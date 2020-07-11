@@ -301,7 +301,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Score att
+                ODA
               </td>
               <td style="${
                 stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -321,7 +321,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Score def
+                ODD
               </td>
               <td style="${
                 stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -341,7 +341,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Score sup
+                ODS
               </td>
               <td style="${
                 stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -361,7 +361,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Score total
+                OD
               </td>
               <td style="${
                 stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -384,6 +384,98 @@ const renderTodaysStats = (stats) => {
   `;
 };
 
+const renderInADayRanks = (player) => {
+  let inADayRanks = document.querySelector('#inADayRanks');
+  if (!inADayRanks) {
+    inADayRanks = document.createElement('div');
+    inADayRanks.id = 'inADayRanks';
+    inADayRanks.width = '100%';
+    otherElementsContainer.prepend(inADayRanks);
+  }
+
+  inADayRanks.innerHTML = `
+      <table width="100%" class="vis">
+        <tbody>
+          <tr>
+            <th colspan="2">
+              'In a day' best scores
+            </th>
+          </tr>
+            <tr>
+              <td>
+                Units defeated while attacking:
+              </td>
+              <td>
+                ${player.inADay.att.score.toLocaleString()} (${
+    player.inADay.att.rank
+  }.)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Units defeated while defending:
+              </td>
+              <td>
+                ${player.inADay.def.score.toLocaleString()} (${
+    player.inADay.def.rank
+  }.)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Units defeated while supporting:
+              </td>
+              <td>
+                ${player.inADay.sup.score.toLocaleString()} (${
+    player.inADay.sup.rank
+  }.)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Resources plundered:
+              </td>
+              <td>
+                ${player.inADay.lootRes.score.toLocaleString()} (${
+    player.inADay.lootRes.rank
+  }.)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Villages plundered:
+              </td>
+              <td>
+                ${player.inADay.lootVil.score.toLocaleString()} (${
+    player.inADay.lootVil.rank
+  }.)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Resources gathered:
+              </td>
+              <td>
+                ${player.inADay.scavenge.score.toLocaleString()} (${
+    player.inADay.scavenge.rank
+  }.)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Villages conquered:
+              </td>
+              <td>
+                ${player.inADay.conquer.score.toLocaleString()} (${
+    player.inADay.conquer.rank
+  }.)
+              </td>
+            </tr>
+      </tbody>
+      </table>
+  `;
+};
+
 const render = ({ player, dailyPlayerStats }) => {
   [
     {
@@ -396,59 +488,11 @@ const render = ({ player, dailyPlayerStats }) => {
       data: player.dailyGrowth.toLocaleString(),
       id: 'dg',
     },
-    {
-      title: 'Units defeated while attacking:',
-      data: `${player.inADay.att.score.toLocaleString()} (${
-        player.inADay.att.rank
-      }.)`,
-      id: 'kill_att',
-    },
-    {
-      title: 'Units defeated while defending:',
-      data: `${player.inADay.def.score.toLocaleString()} (${
-        player.inADay.def.rank
-      }.)`,
-      id: 'kill_def',
-    },
-    {
-      title: 'Units defeated while supporting:',
-      data: `${player.inADay.sup.score.toLocaleString()} (${
-        player.inADay.sup.rank
-      }.)`,
-      id: 'kill_sup',
-    },
-    {
-      title: 'Resources plundered:',
-      data: `${player.inADay.lootRes.score.toLocaleString()} (${
-        player.inADay.lootRes.rank
-      }.)`,
-      id: 'loot_res',
-    },
-    {
-      title: 'Villages plundered:',
-      data: `${player.inADay.lootVil.score.toLocaleString()} (${
-        player.inADay.lootVil.rank
-      }.)`,
-      id: 'loot_vil',
-    },
-    {
-      title: 'Resources gathered:',
-      data: `${player.inADay.scavenge.score.toLocaleString()} (${
-        player.inADay.scavenge.rank
-      }.)`,
-      id: 'scavenge',
-    },
-    {
-      title: 'Villages conquered:',
-      data: `${player.inADay.conquer.score.toLocaleString()} (${
-        player.inADay.conquer.rank
-      }.)`,
-      id: 'conquer',
-    },
   ].forEach((data) => {
     renderTr(data);
   });
 
+  renderInADayRanks(player);
   if (dailyPlayerStats && dailyPlayerStats.items.length > 0) {
     renderTodaysStats(dailyPlayerStats.items[0]);
   }
