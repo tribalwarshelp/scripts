@@ -251,25 +251,33 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var _default = function _default(date) {
-  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), _objectSpread({
+var _default = (date, options) => {
+  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric'
-  }, options));
+  });
 };
 
 exports.default = _default;
+},{}],"Syko":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.formatPlayerURL = void 0;
+
+const formatPlayerURL = function formatPlayerURL() {
+  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  return "http://www.twstats.com/in/".concat(server, "/player/").concat(id);
+};
+
+exports.formatPlayerURL = formatPlayerURL;
 },{}],"KWxH":[function(require,module,exports) {
 "use strict";
 
@@ -309,6 +317,8 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
+var _twstats = require("./utils/twstats");
+
 var _localStorage = require("./utils/localStorage");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -325,14 +335,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
 let PLAYER_ID = (0, _getIDFromURL.default)(window.location.search);
+const CURRENT_PLAYER_ID = parseInt(game_data.player.id);
 
 if (isNaN(PLAYER_ID) || !PLAYER_ID) {
-  PLAYER_ID = parseInt(game_data.player.id);
+  PLAYER_ID = CURRENT_PLAYER_ID;
 }
 
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
 const PLAYER_QUERY = "\n    query player($server: String!, $id: Int!) {\n        player(server: $server, id: $id) {\n            id\n            name\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n    }\n";
-const dataContainer = document.querySelector('#player_info > tbody');
+const profileInfoTBody = document.querySelector('#player_info > tbody');
+const otherElementsContainer = document.querySelector(PLAYER_ID === CURRENT_PLAYER_ID ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)' : '#content_value > table > tbody > tr > td:nth-child(2)');
 
 const loadPlayerDataFromCache = () => {
   return (0, _localStorage.getItem)(LOCAL_STORAGE_KEY);
@@ -411,53 +423,95 @@ const renderTr = (_ref) => {
     tr.id = id;
     tr.appendChild(document.createElement('td'));
     tr.appendChild(document.createElement('td'));
-    dataContainer.append(tr);
+    profileInfoTBody.append(tr);
   }
 
   tr.children[0].innerHTML = title;
   tr.children[1].innerHTML = data;
 };
 
+const renderPlayerServers = player => {
+  let playerServers = document.querySelector('#playerServers');
+
+  if (!playerServers) {
+    playerServers = document.createElement('table');
+    playerServers.id = 'playerServers';
+    playerServers.classList.add('vis');
+    playerServers.width = '100%';
+    playerServers.innerHTML = "\n     <tbody>\n        <tr>\n          <th>\n            Player's Servers\n          </th>\n        </tr>\n        <tr>\n          <td>\n          </td>\n        </tr>\n     </tbody>\n    ";
+    otherElementsContainer.prepend(playerServers);
+  }
+
+  playerServers.querySelector('td').innerHTML = player.servers.map(server => "<a style=\"margin-right: 5px\" href=\"".concat((0, _twstats.formatPlayerURL)(server, player.id), "\">").concat(server, "</a>")).join('');
+};
+
+const renderPlayerOtherNames = player => {
+  let playerOtherNames = document.querySelector('#playerOtherNames');
+
+  if (!playerOtherNames) {
+    playerOtherNames = document.createElement('div');
+    playerOtherNames.id = 'playerOtherNames';
+    playerOtherNames.width = '100%';
+    otherElementsContainer.prepend(playerOtherNames);
+  }
+
+  playerOtherNames.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th>\n              Old name\n            </th>\n            <th>\n              New name\n            </th>\n            <th>\n              Date\n            </th>\n          </tr>\n        ".concat(player.nameChanges.map(nameChange => {
+    return "\n            <tr>\n              <td>\n                ".concat(nameChange.oldName, "\n              </td>\n              <td>\n                ").concat(nameChange.newName, "\n              </td>\n              <td>\n                ").concat((0, _formatDate.default)(nameChange.changeDate, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    }), "\n              </td>\n            </tr>\n          ");
+  }).join(''), "\n      </tbody>\n      </table>\n  ");
+};
+
 const render = player => {
   [{
-    title: 'Joined At',
+    title: 'Joined at:',
     data: (0, _formatDate.default)(player.joinedAt),
     id: 'joined_at'
   }, {
-    title: 'Daily growth',
+    title: 'Daily growth:',
     data: player.dailyGrowth.toLocaleString(),
     id: 'dg'
   }, {
-    title: 'Units defeated while attacking',
+    title: 'Units defeated while attacking:',
     data: "".concat(player.inADay.att.score.toLocaleString(), " (").concat(player.inADay.att.rank, ".)"),
     id: 'kill_att'
   }, {
-    title: 'Units defeated while defending',
+    title: 'Units defeated while defending:',
     data: "".concat(player.inADay.def.score.toLocaleString(), " (").concat(player.inADay.def.rank, ".)"),
     id: 'kill_def'
   }, {
-    title: 'Units defeated while supporting',
+    title: 'Units defeated while supporting:',
     data: "".concat(player.inADay.sup.score.toLocaleString(), " (").concat(player.inADay.sup.rank, ".)"),
     id: 'kill_sup'
   }, {
-    title: 'Resources plundered',
+    title: 'Resources plundered:',
     data: "".concat(player.inADay.lootRes.score.toLocaleString(), " (").concat(player.inADay.lootRes.rank, ".)"),
     id: 'loot_res'
   }, {
-    title: 'Villages plundered',
+    title: 'Villages plundered:',
     data: "".concat(player.inADay.lootVil.score.toLocaleString(), " (").concat(player.inADay.lootVil.rank, ".)"),
     id: 'loot_vil'
   }, {
-    title: 'Resources gathered',
+    title: 'Resources gathered:',
     data: "".concat(player.inADay.scavenge.score.toLocaleString(), " (").concat(player.inADay.scavenge.rank, ".)"),
     id: 'scavenge'
   }, {
-    title: 'Villages conquered',
+    title: 'Villages conquered:',
     data: "".concat(player.inADay.conquer.score.toLocaleString(), " (").concat(player.inADay.conquer.rank, ".)"),
     id: 'conquer'
   }].forEach(data => {
     renderTr(data);
   });
+
+  if (player.nameChanges.length > 0) {
+    renderPlayerOtherNames(player);
+  }
+
+  if (player.servers.length > 0) {
+    renderPlayerServers(player);
+  }
 };
 
 (async function () {
@@ -483,4 +537,4 @@ const render = player => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./libs/InADayParser":"dSAr","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/requestCreator":"Ph2E","./libs/InADayParser":"dSAr","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/localStorage":"KWxH"}]},{},["yRop"], null)

@@ -3,6 +3,7 @@ import InADayParser from './libs/InADayParser';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
+import { formatPlayerURL } from './utils/twstats';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -18,8 +19,9 @@ import { setItem, getItem } from './utils/localStorage';
 
 const SERVER = getCurrentServer();
 let PLAYER_ID = getIDFromURL(window.location.search);
+const CURRENT_PLAYER_ID = parseInt(game_data.player.id);
 if (isNaN(PLAYER_ID) || !PLAYER_ID) {
-  PLAYER_ID = parseInt(game_data.player.id);
+  PLAYER_ID = CURRENT_PLAYER_ID;
 }
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
 const PLAYER_QUERY = `
@@ -38,7 +40,12 @@ const PLAYER_QUERY = `
         }
     }
 `;
-const dataContainer = document.querySelector('#player_info > tbody');
+const profileInfoTBody = document.querySelector('#player_info > tbody');
+const otherElementsContainer = document.querySelector(
+  PLAYER_ID === CURRENT_PLAYER_ID
+    ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)'
+    : '#content_value > table > tbody > tr > td:nth-child(2)'
+);
 
 const loadPlayerDataFromCache = () => {
   return getItem(LOCAL_STORAGE_KEY);
@@ -134,10 +141,91 @@ const renderTr = ({ title, data, id }) => {
     tr.id = id;
     tr.appendChild(document.createElement('td'));
     tr.appendChild(document.createElement('td'));
-    dataContainer.append(tr);
+    profileInfoTBody.append(tr);
   }
   tr.children[0].innerHTML = title;
   tr.children[1].innerHTML = data;
+};
+
+const renderPlayerServers = (player) => {
+  let playerServers = document.querySelector('#playerServers');
+  if (!playerServers) {
+    playerServers = document.createElement('table');
+    playerServers.id = 'playerServers';
+    playerServers.classList.add('vis');
+    playerServers.width = '100%';
+    playerServers.innerHTML = `
+     <tbody>
+        <tr>
+          <th>
+            Player's Servers
+          </th>
+        </tr>
+        <tr>
+          <td>
+          </td>
+        </tr>
+     </tbody>
+    `;
+    otherElementsContainer.prepend(playerServers);
+  }
+  playerServers.querySelector('td').innerHTML = player.servers
+    .map(
+      (server) =>
+        `<a style="margin-right: 5px" href="${formatPlayerURL(
+          server,
+          player.id
+        )}">${server}</a>`
+    )
+    .join('');
+};
+
+const renderPlayerOtherNames = (player) => {
+  let playerOtherNames = document.querySelector('#playerOtherNames');
+  if (!playerOtherNames) {
+    playerOtherNames = document.createElement('div');
+    playerOtherNames.id = 'playerOtherNames';
+    playerOtherNames.width = '100%';
+    otherElementsContainer.prepend(playerOtherNames);
+  }
+  playerOtherNames.innerHTML = `
+      <table width="100%" class="vis">
+        <tbody>
+          <tr>
+            <th>
+              Old name
+            </th>
+            <th>
+              New name
+            </th>
+            <th>
+              Date
+            </th>
+          </tr>
+        ${player.nameChanges
+          .map((nameChange) => {
+            return `
+            <tr>
+              <td>
+                ${nameChange.oldName}
+              </td>
+              <td>
+                ${nameChange.newName}
+              </td>
+              <td>
+                ${formatDate(nameChange.changeDate, {
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                })}
+              </td>
+            </tr>
+          `;
+          })
+          .join('')}
+      </tbody>
+      </table>
+  `;
 };
 
 const render = (player) => {
@@ -204,6 +292,13 @@ const render = (player) => {
   ].forEach((data) => {
     renderTr(data);
   });
+
+  if (player.nameChanges.length > 0) {
+    renderPlayerOtherNames(player);
+  }
+  if (player.servers.length > 0) {
+    renderPlayerServers(player);
+  }
 };
 
 (async function () {
