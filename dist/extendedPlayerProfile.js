@@ -263,6 +263,44 @@ var _default = (date, options) => {
 };
 
 exports.default = _default;
+},{}],"P4rL":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const POPUP_WRAPPER_SELECTOR = '.popup_helper';
+const POPUP_SELECTOR = '#inline_popup';
+
+var _default = function _default() {
+  let {
+    e,
+    title,
+    html,
+    id
+  } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  inlinePopup(e, id, null, {
+    offset_x: 0,
+    offset_y: 0
+  }, html, title);
+  const popup = document.querySelector(POPUP_SELECTOR);
+
+  if (popup) {
+    popup.style.width = 'auto';
+    popup.style.maxWidth = '800px';
+  }
+
+  const popupWrapper = document.querySelector(POPUP_WRAPPER_SELECTOR);
+
+  if (popupWrapper) {
+    popupWrapper.style.width = 'auto';
+    popupWrapper.style.position = 'fixed';
+    popupWrapper.style.zIndex = '50001';
+  }
+};
+
+exports.default = _default;
 },{}],"Syko":[function(require,module,exports) {
 "use strict";
 
@@ -278,6 +316,40 @@ const formatPlayerURL = function formatPlayerURL() {
 };
 
 exports.formatPlayerURL = formatPlayerURL;
+},{}],"fHHP":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+
+const formatTribeURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_ally',
+    id
+  });
+};
+
+exports.formatTribeURL = formatTribeURL;
+
+const formatPlayerURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_player',
+    id
+  });
+};
+
+exports.formatPlayerURL = formatPlayerURL;
+
+const formatVillageURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_village',
+    id
+  });
+};
+
+exports.formatVillageURL = formatVillageURL;
 },{}],"KWxH":[function(require,module,exports) {
 "use strict";
 
@@ -317,7 +389,11 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
+var _renderPopup = _interopRequireDefault(require("./utils/renderPopup"));
+
 var _twstats = require("./utils/twstats");
+
+var _tribalwars = require("./utils/tribalwars");
 
 var _localStorage = require("./utils/localStorage");
 
@@ -342,8 +418,12 @@ if (isNaN(PLAYER_ID) || !PLAYER_ID) {
 }
 
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
-const query = "\n    query pageData($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {\n        player(server: $server, id: $id) {\n            id\n            name\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n        dailyPlayerStats(server: $server, filter: $filter) {\n            items {\n              rank\n              rankAtt\n              rankDef\n              rankSup\n              rankTotal\n              points\n              scoreAtt\n              scoreAtt\n              scoreDef\n              scoreSup\n              scoreTotal\n              villages\n            }\n        }\n    }\n";
+const PLAYER_QUERY = "\n    query pageData($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {\n        player(server: $server, id: $id) {\n            id\n            name\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n        dailyPlayerStats(server: $server, filter: $filter) {\n            items {\n              rank\n              rankAtt\n              rankDef\n              rankSup\n              rankTotal\n              points\n              scoreAtt\n              scoreAtt\n              scoreDef\n              scoreSup\n              scoreTotal\n              villages\n            }\n        }\n    }\n";
+const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $filter: TribeChangeFilter!) {\n      tribeChanges(server: $server, filter: $filter) {\n        total\n        items {\n          oldTribe {\n            id\n            tag\n          }\n          newTribe {\n            id\n            tag\n          }\n          createdAt\n        }\n      }\n    }\n";
+const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
+const TRIBE_CHANGES_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector('#player_info > tbody');
+const actionsContainer = PLAYER_ID === CURRENT_PLAYER_ID ? profileInfoTBody : document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
 const otherElementsContainer = document.querySelector(PLAYER_ID === CURRENT_PLAYER_ID ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)' : '#content_value > table > tbody > tr > td:nth-child(2)');
 
 const loadDataFromCache = () => {
@@ -386,7 +466,7 @@ const loadInADayRankAndScore = async (name, playerID, type) => {
 
 const loadData = async () => {
   const data = await (0, _requestCreator.default)({
-    query,
+    query: PLAYER_QUERY,
     variables: {
       server: SERVER,
       id: PLAYER_ID,
@@ -527,8 +607,86 @@ const render = (_ref2) => {
   }
 };
 
+const addTribeChangesListeners = () => {
+  document.querySelectorAll('#' + TRIBE_CHANGES_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+    el.addEventListener('click', handleShowTribeChangesClick);
+  });
+};
+
+const renderTribeChanges = (e, currentPage, tribeChanges) => {
+  const numberOfPages = tribeChanges.total > 0 ? Math.ceil(tribeChanges.total / TRIBE_CHANGES_PER_PAGE) : 1;
+  const paginationItems = [];
+
+  for (let i = 1; i <= numberOfPages; i++) {
+    if (i === currentPage) {
+      paginationItems.push("<strong style=\"margin-right: 3px\">>".concat(i, "<</strong>"));
+    } else {
+      paginationItems.push("<a style=\"margin-right: 3px\" href=\"#\" data-page=\"".concat(i, "\">").concat(i, "</a>"));
+    }
+  }
+
+  const html = "\n    <div id=\"".concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            New tribe\n          </th>\n          <th>\n            Old tribe\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
+    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
+
+    if (tribeChange.newTribe) {
+      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(tribeChange.newTribe.id), "\">").concat(tribeChange.newTribe.tag, "</a></td>");
+    } else {
+      rowHTML += '<td>-</td>';
+    }
+
+    if (tribeChange.oldTribe) {
+      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(tribeChange.oldTribe.id), "\">").concat(tribeChange.oldTribe.tag, "</a></td>");
+    } else {
+      rowHTML += '<td>-</td>';
+    }
+
+    return rowHTML;
+  }).join(''), "\n      </tbody>\n    </table>\n  ");
+  (0, _renderPopup.default)({
+    e,
+    title: "Tribe changes",
+    id: 'tribeChanges',
+    html
+  });
+  addTribeChangesListeners();
+};
+
+const handleShowTribeChangesClick = async e => {
+  e.preventDefault();
+  const page = parseInt(e.target.getAttribute('data-page'));
+
+  if (!isNaN(page)) {
+    const data = await (0, _requestCreator.default)({
+      query: TRIBE_CHANGES_QUERY,
+      variables: {
+        filter: {
+          playerID: [PLAYER_ID],
+          offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
+          limit: TRIBE_CHANGES_PER_PAGE,
+          sort: 'createdAt DESC'
+        },
+        server: SERVER
+      }
+    });
+    renderTribeChanges(e, page, data.tribeChanges);
+  }
+};
+
+const renderActions = () => {
+  const showTribeChanges = document.createElement('a');
+  showTribeChanges.href = '#';
+  showTribeChanges.setAttribute('data-page', '1');
+  showTribeChanges.innerHTML = 'Show tribe changes';
+  showTribeChanges.addEventListener('click', handleShowTribeChangesClick);
+  const showTribeChangesTd = document.createElement('td');
+  showTribeChangesTd.colSpan = '2';
+  showTribeChangesTd.append(showTribeChanges);
+  actionsContainer.appendChild(document.createElement('tr').appendChild(showTribeChangesTd));
+};
+
 (async function () {
   try {
+    renderActions();
     const dataFromCache = loadDataFromCache();
 
     if (dataFromCache && dataFromCache.player) {
@@ -546,4 +704,4 @@ const render = (_ref2) => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./libs/InADayParser":"dSAr","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/requestCreator":"Ph2E","./libs/InADayParser":"dSAr","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/renderPopup":"P4rL","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)

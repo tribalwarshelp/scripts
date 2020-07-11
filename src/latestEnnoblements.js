@@ -2,6 +2,11 @@ import requestCreator from './libs/requestCreator';
 import renderPopup from './utils/renderPopup';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
+import {
+  formatTribeURL,
+  formatPlayerURL,
+  formatVillageURL,
+} from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -154,18 +159,11 @@ const addEventListeners = (ennoblements = []) => {
 
 const formatPlayerHTML = (player) => {
   return player && player.name
-    ? `<a href="${
-        window.location.origin +
-        TribalWars.buildURL('', { screen: 'info_player', id: player.id })
-      }">${player.name}</a> (${
+    ? `<a href="${formatPlayerURL(player.id)}">${player.name}</a> (${
         player.tribe && player.tribe.tag
-          ? `<a href="${
-              window.location.origin +
-              TribalWars.buildURL('', {
-                screen: 'info_ally',
-                id: player.tribe.id,
-              })
-            }">${player.tribe.tag}</a>`
+          ? `<a href="${formatTribeURL(player.tribe.id)}">${
+              player.tribe.tag
+            }</a>`
           : '-'
       })`
     : '-';
@@ -173,10 +171,9 @@ const formatPlayerHTML = (player) => {
 
 const formatVillageHTML = (village) => {
   const continent = 'K' + String(village.y)[0] + String(village.x)[0];
-  return `<a href="${
-    window.location.origin +
-    TribalWars.buildURL('', { screen: 'info_village', id: village.id })
-  }">${village.name} (${village.x}|${village.y}) ${continent}</a>`;
+  return `<a href="${formatVillageURL(village.id)}">${village.name} (${
+    village.x
+  }|${village.y}) ${continent}</a>`;
 };
 
 const formatEnnoblementRows = (ennoblements) => {

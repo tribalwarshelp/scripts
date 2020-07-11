@@ -227,6 +227,40 @@ var _default = (date, options) => {
 };
 
 exports.default = _default;
+},{}],"fHHP":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+
+const formatTribeURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_ally',
+    id
+  });
+};
+
+exports.formatTribeURL = formatTribeURL;
+
+const formatPlayerURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_player',
+    id
+  });
+};
+
+exports.formatPlayerURL = formatPlayerURL;
+
+const formatVillageURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_village',
+    id
+  });
+};
+
+exports.formatVillageURL = formatVillageURL;
 },{}],"KWxH":[function(require,module,exports) {
 "use strict";
 
@@ -263,6 +297,8 @@ var _renderPopup = _interopRequireDefault(require("./utils/renderPopup"));
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
+
+var _tribalwars = require("./utils/tribalwars");
 
 var _localStorage = require("./utils/localStorage");
 
@@ -387,21 +423,12 @@ const addEventListeners = function addEventListeners() {
 };
 
 const formatPlayerHTML = player => {
-  return player && player.name ? "<a href=\"".concat(window.location.origin + TribalWars.buildURL('', {
-    screen: 'info_player',
-    id: player.id
-  }), "\">").concat(player.name, "</a> (").concat(player.tribe && player.tribe.tag ? "<a href=\"".concat(window.location.origin + TribalWars.buildURL('', {
-    screen: 'info_ally',
-    id: player.tribe.id
-  }), "\">").concat(player.tribe.tag, "</a>") : '-', ")") : '-';
+  return player && player.name ? "<a href=\"".concat((0, _tribalwars.formatPlayerURL)(player.id), "\">").concat(player.name, "</a> (").concat(player.tribe && player.tribe.tag ? "<a href=\"".concat((0, _tribalwars.formatTribeURL)(player.tribe.id), "\">").concat(player.tribe.tag, "</a>") : '-', ")") : '-';
 };
 
 const formatVillageHTML = village => {
   const continent = 'K' + String(village.y)[0] + String(village.x)[0];
-  return "<a href=\"".concat(window.location.origin + TribalWars.buildURL('', {
-    screen: 'info_village',
-    id: village.id
-  }), "\">").concat(village.name, " (").concat(village.x, "|").concat(village.y, ") ").concat(continent, "</a>");
+  return "<a href=\"".concat((0, _tribalwars.formatVillageURL)(village.id), "\">").concat(village.name, " (").concat(village.x, "|").concat(village.y, ") ").concat(continent, "</a>");
 };
 
 const formatEnnoblementRows = ennoblements => {
@@ -464,4 +491,4 @@ const renderButton = () => {
 (function () {
   renderButton();
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/renderPopup":"P4rL","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/localStorage":"KWxH"}]},{},["hkfB"], null)
+},{"./libs/requestCreator":"Ph2E","./utils/renderPopup":"P4rL","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["hkfB"], null)
