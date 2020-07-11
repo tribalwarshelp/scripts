@@ -1,0 +1,17 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:tribalwarshelp/scripts.git",
+  "author": "Kichiyaki <xyztojajestem@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build ./src/*.js --no-minify --no-source-maps"
+  },
+  "dependencies": {
+    "parcel": "^1.12.4"
+  },
+  "browserslist": [
+    "since 2017-06"
+  ]
+}
