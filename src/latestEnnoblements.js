@@ -1,12 +1,13 @@
 import requestCreator from './libs/requestCreator';
 import renderPopup from './utils/renderPopup';
 import getCurrentServer from './utils/getCurrentServer';
+import formatDate from './utils/formatDate';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
 // @name         Latest ennoblements
 // @namespace    https://gist.github.com/Kichiyaki/3c273582cc6856512e22c86c375f795a
-// @version      0.1
+// @version      0.5
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
 // @match        *://*.plemiona.pl/game.php*
@@ -176,20 +177,6 @@ const formatVillageHTML = (village) => {
     window.location.origin +
     TribalWars.buildURL('', { screen: 'info_village', id: village.id })
   }">${village.name} (${village.x}|${village.y}) ${continent}</a>`;
-};
-
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString(
-    window.game_data.locale.replace('_', '-'),
-    {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    }
-  );
 };
 
 const formatEnnoblementRows = (ennoblements) => {
