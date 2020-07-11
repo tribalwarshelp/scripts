@@ -24,8 +24,8 @@ if (isNaN(PLAYER_ID) || !PLAYER_ID) {
   PLAYER_ID = CURRENT_PLAYER_ID;
 }
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
-const PLAYER_QUERY = `
-    query player($server: String!, $id: Int!) {
+const query = `
+    query pageData($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {
         player(server: $server, id: $id) {
             id
             name
@@ -38,8 +38,25 @@ const PLAYER_QUERY = `
             }
             dailyGrowth
         }
+        dailyPlayerStats(server: $server, filter: $filter) {
+            items {
+              rank
+              rankAtt
+              rankDef
+              rankSup
+              rankTotal
+              points
+              scoreAtt
+              scoreAtt
+              scoreDef
+              scoreSup
+              scoreTotal
+              villages
+            }
+        }
     }
 `;
+
 const profileInfoTBody = document.querySelector('#player_info > tbody');
 const otherElementsContainer = document.querySelector(
   PLAYER_ID === CURRENT_PLAYER_ID
@@ -47,7 +64,7 @@ const otherElementsContainer = document.querySelector(
     : '#content_value > table > tbody > tr > td:nth-child(2)'
 );
 
-const loadPlayerDataFromCache = () => {
+const loadDataFromCache = () => {
   return getItem(LOCAL_STORAGE_KEY);
 };
 
@@ -72,7 +89,6 @@ const loadInADayRankAndScore = async (name, playerID, type) => {
     }
     return res[0];
   } catch (error) {
-    console.log(error);
     return {
       rank: 0,
       playerID: 0,
@@ -83,12 +99,17 @@ const loadInADayRankAndScore = async (name, playerID, type) => {
   }
 };
 
-const loadPlayerData = async () => {
+const loadData = async () => {
   const data = await requestCreator({
-    query: PLAYER_QUERY,
+    query,
     variables: {
       server: SERVER,
       id: PLAYER_ID,
+      filter: {
+        sort: 'createDate DESC',
+        limit: 1,
+        playerID: [PLAYER_ID],
+      },
     },
   });
   if (data.player) {
@@ -170,6 +191,7 @@ const renderPlayerServers = (player) => {
     otherElementsContainer.prepend(playerServers);
   }
   playerServers.querySelector('td').innerHTML = player.servers
+    .sort()
     .map(
       (server) =>
         `<a style="margin-right: 5px" href="${formatPlayerURL(
@@ -228,7 +250,141 @@ const renderPlayerOtherNames = (player) => {
   `;
 };
 
-const render = (player) => {
+const renderTodaysStats = (stats) => {
+  let todaysStats = document.querySelector('#todaysStats');
+  if (!todaysStats) {
+    todaysStats = document.createElement('div');
+    todaysStats.id = 'todaysStats';
+    todaysStats.width = '100%';
+    otherElementsContainer.prepend(todaysStats);
+  }
+  const statIncreaseStyle = 'color: #000; background-color: #0f0';
+  const statDecreaseStyle = 'color: #000; background-color: #f00';
+
+  todaysStats.innerHTML = `
+      <table width="100%" class="vis">
+        <tbody>
+          <tr>
+            <th colspan="2">
+              Today's stats
+            </th>
+          </tr>
+            <tr>
+              <td>
+                Points
+              </td>
+              <td style="${
+                stats.points > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.points).toLocaleString()}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Rank
+              </td>
+              <td style="${
+                stats.rank > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.rank)}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Villages
+              </td>
+              <td style="${
+                stats.villages > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.villages).toLocaleString()}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Score att
+              </td>
+              <td style="${
+                stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.scoreAtt).toLocaleString()}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Rank (ODA)
+              </td>
+              <td style="${
+                stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.rankAtt)}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Score def
+              </td>
+              <td style="${
+                stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.scoreDef).toLocaleString()}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Rank (ODD)
+              </td>
+              <td style="${
+                stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.rankDef)}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Score sup
+              </td>
+              <td style="${
+                stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.scoreSup).toLocaleString()}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Rank (ODS)
+              </td>
+              <td style="${
+                stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.rankSup)}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Score total
+              </td>
+              <td style="${
+                stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.scoreTotal).toLocaleString()}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Rank (OD)
+              </td>
+              <td style="${
+                stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle
+              }">
+                ${Math.abs(stats.rankTotal)}
+              </td>
+            </tr>
+      </tbody>
+      </table>
+  `;
+};
+
+const render = ({ player, dailyPlayerStats }) => {
   [
     {
       title: 'Joined at:',
@@ -293,6 +449,9 @@ const render = (player) => {
     renderTr(data);
   });
 
+  if (dailyPlayerStats && dailyPlayerStats.items.length > 0) {
+    renderTodaysStats(dailyPlayerStats.items[0]);
+  }
   if (player.nameChanges.length > 0) {
     renderPlayerOtherNames(player);
   }
@@ -303,15 +462,15 @@ const render = (player) => {
 
 (async function () {
   try {
-    const { player: playerDataFromCache } = loadPlayerDataFromCache();
-    if (playerDataFromCache) {
-      render(playerDataFromCache);
+    const dataFromCache = loadDataFromCache();
+    if (dataFromCache && dataFromCache.player) {
+      render(dataFromCache);
     }
-    const { player } = await loadPlayerData();
-    if (player) {
-      render(player);
+    const dataFromAPI = await loadData();
+    if (dataFromAPI) {
+      render(dataFromAPI);
     }
-    console.log(player);
+    console.log(dataFromAPI);
   } catch (error) {
     console.log('extended player profile', error);
   }

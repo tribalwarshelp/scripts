@@ -342,11 +342,11 @@ if (isNaN(PLAYER_ID) || !PLAYER_ID) {
 }
 
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
-const PLAYER_QUERY = "\n    query player($server: String!, $id: Int!) {\n        player(server: $server, id: $id) {\n            id\n            name\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n    }\n";
+const query = "\n    query pageData($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {\n        player(server: $server, id: $id) {\n            id\n            name\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n        dailyPlayerStats(server: $server, filter: $filter) {\n            items {\n              rank\n              rankAtt\n              rankDef\n              rankSup\n              rankTotal\n              points\n              scoreAtt\n              scoreAtt\n              scoreDef\n              scoreSup\n              scoreTotal\n              villages\n            }\n        }\n    }\n";
 const profileInfoTBody = document.querySelector('#player_info > tbody');
 const otherElementsContainer = document.querySelector(PLAYER_ID === CURRENT_PLAYER_ID ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)' : '#content_value > table > tbody > tr > td:nth-child(2)');
 
-const loadPlayerDataFromCache = () => {
+const loadDataFromCache = () => {
   return (0, _localStorage.getItem)(LOCAL_STORAGE_KEY);
 };
 
@@ -374,7 +374,6 @@ const loadInADayRankAndScore = async (name, playerID, type) => {
 
     return res[0];
   } catch (error) {
-    console.log(error);
     return {
       rank: 0,
       playerID: 0,
@@ -385,12 +384,17 @@ const loadInADayRankAndScore = async (name, playerID, type) => {
   }
 };
 
-const loadPlayerData = async () => {
+const loadData = async () => {
   const data = await (0, _requestCreator.default)({
-    query: PLAYER_QUERY,
+    query,
     variables: {
       server: SERVER,
-      id: PLAYER_ID
+      id: PLAYER_ID,
+      filter: {
+        sort: 'createDate DESC',
+        limit: 1,
+        playerID: [PLAYER_ID]
+      }
     }
   });
 
@@ -442,7 +446,7 @@ const renderPlayerServers = player => {
     otherElementsContainer.prepend(playerServers);
   }
 
-  playerServers.querySelector('td').innerHTML = player.servers.map(server => "<a style=\"margin-right: 5px\" href=\"".concat((0, _twstats.formatPlayerURL)(server, player.id), "\">").concat(server, "</a>")).join('');
+  playerServers.querySelector('td').innerHTML = player.servers.sort().map(server => "<a style=\"margin-right: 5px\" href=\"".concat((0, _twstats.formatPlayerURL)(server, player.id), "\">").concat(server, "</a>")).join('');
 };
 
 const renderPlayerOtherNames = player => {
@@ -464,7 +468,26 @@ const renderPlayerOtherNames = player => {
   }).join(''), "\n      </tbody>\n      </table>\n  ");
 };
 
-const render = player => {
+const renderTodaysStats = stats => {
+  let todaysStats = document.querySelector('#todaysStats');
+
+  if (!todaysStats) {
+    todaysStats = document.createElement('div');
+    todaysStats.id = 'todaysStats';
+    todaysStats.width = '100%';
+    otherElementsContainer.prepend(todaysStats);
+  }
+
+  const statIncreaseStyle = 'color: #000; background-color: #0f0';
+  const statDecreaseStyle = 'color: #000; background-color: #f00';
+  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stats\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points\n              </td>\n              <td style=\"".concat(stats.points > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank\n              </td>\n              <td style=\"").concat(stats.rank > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages\n              </td>\n              <td style=\"").concat(stats.villages > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Score att\n              </td>\n              <td style=\"").concat(stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank (ODA)\n              </td>\n              <td style=\"").concat(stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Score def\n              </td>\n              <td style=\"").concat(stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank (ODD)\n              </td>\n              <td style=\"").concat(stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Score sup\n              </td>\n              <td style=\"").concat(stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank (ODS)\n              </td>\n              <td style=\"").concat(stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Score total\n              </td>\n              <td style=\"").concat(stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank (OD)\n              </td>\n              <td style=\"").concat(stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
+};
+
+const render = (_ref2) => {
+  let {
+    player,
+    dailyPlayerStats
+  } = _ref2;
   [{
     title: 'Joined at:',
     data: (0, _formatDate.default)(player.joinedAt),
@@ -505,6 +528,10 @@ const render = player => {
     renderTr(data);
   });
 
+  if (dailyPlayerStats && dailyPlayerStats.items.length > 0) {
+    renderTodaysStats(dailyPlayerStats.items[0]);
+  }
+
   if (player.nameChanges.length > 0) {
     renderPlayerOtherNames(player);
   }
@@ -516,23 +543,19 @@ const render = player => {
 
 (async function () {
   try {
-    const {
-      player: playerDataFromCache
-    } = loadPlayerDataFromCache();
+    const dataFromCache = loadDataFromCache();
 
-    if (playerDataFromCache) {
-      render(playerDataFromCache);
+    if (dataFromCache && dataFromCache.player) {
+      render(dataFromCache);
     }
 
-    const {
-      player
-    } = await loadPlayerData();
+    const dataFromAPI = await loadData();
 
-    if (player) {
-      render(player);
+    if (dataFromAPI) {
+      render(dataFromAPI);
     }
 
-    console.log(player);
+    console.log(dataFromAPI);
   } catch (error) {
     console.log('extended player profile', error);
   }
