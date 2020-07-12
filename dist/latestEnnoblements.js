@@ -442,7 +442,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 // ==UserScript==
 // @name         Latest ennoblements
-// @namespace    https://github.com/
+// @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @version      0.5

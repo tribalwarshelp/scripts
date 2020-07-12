@@ -455,7 +455,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // ==UserScript==
 // @name         Extended Player Profile
-// @namespace    https://github.com/
+// @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @version      0.5

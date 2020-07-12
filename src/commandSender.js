@@ -47,8 +47,7 @@ const handleStart = () => {
   const ms = calcMillisecondsToAttack(
     document.querySelector('#' + INPUT_ID).value
   );
-  if (ms <= 0 || isNaN(ms))
-    return UI.ErrorMessage('Wprowadzono nieprawidłowy czas!');
+  if (ms <= 0 || isNaN(ms)) return UI.ErrorMessage('Invalid date!');
 
   document.querySelector('#' + START_BUTTON_ID).disabled = true;
   document.querySelector('#' + CANCEL_BUTTON_ID).disabled = false;
@@ -67,7 +66,7 @@ const handleCancel = () => {
 const render = () => {
   const container = document.createElement('div');
   const label = document.createElement('label');
-  label.innerHTML = 'Czas dotarcia ataku:';
+  label.innerHTML = 'Attack time:';
   label.style.marginRight = '15px';
   container.appendChild(label);
   const input = document.createElement('input');

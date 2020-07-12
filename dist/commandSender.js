@@ -120,7 +120,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"tYTs":[function(require,module,exports) {
 // ==UserScript==
 // @name         Command sender
-// @namespace    https://github.com/
+// @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandSender.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandSender.js
 // @version      0.1
@@ -156,8 +156,7 @@ const calcMillisecondsToAttack = date => {
 
 const handleStart = () => {
   const ms = calcMillisecondsToAttack(document.querySelector('#' + INPUT_ID).value);
-  console.log(ms);
-  if (ms <= 0 || isNaN(ms)) return UI.ErrorMessage('Wprowadzono nieprawidłowy czas!');
+  if (ms <= 0 || isNaN(ms)) return UI.ErrorMessage('Invalid date!');
   document.querySelector('#' + START_BUTTON_ID).disabled = true;
   document.querySelector('#' + CANCEL_BUTTON_ID).disabled = false;
   timeoutID = setTimeout(() => {
@@ -174,7 +173,7 @@ const handleCancel = () => {
 const render = () => {
   const container = document.createElement('div');
   const label = document.createElement('label');
-  label.innerHTML = 'Czas dotarcia ataku:';
+  label.innerHTML = 'Attack time:';
   label.style.marginRight = '15px';
   container.appendChild(label);
   const input = document.createElement('input');
