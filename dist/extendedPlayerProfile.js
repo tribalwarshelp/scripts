@@ -752,7 +752,7 @@ const renderActions = () => {
   actionsContainer.appendChild(showTribeChangesTr);
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';
-  exportPlayerVillages.innerHTML = 'Export player villages';
+  exportPlayerVillages.innerHTML = "Export player's villages";
   exportPlayerVillages.addEventListener('click', handleExportPlayerVillagesButtonClick);
   const exportPlayerVillagesTd = document.createElement('td');
   exportPlayerVillagesTd.colSpan = '2';
