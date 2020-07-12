@@ -455,13 +455,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // ==UserScript==
 // @name         Extended Player Profile
-// @namespace    https://gist.github.com/Kichiyaki/3c273582cc6856512e22c86c375f795a
-// @version      0.1
+// @namespace    https://github.com/
+// @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
+// @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
+// @version      0.5
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*.plemiona.pl/game.php*&screen=info_player*
 // @match        *://*.tribalwars.net/game.php*&screen=info_player*
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
 let PLAYER_ID = (0, _getIDFromURL.default)(window.location.search);

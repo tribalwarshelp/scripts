@@ -11,13 +11,16 @@ import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
 // @name         Latest ennoblements
-// @namespace    https://gist.github.com/Kichiyaki/3c273582cc6856512e22c86c375f795a
+// @namespace    https://github.com/
+// @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
+// @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @version      0.5
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
 // @match        *://*.plemiona.pl/game.php*
 // @match        *://*.tribalwars.net/game.php*
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
 const SERVER = getCurrentServer();
