@@ -9,7 +9,7 @@ import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
 // @name         Extended Player Profile
-// @namespace    https://github.com/
+// @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @version      0.5

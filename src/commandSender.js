@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Command sender
-// @namespace    https://github.com/
+// @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandSender.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandSender.js
 // @version      0.1
