@@ -621,7 +621,7 @@ const render = (_ref2) => {
 
 const addTribeChangesListeners = () => {
   document.querySelectorAll('#' + TRIBE_CHANGES_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
-    el.addEventListener('click', handleShowTribeChangesClick);
+    el.addEventListener('click', handleShowTribeChangesButtonClick);
   });
 };
 
@@ -663,7 +663,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
   addTribeChangesListeners();
 };
 
-const handleShowTribeChangesClick = async e => {
+const handleShowTribeChangesButtonClick = async e => {
   e.preventDefault();
   const page = parseInt(e.target.getAttribute('data-page'));
 
@@ -684,16 +684,33 @@ const handleShowTribeChangesClick = async e => {
   }
 };
 
+const handleExportPlayerVillagesButtonClick = e => {
+  e.preventDefault();
+  Dialog.show('Exported villages', "<textarea cols=30 rows=8 readonly>".concat(document.querySelector('#villages_list').innerHTML.match(/(\d+)\|(\d+)/g).join(' '), "</textarea>"));
+};
+
 const renderActions = () => {
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   showTribeChanges.setAttribute('data-page', '1');
   showTribeChanges.innerHTML = 'Show tribe changes';
-  showTribeChanges.addEventListener('click', handleShowTribeChangesClick);
+  showTribeChanges.addEventListener('click', handleShowTribeChangesButtonClick);
   const showTribeChangesTd = document.createElement('td');
   showTribeChangesTd.colSpan = '2';
   showTribeChangesTd.append(showTribeChanges);
-  actionsContainer.appendChild(document.createElement('tr').appendChild(showTribeChangesTd));
+  const showTribeChangesTr = document.createElement('tr');
+  showTribeChangesTr.appendChild(showTribeChangesTd);
+  actionsContainer.appendChild(showTribeChangesTr);
+  const exportPlayerVillages = document.createElement('a');
+  exportPlayerVillages.href = '#';
+  exportPlayerVillages.innerHTML = 'Export player villages';
+  exportPlayerVillages.addEventListener('click', handleExportPlayerVillagesButtonClick);
+  const exportPlayerVillagesTd = document.createElement('td');
+  exportPlayerVillagesTd.colSpan = '2';
+  exportPlayerVillagesTd.append(exportPlayerVillages);
+  const exportPlayerVillagesTr = document.createElement('tr');
+  exportPlayerVillagesTr.appendChild(exportPlayerVillagesTd);
+  actionsContainer.appendChild(exportPlayerVillagesTr);
 };
 
 (async function () {
