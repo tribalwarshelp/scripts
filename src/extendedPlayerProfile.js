@@ -31,6 +31,12 @@ const PLAYER_QUERY = `
         player(server: $server, id: $id) {
             id
             name
+            bestRank
+            bestRankAt
+            mostPoints
+            mostPointsAt
+            mostVillages
+            mostVillagesAt
             servers
             joinedAt
             nameChanges {
@@ -515,6 +521,22 @@ const render = ({ player, dailyPlayerStats }) => {
       data: player.dailyGrowth.toLocaleString(),
       id: 'dg',
     },
+    {
+      title: 'Best rank:',
+      data: player.bestRank + ' ' + `(${formatDate(player.bestRankAt)})`,
+      id: 'best_rank',
+    },
+    {
+      title: 'Most points:',
+      data: player.mostPoints + ' ' + `(${formatDate(player.mostPointsAt)})`,
+      id: 'most_points',
+    },
+    {
+      title: 'Most villages:',
+      data:
+        player.mostVillages + ' ' + `(${formatDate(player.mostVillagesAt)})`,
+      id: 'most_villages',
+    },
   ].forEach((data) => {
     renderTr(data);
   });
@@ -651,7 +673,6 @@ const renderActions = () => {
     if (dataFromAPI) {
       render(dataFromAPI);
     }
-    console.log(dataFromAPI);
   } catch (error) {
     console.log('extended player profile', error);
   }

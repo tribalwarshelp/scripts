@@ -418,7 +418,7 @@ if (isNaN(PLAYER_ID) || !PLAYER_ID) {
 }
 
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
-const PLAYER_QUERY = "\n    query pageData($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {\n        player(server: $server, id: $id) {\n            id\n            name\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n        dailyPlayerStats(server: $server, filter: $filter) {\n            items {\n              rank\n              rankAtt\n              rankDef\n              rankSup\n              rankTotal\n              points\n              scoreAtt\n              scoreAtt\n              scoreDef\n              scoreSup\n              scoreTotal\n              villages\n            }\n        }\n    }\n";
+const PLAYER_QUERY = "\n    query pageData($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {\n        player(server: $server, id: $id) {\n            id\n            name\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n        dailyPlayerStats(server: $server, filter: $filter) {\n            items {\n              rank\n              rankAtt\n              rankDef\n              rankSup\n              rankTotal\n              points\n              scoreAtt\n              scoreAtt\n              scoreDef\n              scoreSup\n              scoreTotal\n              villages\n            }\n        }\n    }\n";
 const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $filter: TribeChangeFilter!) {\n      tribeChanges(server: $server, filter: $filter) {\n        total\n        items {\n          oldTribe {\n            id\n            tag\n          }\n          newTribe {\n            id\n            tag\n          }\n          createdAt\n        }\n      }\n    }\n";
 const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
 const TRIBE_CHANGES_PER_PAGE = 15;
@@ -589,6 +589,18 @@ const render = (_ref2) => {
     title: 'Daily growth:',
     data: player.dailyGrowth.toLocaleString(),
     id: 'dg'
+  }, {
+    title: 'Best rank:',
+    data: player.bestRank + ' ' + "(".concat((0, _formatDate.default)(player.bestRankAt), ")"),
+    id: 'best_rank'
+  }, {
+    title: 'Most points:',
+    data: player.mostPoints + ' ' + "(".concat((0, _formatDate.default)(player.mostPointsAt), ")"),
+    id: 'most_points'
+  }, {
+    title: 'Most villages:',
+    data: player.mostVillages + ' ' + "(".concat((0, _formatDate.default)(player.mostVillagesAt), ")"),
+    id: 'most_villages'
   }].forEach(data => {
     renderTr(data);
   });
@@ -698,8 +710,6 @@ const renderActions = () => {
     if (dataFromAPI) {
       render(dataFromAPI);
     }
-
-    console.log(dataFromAPI);
   } catch (error) {
     console.log('extended player profile', error);
   }
