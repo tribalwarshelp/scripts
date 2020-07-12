@@ -254,11 +254,11 @@ exports.default = void 0;
 var _default = (date, options) => {
   return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
     year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric'
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
   });
 };
 
@@ -542,8 +542,8 @@ const renderPlayerOtherNames = player => {
   playerOtherNames.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th>\n              Old name\n            </th>\n            <th>\n              New name\n            </th>\n            <th>\n              Date\n            </th>\n          </tr>\n        ".concat(player.nameChanges.map(nameChange => {
     return "\n            <tr>\n              <td>\n                ".concat(nameChange.oldName, "\n              </td>\n              <td>\n                ").concat(nameChange.newName, "\n              </td>\n              <td>\n                ").concat((0, _formatDate.default)(nameChange.changeDate, {
       year: 'numeric',
-      month: 'numeric',
-      day: 'numeric'
+      month: '2-digit',
+      day: '2-digit'
     }), "\n              </td>\n            </tr>\n          ");
   }).join(''), "\n      </tbody>\n      </table>\n  ");
 };

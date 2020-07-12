@@ -270,8 +270,8 @@ const renderPlayerOtherNames = (player) => {
               <td>
                 ${formatDate(nameChange.changeDate, {
                   year: 'numeric',
-                  month: 'numeric',
-                  day: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
                 })}
               </td>
             </tr>
