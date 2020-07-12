@@ -1,3 +1,5 @@
+import InADayParser from '../libs/InADayParser';
+
 export const formatTribeURL = (id) => {
   return (
     window.location.origin +
@@ -26,4 +28,34 @@ export const formatVillageURL = (id) => {
       id,
     })
   );
+};
+
+export const loadInADayData = async (type, { name, ...rest } = {}) => {
+  try {
+    const response = await fetch(
+      TribalWars.buildURL('', {
+        screen: 'ranking',
+        mode: 'in_a_day',
+        type,
+        name: name ? name : '',
+      })
+    );
+    const html = await response.text();
+    if (!html) {
+      throw new Error();
+    }
+    const res = new InADayParser(html, rest).parse();
+    if (res.length === 0) {
+      throw new Error();
+    }
+    return res[0];
+  } catch (error) {
+    return {
+      rank: 0,
+      playerID: 0,
+      score: 0,
+      tribeID: 0,
+      date: new Date(),
+    };
+  }
 };

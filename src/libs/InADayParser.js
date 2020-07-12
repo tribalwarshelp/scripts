@@ -6,12 +6,18 @@ export default class InADayParser {
     this.filters = filters;
   }
   isValidRow(row) {
+    if (!row) {
+      return false;
+    }
     if (this.filters.playerID && row.playerID !== this.filters.playerID) {
       return false;
     }
     return true;
   }
   parseRow(row) {
+    if (!row || !row instanceof HTMLTableRowElement) {
+      return undefined;
+    }
     let obj = {};
     obj.rank = parseInt(row.children[0].innerText.trim());
     obj.name = row.children[1].innerText.trim();

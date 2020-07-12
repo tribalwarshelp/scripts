@@ -1,11 +1,10 @@
 import requestCreator from './libs/requestCreator';
-import InADayParser from './libs/InADayParser';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
 import renderPopup from './utils/renderPopup';
 import { formatPlayerURL } from './utils/twstats';
-import { formatTribeURL } from './utils/tribalwars';
+import { formatTribeURL, loadInADayData } from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -105,33 +104,6 @@ const cachePlayerData = (data = {}) => {
   setItem(LOCAL_STORAGE_KEY, data);
 };
 
-const loadInADayRankAndScore = async (name, playerID, type) => {
-  try {
-    const response = await fetch(
-      TribalWars.buildURL('', {
-        screen: 'ranking',
-        mode: 'in_a_day',
-        type,
-        name,
-      })
-    );
-    const html = await response.text();
-    const res = new InADayParser(html, { playerID }).parse();
-    if (res.length === 0) {
-      throw new Error();
-    }
-    return res[0];
-  } catch (error) {
-    return {
-      rank: 0,
-      playerID: 0,
-      score: 0,
-      tribeID: 0,
-      date: new Date(),
-    };
-  }
-};
-
 const loadData = async () => {
   const data = await requestCreator({
     query: PLAYER_QUERY,
@@ -147,41 +119,34 @@ const loadData = async () => {
   });
   if (data.player) {
     const inADay = {};
-    inADay.att = await loadInADayRankAndScore(
-      data.player.name,
-      data.player.id,
-      'kill_att'
-    );
-    inADay.def = await loadInADayRankAndScore(
-      data.player.name,
-      data.player.id,
-      'kill_def'
-    );
-    inADay.sup = await loadInADayRankAndScore(
-      data.player.name,
-      data.player.id,
-      'kill_sup'
-    );
-    inADay.lootRes = await loadInADayRankAndScore(
-      data.player.name,
-      data.player.id,
-      'loot_res'
-    );
-    inADay.lootVil = await loadInADayRankAndScore(
-      data.player.name,
-      data.player.id,
-      'loot_vil'
-    );
-    inADay.scavenge = await loadInADayRankAndScore(
-      data.player.name,
-      data.player.id,
-      'scavenge'
-    );
-    inADay.conquer = await loadInADayRankAndScore(
-      data.player.name,
-      data.player.id,
-      'conquer'
-    );
+    inADay.att = await loadInADayData('kill_att', {
+      name: data.player.name,
+      playerID: data.player.id,
+    });
+    inADay.def = await loadInADayData('kill_def', {
+      name: data.player.name,
+      playerID: data.player.id,
+    });
+    inADay.sup = await loadInADayData('kill_sup', {
+      name: data.player.name,
+      playerID: data.player.id,
+    });
+    inADay.lootRes = await loadInADayData('loot_res', {
+      name: data.player.name,
+      playerID: data.player.id,
+    });
+    inADay.lootVil = await loadInADayData('loot_vil', {
+      name: data.player.name,
+      playerID: data.player.id,
+    });
+    inADay.scavenge = await loadInADayData('scavenge', {
+      name: data.player.name,
+      playerID: data.player.id,
+    });
+    inADay.conquer = await loadInADayData('conquer', {
+      name: data.player.name,
+      playerID: data.player.id,
+    });
     data.player.inADay = inADay;
   }
   cachePlayerData(data);

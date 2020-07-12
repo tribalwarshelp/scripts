@@ -169,70 +169,7 @@ exports.default = void 0;
 var _default = url => parseInt(new URLSearchParams(url).get('id'));
 
 exports.default = _default;
-},{}],"dSAr":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _getIDFromURL = _interopRequireDefault(require("../utils/getIDFromURL"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class InADayParser {
-  constructor(html) {
-    let filters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    this.dom = new DOMParser().parseFromString(html, 'text/html');
-    this.filters = filters;
-  }
-
-  isValidRow(row) {
-    if (this.filters.playerID && row.playerID !== this.filters.playerID) {
-      return false;
-    }
-
-    return true;
-  }
-
-  parseRow(row) {
-    let obj = {};
-    obj.rank = parseInt(row.children[0].innerText.trim());
-    obj.name = row.children[1].innerText.trim();
-    obj.playerID = (0, _getIDFromURL.default)(row.children[1].querySelector('a').getAttribute('href'));
-    obj.tribe = row.children[2].innerText.trim();
-    obj.tribeID = 0;
-
-    if (obj.tribe) {
-      obj.tribeID = (0, _getIDFromURL.default)(row.children[2].querySelector('a').getAttribute('href'));
-    }
-
-    obj.score = parseInt(row.children[3].innerText.trim().replace(/\./g, ''));
-    obj.date = row.children[4].innerText.trim();
-    return obj;
-  }
-
-  parse() {
-    const trs = this.dom.querySelectorAll('#in_a_day_ranking_table tbody tr');
-    const result = [];
-
-    for (let i = 1; i < trs.length; i++) {
-      const row = trs[i];
-      const parsed = this.parseRow(row);
-
-      if (this.isValidRow(parsed)) {
-        result.push(parsed);
-      }
-    }
-
-    return result;
-  }
-
-}
-
-exports.default = InADayParser;
-},{"../utils/getIDFromURL":"tQUs"}],"DMkL":[function(require,module,exports) {
+},{}],"DMkL":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -316,13 +253,92 @@ const formatPlayerURL = function formatPlayerURL() {
 };
 
 exports.formatPlayerURL = formatPlayerURL;
-},{}],"fHHP":[function(require,module,exports) {
+},{}],"dSAr":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.default = void 0;
+
+var _getIDFromURL = _interopRequireDefault(require("../utils/getIDFromURL"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class InADayParser {
+  constructor(html) {
+    let filters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    this.dom = new DOMParser().parseFromString(html, 'text/html');
+    this.filters = filters;
+  }
+
+  isValidRow(row) {
+    if (!row) {
+      return false;
+    }
+
+    if (this.filters.playerID && row.playerID !== this.filters.playerID) {
+      return false;
+    }
+
+    return true;
+  }
+
+  parseRow(row) {
+    if (!row || !row instanceof HTMLTableRowElement) {
+      return undefined;
+    }
+
+    let obj = {};
+    obj.rank = parseInt(row.children[0].innerText.trim());
+    obj.name = row.children[1].innerText.trim();
+    obj.playerID = (0, _getIDFromURL.default)(row.children[1].querySelector('a').getAttribute('href'));
+    obj.tribe = row.children[2].innerText.trim();
+    obj.tribeID = 0;
+
+    if (obj.tribe) {
+      obj.tribeID = (0, _getIDFromURL.default)(row.children[2].querySelector('a').getAttribute('href'));
+    }
+
+    obj.score = parseInt(row.children[3].innerText.trim().replace(/\./g, ''));
+    obj.date = row.children[4].innerText.trim();
+    return obj;
+  }
+
+  parse() {
+    const trs = this.dom.querySelectorAll('#in_a_day_ranking_table tbody tr');
+    const result = [];
+
+    for (let i = 1; i < trs.length; i++) {
+      const row = trs[i];
+      const parsed = this.parseRow(row);
+
+      if (this.isValidRow(parsed)) {
+        result.push(parsed);
+      }
+    }
+
+    return result;
+  }
+
+}
+
+exports.default = InADayParser;
+},{"../utils/getIDFromURL":"tQUs"}],"fHHP":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.loadInADayData = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+
+var _InADayParser = _interopRequireDefault(require("../libs/InADayParser"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 const formatTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
@@ -350,7 +366,47 @@ const formatVillageURL = id => {
 };
 
 exports.formatVillageURL = formatVillageURL;
-},{}],"KWxH":[function(require,module,exports) {
+
+const loadInADayData = async function loadInADayData(type) {
+  let _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      {
+    name
+  } = _ref,
+      rest = _objectWithoutProperties(_ref, ["name"]);
+
+  try {
+    const response = await fetch(TribalWars.buildURL('', {
+      screen: 'ranking',
+      mode: 'in_a_day',
+      type,
+      name: name ? name : ''
+    }));
+    const html = await response.text();
+
+    if (!html) {
+      throw new Error();
+    }
+
+    const res = new _InADayParser.default(html, rest).parse();
+
+    if (res.length === 0) {
+      throw new Error();
+    }
+
+    return res[0];
+  } catch (error) {
+    return {
+      rank: 0,
+      playerID: 0,
+      score: 0,
+      tribeID: 0,
+      date: new Date()
+    };
+  }
+};
+
+exports.loadInADayData = loadInADayData;
+},{"../libs/InADayParser":"dSAr"}],"KWxH":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -380,8 +436,6 @@ exports.setItem = setItem;
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
-
-var _InADayParser = _interopRequireDefault(require("./libs/InADayParser"));
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
@@ -435,35 +489,6 @@ const cachePlayerData = function cachePlayerData() {
   (0, _localStorage.setItem)(LOCAL_STORAGE_KEY, data);
 };
 
-const loadInADayRankAndScore = async (name, playerID, type) => {
-  try {
-    const response = await fetch(TribalWars.buildURL('', {
-      screen: 'ranking',
-      mode: 'in_a_day',
-      type,
-      name
-    }));
-    const html = await response.text();
-    const res = new _InADayParser.default(html, {
-      playerID
-    }).parse();
-
-    if (res.length === 0) {
-      throw new Error();
-    }
-
-    return res[0];
-  } catch (error) {
-    return {
-      rank: 0,
-      playerID: 0,
-      score: 0,
-      tribeID: 0,
-      date: new Date()
-    };
-  }
-};
-
 const loadData = async () => {
   const data = await (0, _requestCreator.default)({
     query: PLAYER_QUERY,
@@ -480,13 +505,34 @@ const loadData = async () => {
 
   if (data.player) {
     const inADay = {};
-    inADay.att = await loadInADayRankAndScore(data.player.name, data.player.id, 'kill_att');
-    inADay.def = await loadInADayRankAndScore(data.player.name, data.player.id, 'kill_def');
-    inADay.sup = await loadInADayRankAndScore(data.player.name, data.player.id, 'kill_sup');
-    inADay.lootRes = await loadInADayRankAndScore(data.player.name, data.player.id, 'loot_res');
-    inADay.lootVil = await loadInADayRankAndScore(data.player.name, data.player.id, 'loot_vil');
-    inADay.scavenge = await loadInADayRankAndScore(data.player.name, data.player.id, 'scavenge');
-    inADay.conquer = await loadInADayRankAndScore(data.player.name, data.player.id, 'conquer');
+    inADay.att = await (0, _tribalwars.loadInADayData)('kill_att', {
+      name: data.player.name,
+      playerID: data.player.id
+    });
+    inADay.def = await (0, _tribalwars.loadInADayData)('kill_def', {
+      name: data.player.name,
+      playerID: data.player.id
+    });
+    inADay.sup = await (0, _tribalwars.loadInADayData)('kill_sup', {
+      name: data.player.name,
+      playerID: data.player.id
+    });
+    inADay.lootRes = await (0, _tribalwars.loadInADayData)('loot_res', {
+      name: data.player.name,
+      playerID: data.player.id
+    });
+    inADay.lootVil = await (0, _tribalwars.loadInADayData)('loot_vil', {
+      name: data.player.name,
+      playerID: data.player.id
+    });
+    inADay.scavenge = await (0, _tribalwars.loadInADayData)('scavenge', {
+      name: data.player.name,
+      playerID: data.player.id
+    });
+    inADay.conquer = await (0, _tribalwars.loadInADayData)('conquer', {
+      name: data.player.name,
+      playerID: data.player.id
+    });
     data.player.inADay = inADay;
   }
 
@@ -731,4 +777,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./libs/InADayParser":"dSAr","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/renderPopup":"P4rL","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/requestCreator":"Ph2E","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/renderPopup":"P4rL","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
