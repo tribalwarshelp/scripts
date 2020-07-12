@@ -212,7 +212,7 @@ const renderPlayerServers = (player) => {
      <tbody>
         <tr>
           <th>
-            Player's Servers
+            Player's servers
           </th>
         </tr>
         <tr>
@@ -304,7 +304,7 @@ const renderTodaysStats = (stats) => {
           </tr>
             <tr>
               <td>
-                Points
+                Points:
               </td>
               <td style="${
                 stats.points > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -314,7 +314,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank
+                Rank:
               </td>
               <td style="${
                 stats.rank > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -324,7 +324,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Villages
+                Villages:
               </td>
               <td style="${
                 stats.villages > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -334,7 +334,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                ODA
+                ODA:
               </td>
               <td style="${
                 stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -344,7 +344,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank (ODA)
+                Rank ODA:
               </td>
               <td style="${
                 stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -354,7 +354,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                ODD
+                ODD:
               </td>
               <td style="${
                 stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -364,7 +364,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank (ODD)
+                Rank ODD:
               </td>
               <td style="${
                 stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -374,7 +374,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                ODS
+                ODS:
               </td>
               <td style="${
                 stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -384,7 +384,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank (ODS)
+                Rank ODS:
               </td>
               <td style="${
                 stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -394,7 +394,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                OD
+                OD:
               </td>
               <td style="${
                 stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -404,7 +404,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank (OD)
+                Rank OD:
               </td>
               <td style="${
                 stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle
