@@ -117,7 +117,201 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"Ph2E":[function(require,module,exports) {
+})({"VYL5":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toInteger;
+
+function toInteger(dirtyNumber) {
+  if (dirtyNumber === null || dirtyNumber === true || dirtyNumber === false) {
+    return NaN;
+  }
+
+  var number = Number(dirtyNumber);
+
+  if (isNaN(number)) {
+    return number;
+  }
+
+  return number < 0 ? Math.ceil(number) : Math.floor(number);
+}
+},{}],"kK6Q":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = requiredArgs;
+
+function requiredArgs(required, args) {
+  if (args.length < required) {
+    throw new TypeError(required + ' argument' + (required > 1 ? 's' : '') + ' required, but only ' + args.length + ' present');
+  }
+}
+},{}],"KYJg":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toDate;
+
+var _index = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name toDate
+ * @category Common Helpers
+ * @summary Convert the given argument to an instance of Date.
+ *
+ * @description
+ * Convert the given argument to an instance of Date.
+ *
+ * If the argument is an instance of Date, the function returns its clone.
+ *
+ * If the argument is a number, it is treated as a timestamp.
+ *
+ * If the argument is none of the above, the function returns Invalid Date.
+ *
+ * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
+ *
+ * @param {Date|Number} argument - the value to convert
+ * @returns {Date} the parsed date in the local time zone
+ * @throws {TypeError} 1 argument required
+ *
+ * @example
+ * // Clone the date:
+ * const result = toDate(new Date(2014, 1, 11, 11, 30, 30))
+ * //=> Tue Feb 11 2014 11:30:30
+ *
+ * @example
+ * // Convert the timestamp to date:
+ * const result = toDate(1392098430000)
+ * //=> Tue Feb 11 2014 11:30:30
+ */
+function toDate(argument) {
+  (0, _index.default)(1, arguments);
+  var argStr = Object.prototype.toString.call(argument); // Clone the date
+
+  if (argument instanceof Date || typeof argument === 'object' && argStr === '[object Date]') {
+    // Prevent the date to lose the milliseconds when passed to new Date() in IE10
+    return new Date(argument.getTime());
+  } else if (typeof argument === 'number' || argStr === '[object Number]') {
+    return new Date(argument);
+  } else {
+    if ((typeof argument === 'string' || argStr === '[object String]') && typeof console !== 'undefined') {
+      // eslint-disable-next-line no-console
+      console.warn("Starting with v2.0.0-beta.1 date-fns doesn't accept strings as arguments. Please use `parseISO` to parse strings. See: https://git.io/fjule"); // eslint-disable-next-line no-console
+
+      console.warn(new Error().stack);
+    }
+
+    return new Date(NaN);
+  }
+}
+},{"../_lib/requiredArgs/index.js":"kK6Q"}],"lQIY":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = addDays;
+
+var _index = _interopRequireDefault(require("../_lib/toInteger/index.js"));
+
+var _index2 = _interopRequireDefault(require("../toDate/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name addDays
+ * @category Day Helpers
+ * @summary Add the specified number of days to the given date.
+ *
+ * @description
+ * Add the specified number of days to the given date.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} date - the date to be changed
+ * @param {Number} amount - the amount of days to be added. Positive decimals will be rounded using `Math.floor`, decimals less than zero will be rounded using `Math.ceil`.
+ * @returns {Date} the new date with the days added
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // Add 10 days to 1 September 2014:
+ * var result = addDays(new Date(2014, 8, 1), 10)
+ * //=> Thu Sep 11 2014 00:00:00
+ */
+function addDays(dirtyDate, dirtyAmount) {
+  (0, _index3.default)(2, arguments);
+  var date = (0, _index2.default)(dirtyDate);
+  var amount = (0, _index.default)(dirtyAmount);
+
+  if (isNaN(amount)) {
+    return new Date(NaN);
+  }
+
+  if (!amount) {
+    // If 0 days, no-op to avoid changing times in the hour before end of DST
+    return date;
+  }
+
+  date.setDate(date.getDate() + amount);
+  return date;
+}
+},{"../_lib/toInteger/index.js":"VYL5","../toDate/index.js":"KYJg","../_lib/requiredArgs/index.js":"kK6Q"}],"mRRL":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = subDays;
+
+var _index = _interopRequireDefault(require("../_lib/toInteger/index.js"));
+
+var _index2 = _interopRequireDefault(require("../addDays/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name subDays
+ * @category Day Helpers
+ * @summary Subtract the specified number of days from the given date.
+ *
+ * @description
+ * Subtract the specified number of days from the given date.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} date - the date to be changed
+ * @param {Number} amount - the amount of days to be subtracted. Positive decimals will be rounded using `Math.floor`, decimals less than zero will be rounded using `Math.ceil`.
+ * @returns {Date} the new date with the days subtracted
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // Subtract 10 days from 1 September 2014:
+ * var result = subDays(new Date(2014, 8, 1), 10)
+ * //=> Fri Aug 22 2014 00:00:00
+ */
+function subDays(dirtyDate, dirtyAmount) {
+  (0, _index3.default)(2, arguments);
+  var amount = (0, _index.default)(dirtyAmount);
+  return (0, _index2.default)(dirtyDate, -amount);
+}
+},{"../_lib/toInteger/index.js":"VYL5","../addDays/index.js":"lQIY","../_lib/requiredArgs/index.js":"kK6Q"}],"Ph2E":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -158,6 +352,79 @@ var _default = function _default() {
 };
 
 exports.default = _default;
+},{}],"m41w":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.generatePaginationItems = exports.calcNumberOfPages = exports.getPage = exports.setPage = void 0;
+const ATTRIBUTE = 'data-page';
+
+const setPage = function setPage(el) {
+  let page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+  if (!el instanceof HTMLElement) {
+    throw new Error('Expected HTMLElement as the first argument');
+  }
+
+  page = parseInt(page);
+
+  if (typeof page !== 'number' || isNaN(page)) {
+    throw new Error('Expected number or string as the second argument');
+  }
+
+  el.setAttribute(ATTRIBUTE, page + '');
+};
+
+exports.setPage = setPage;
+
+const getPage = el => {
+  if (!el instanceof HTMLElement) {
+    return 0;
+  }
+
+  return parseInt(el.getAttribute(ATTRIBUTE));
+};
+
+exports.getPage = getPage;
+
+const calcNumberOfPages = (total, limit) => {
+  if (typeof total !== 'number') {
+    throw new Error('Expected number as the first argument');
+  }
+
+  if (typeof limit !== 'number') {
+    throw new Error('Expected number as the second argument');
+  }
+
+  return total > 0 ? Math.ceil(total / limit) : 1;
+};
+
+exports.calcNumberOfPages = calcNumberOfPages;
+
+const generatePaginationItems = function generatePaginationItems() {
+  let {
+    total,
+    limit,
+    marginRight = 3,
+    currentPage = 0
+  } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  const numberOfPages = calcNumberOfPages(total, limit);
+  const paginationItems = [];
+
+  for (let i = 1; i <= numberOfPages; i++) {
+    if (i === currentPage) {
+      paginationItems.push("<strong style=\"margin-right: ".concat(marginRight, "px\">>").concat(i, "<</strong>"));
+    } else {
+      paginationItems.push("<a style=\"margin-right: ".concat(marginRight, "px\" href=\"#\" ").concat(ATTRIBUTE, "=\"").concat(i, "\">").concat(i, "</a>"));
+    }
+  }
+
+  return paginationItems;
+};
+
+exports.generatePaginationItems = generatePaginationItems;
 },{}],"tQUs":[function(require,module,exports) {
 "use strict";
 
@@ -435,7 +702,11 @@ exports.setItem = setItem;
 },{}],"yRop":[function(require,module,exports) {
 "use strict";
 
+var _subDays = _interopRequireDefault(require("date-fns/subDays"));
+
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
+
+var _pagination = require("./libs/pagination");
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
@@ -452,6 +723,12 @@ var _tribalwars = require("./utils/tribalwars");
 var _localStorage = require("./utils/localStorage");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 // ==UserScript==
 // @name         Extended Player Profile
@@ -479,6 +756,9 @@ const PLAYER_QUERY = "\n    query pageData($server: String!, $id: Int!, $filter:
 const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $filter: TribeChangeFilter!) {\n      tribeChanges(server: $server, filter: $filter) {\n        total\n        items {\n          oldTribe {\n            id\n            tag\n          }\n          newTribe {\n            id\n            tag\n          }\n          createdAt\n        }\n      }\n    }\n";
 const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
 const TRIBE_CHANGES_PER_PAGE = 15;
+const PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY = "\nquery playerHistoryAndPlayerDailyStats($server: String!,\n     $playerHistoryFilter: PlayerHistoryFilter!,\n     $dailyPlayerStatsFilter: DailyPlayerStatsFilter!) {\n  playerHistory(server: $server, filter: $playerHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreSup\n      rankSup\n      scoreTotal\n      rankTotal\n      tribe {\n        id\n        tag\n      }\n      createDate\n    }\n  }\n  dailyPlayerStats(server: $server, filter: $dailyPlayerStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreSup\n        scoreTotal\n        villages\n        createDate\n      }\n    }\n}\n";
+const PLAYER_HISTORY_PAGINATION_CONTAINER_ID = 'playerHistoryPagination';
+const PLAYER_HISTORY_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector('#player_info > tbody');
 const actionsContainer = PLAYER_ID === CURRENT_PLAYER_ID ? profileInfoTBody : document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
 const otherElementsContainer = document.querySelector(PLAYER_ID === CURRENT_PLAYER_ID ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)' : '#content_value > table > tbody > tr > td:nth-child(2)');
@@ -609,7 +889,7 @@ const renderTodaysStats = stats => {
 
   const statIncreaseStyle = 'color: #000; background-color: #0f0';
   const statDecreaseStyle = 'color: #000; background-color: #f00';
-  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stats\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(stats.points > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(stats.rank > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(stats.villages > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank ODA:\n              </td>\n              <td style=\"").concat(stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank ODD:\n              </td>\n              <td style=\"").concat(stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"").concat(stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank ODS:\n              </td>\n              <td style=\"").concat(stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank OD:\n              </td>\n              <td style=\"").concat(stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
+  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stats\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(stats.points > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(stats.rank > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(stats.villages > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"").concat(stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
 };
 
 const renderInADayRanks = player => {
@@ -675,17 +955,11 @@ const addTribeChangesListeners = () => {
 };
 
 const renderTribeChanges = (e, currentPage, tribeChanges) => {
-  const numberOfPages = tribeChanges.total > 0 ? Math.ceil(tribeChanges.total / TRIBE_CHANGES_PER_PAGE) : 1;
-  const paginationItems = [];
-
-  for (let i = 1; i <= numberOfPages; i++) {
-    if (i === currentPage) {
-      paginationItems.push("<strong style=\"margin-right: 3px\">>".concat(i, "<</strong>"));
-    } else {
-      paginationItems.push("<a style=\"margin-right: 3px\" href=\"#\" data-page=\"".concat(i, "\">").concat(i, "</a>"));
-    }
-  }
-
+  const paginationItems = (0, _pagination.generatePaginationItems)({
+    total: tribeChanges.total,
+    limit: TRIBE_CHANGES_PER_PAGE,
+    currentPage
+  });
   const html = "\n    <div id=\"".concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            New tribe\n          </th>\n          <th>\n            Old tribe\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
 
@@ -714,7 +988,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
 
 const handleShowTribeChangesButtonClick = async e => {
   e.preventDefault();
-  const page = parseInt(e.target.getAttribute('data-page'));
+  const page = (0, _pagination.getPage)(e.target);
 
   if (!isNaN(page)) {
     const data = await (0, _requestCreator.default)({
@@ -733,33 +1007,115 @@ const handleShowTribeChangesButtonClick = async e => {
   }
 };
 
+const addPlayerHistoryListeners = () => {
+  document.querySelectorAll('#' + PLAYER_HISTORY_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+    el.addEventListener('click', handleShowPlayerHistoryClick);
+  });
+};
+
+const addMathSymbol = v => {
+  return v > 0 ? '+' + v : v;
+};
+
+const renderPlayerHistory = (e, currentPage, playerHistory, playerDailyStats) => {
+  const paginationItems = (0, _pagination.generatePaginationItems)({
+    total: playerHistory.total,
+    limit: PLAYER_HISTORY_PER_PAGE,
+    currentPage
+  });
+  const html = "\n    <div id=\"".concat(PLAYER_HISTORY_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Tribe\n          </th>\n          <th>\n            Rank\n          </th>\n          <th>\n            Points\n          </th>\n          <th>\n            Villages\n          </th>\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          <th>\n            ODS\n          </th>\n        </tr>\n        ").concat(playerHistory.items.map(playerHistory => {
+    const subtracted = (0, _subDays.default)(new Date(playerHistory.createDate), 1).toISOString().split('.')[0] + 'Z';
+    const stats = playerDailyStats.items.find(stats => {
+      return stats.createDate === subtracted;
+    });
+    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(playerHistory.createDate, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }), "</td>");
+
+    if (playerHistory.tribe) {
+      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(playerHistory.tribe.id), "\">").concat(playerHistory.tribe.tag, "</a></td>");
+    } else {
+      rowHTML += '<td>-</td>';
+    }
+
+    rowHTML += "\n              <td>\n                ".concat(playerHistory.rank, ".\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.points) : '', "\">\n                ").concat(playerHistory.points.toLocaleString(), "\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.villages) : '', "\">\n                ").concat(playerHistory.totalVillages, "\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreTotal) : '', "\">\n                ").concat(playerHistory.scoreTotal.toLocaleString(), " (").concat(playerHistory.rankTotal, ")\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreAtt) : '', "\">\n                ").concat(playerHistory.scoreAtt.toLocaleString(), " (").concat(playerHistory.rankAtt, ")\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreDef) : '', "\">\n                ").concat(playerHistory.scoreDef.toLocaleString(), " (").concat(playerHistory.rankDef, ")\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreSup) : '', "\">\n                ").concat(playerHistory.scoreSup.toLocaleString(), " (").concat(playerHistory.rankSup, ")\n              </td>\n            ") + '</tr>';
+    return rowHTML;
+  }).join(''), "\n      </tbody>\n    </table>\n  ");
+  (0, _renderPopup.default)({
+    e,
+    title: "Player history",
+    id: 'playerHistory',
+    html
+  });
+  addPlayerHistoryListeners();
+};
+
+const handleShowPlayerHistoryClick = async e => {
+  e.preventDefault();
+  const page = (0, _pagination.getPage)(e.target);
+
+  if (!isNaN(page)) {
+    try {
+      const filter = {
+        playerID: [PLAYER_ID],
+        offset: PLAYER_HISTORY_PER_PAGE * (page - 1),
+        limit: PLAYER_HISTORY_PER_PAGE,
+        sort: 'createDate DESC'
+      };
+      const {
+        playerHistory,
+        dailyPlayerStats
+      } = await (0, _requestCreator.default)({
+        query: PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY,
+        variables: {
+          server: SERVER,
+          playerHistoryFilter: filter,
+          dailyPlayerStatsFilter: _objectSpread(_objectSpread({}, filter), {}, {
+            offset: filter.offset + 1
+          })
+        }
+      });
+      renderPlayerHistory(e, page, playerHistory, dailyPlayerStats);
+    } catch (error) {
+      console.log('cannot load player history', error);
+    }
+  }
+};
+
 const handleExportPlayerVillagesButtonClick = e => {
   e.preventDefault();
   Dialog.show('Exported villages', "<textarea cols=30 rows=8 readonly>".concat(document.querySelector('#villages_list').innerHTML.match(/(\d+)\|(\d+)/g).join(' '), "</textarea>"));
 };
 
+const wrapAction = action => {
+  const actionWrapperTd = document.createElement('td');
+  actionWrapperTd.colSpan = '2';
+  actionWrapperTd.append(action);
+  const actionWrapperTr = document.createElement('tr');
+  actionWrapperTr.appendChild(actionWrapperTd);
+  return actionWrapperTr;
+};
+
 const renderActions = () => {
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
-  showTribeChanges.setAttribute('data-page', '1');
+  (0, _pagination.setPage)(showTribeChanges, '1');
   showTribeChanges.innerHTML = 'Show tribe changes';
   showTribeChanges.addEventListener('click', handleShowTribeChangesButtonClick);
-  const showTribeChangesTd = document.createElement('td');
-  showTribeChangesTd.colSpan = '2';
-  showTribeChangesTd.append(showTribeChanges);
-  const showTribeChangesTr = document.createElement('tr');
-  showTribeChangesTr.appendChild(showTribeChangesTd);
-  actionsContainer.appendChild(showTribeChangesTr);
+  actionsContainer.appendChild(wrapAction(showTribeChanges));
+  const showPlayerHistory = document.createElement('a');
+  showPlayerHistory.href = '#';
+  (0, _pagination.setPage)(showPlayerHistory, '1');
+  showPlayerHistory.innerHTML = 'Show player history';
+  showPlayerHistory.addEventListener('click', handleShowPlayerHistoryClick);
+  actionsContainer.appendChild(wrapAction(showPlayerHistory));
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';
   exportPlayerVillages.innerHTML = "Export player's villages";
   exportPlayerVillages.addEventListener('click', handleExportPlayerVillagesButtonClick);
-  const exportPlayerVillagesTd = document.createElement('td');
-  exportPlayerVillagesTd.colSpan = '2';
-  exportPlayerVillagesTd.append(exportPlayerVillages);
-  const exportPlayerVillagesTr = document.createElement('tr');
-  exportPlayerVillagesTr.appendChild(exportPlayerVillagesTd);
-  actionsContainer.appendChild(exportPlayerVillagesTr);
+  actionsContainer.appendChild(wrapAction(exportPlayerVillages));
 };
 
 (async function () {
@@ -780,4 +1136,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/renderPopup":"P4rL","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"date-fns/subDays":"mRRL","./libs/requestCreator":"Ph2E","./libs/pagination":"m41w","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/renderPopup":"P4rL","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)

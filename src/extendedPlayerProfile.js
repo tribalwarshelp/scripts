@@ -1,4 +1,6 @@
+import subDays from 'date-fns/subDays';
 import requestCreator from './libs/requestCreator';
+import { generatePaginationItems, setPage, getPage } from './utils/pagination';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
@@ -12,7 +14,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      0.5
+// @version      0.6
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*.plemiona.pl/game.php*&screen=info_player*
@@ -86,6 +88,48 @@ const TRIBE_CHANGES_QUERY = `
 `;
 const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
 const TRIBE_CHANGES_PER_PAGE = 15;
+const PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY = `
+query playerHistoryAndPlayerDailyStats($server: String!,
+     $playerHistoryFilter: PlayerHistoryFilter!,
+     $dailyPlayerStatsFilter: DailyPlayerStatsFilter!) {
+  playerHistory(server: $server, filter: $playerHistoryFilter) {
+    total
+    items {
+      totalVillages
+      points
+      rank
+      scoreAtt
+      rankAtt
+      scoreDef
+      rankDef
+      scoreSup
+      rankSup
+      scoreTotal
+      rankTotal
+      tribe {
+        id
+        tag
+      }
+      createDate
+    }
+  }
+  dailyPlayerStats(server: $server, filter: $dailyPlayerStatsFilter) {
+    items {
+        points
+        scoreAtt
+        scoreAtt
+        scoreDef
+        scoreSup
+        scoreTotal
+        villages
+        createDate
+      }
+    }
+}
+`;
+const PLAYER_HISTORY_PAGINATION_CONTAINER_ID = 'playerHistoryPagination';
+const PLAYER_HISTORY_PER_PAGE = 15;
+
 const profileInfoTBody = document.querySelector('#player_info > tbody');
 const actionsContainer =
   PLAYER_ID === CURRENT_PLAYER_ID
@@ -312,7 +356,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank ODA:
+                ODA Rank:
               </td>
               <td style="${
                 stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -332,7 +376,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank ODD:
+                ODD Rank:
               </td>
               <td style="${
                 stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -352,7 +396,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank ODS:
+                ODS Rank:
               </td>
               <td style="${
                 stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -372,7 +416,7 @@ const renderTodaysStats = (stats) => {
             </tr>
             <tr>
               <td>
-                Rank OD:
+                OD Rank:
               </td>
               <td style="${
                 stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle
@@ -530,20 +574,11 @@ const addTribeChangesListeners = () => {
 };
 
 const renderTribeChanges = (e, currentPage, tribeChanges) => {
-  const numberOfPages =
-    tribeChanges.total > 0
-      ? Math.ceil(tribeChanges.total / TRIBE_CHANGES_PER_PAGE)
-      : 1;
-  const paginationItems = [];
-  for (let i = 1; i <= numberOfPages; i++) {
-    if (i === currentPage) {
-      paginationItems.push(`<strong style="margin-right: 3px">>${i}<</strong>`);
-    } else {
-      paginationItems.push(
-        `<a style="margin-right: 3px" href="#" data-page="${i}">${i}</a>`
-      );
-    }
-  }
+  const paginationItems = generatePaginationItems({
+    total: tribeChanges.total,
+    limit: TRIBE_CHANGES_PER_PAGE,
+    currentPage,
+  });
   const html = `
     <div id="${TRIBE_CHANGES_PAGINATION_CONTAINER_ID}">
       ${paginationItems.join('')}
@@ -598,7 +633,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
 
 const handleShowTribeChangesButtonClick = async (e) => {
   e.preventDefault();
-  const page = parseInt(e.target.getAttribute('data-page'));
+  const page = getPage(e.target);
   if (!isNaN(page)) {
     const data = await requestCreator({
       query: TRIBE_CHANGES_QUERY,
@@ -616,6 +651,167 @@ const handleShowTribeChangesButtonClick = async (e) => {
   }
 };
 
+const addPlayerHistoryListeners = () => {
+  document
+    .querySelectorAll('#' + PLAYER_HISTORY_PAGINATION_CONTAINER_ID + ' a')
+    .forEach((el) => {
+      el.addEventListener('click', handleShowPlayerHistoryClick);
+    });
+};
+
+const addMathSymbol = (v) => {
+  return v > 0 ? '+' + v : v;
+};
+
+const renderPlayerHistory = (
+  e,
+  currentPage,
+  playerHistory,
+  playerDailyStats
+) => {
+  const paginationItems = generatePaginationItems({
+    total: playerHistory.total,
+    limit: PLAYER_HISTORY_PER_PAGE,
+    currentPage,
+  });
+  const html = `
+    <div id="${PLAYER_HISTORY_PAGINATION_CONTAINER_ID}">
+      ${paginationItems.join('')}
+    </div>
+    <table class="vis">
+      <tbody>
+        <tr>
+          <th>
+            Date
+          </th>
+          <th>
+            Tribe
+          </th>
+          <th>
+            Rank
+          </th>
+          <th>
+            Points
+          </th>
+          <th>
+            Villages
+          </th>
+          <th>
+            OD
+          </th>
+          <th>
+            ODA
+          </th>
+          <th>
+            ODD
+          </th>
+          <th>
+            ODS
+          </th>
+        </tr>
+        ${playerHistory.items
+          .map((playerHistory) => {
+            const subtracted =
+              subDays(new Date(playerHistory.createDate), 1)
+                .toISOString()
+                .split('.')[0] + 'Z';
+            const stats = playerDailyStats.items.find((stats) => {
+              return stats.createDate === subtracted;
+            });
+
+            let rowHTML =
+              '<tr>' +
+              `<td>${formatDate(playerHistory.createDate, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })}</td>`;
+            if (playerHistory.tribe) {
+              rowHTML += `<td><a href="${formatTribeURL(
+                playerHistory.tribe.id
+              )}">${playerHistory.tribe.tag}</a></td>`;
+            } else {
+              rowHTML += '<td>-</td>';
+            }
+            rowHTML +=
+              `
+              <td>
+                ${playerHistory.rank}.
+              </td>
+              <td title="${stats ? addMathSymbol(stats.points) : ''}">
+                ${playerHistory.points.toLocaleString()}
+              </td>
+              <td title="${stats ? addMathSymbol(stats.villages) : ''}">
+                ${playerHistory.totalVillages}
+              </td>
+              <td title="${stats ? addMathSymbol(stats.scoreTotal) : ''}">
+                ${playerHistory.scoreTotal.toLocaleString()} (${
+                playerHistory.rankTotal
+              })
+              </td>
+              <td title="${stats ? addMathSymbol(stats.scoreAtt) : ''}">
+                ${playerHistory.scoreAtt.toLocaleString()} (${
+                playerHistory.rankAtt
+              })
+              </td>
+              <td title="${stats ? addMathSymbol(stats.scoreDef) : ''}">
+                ${playerHistory.scoreDef.toLocaleString()} (${
+                playerHistory.rankDef
+              })
+              </td>
+              <td title="${stats ? addMathSymbol(stats.scoreSup) : ''}">
+                ${playerHistory.scoreSup.toLocaleString()} (${
+                playerHistory.rankSup
+              })
+              </td>
+            ` + '</tr>';
+
+            return rowHTML;
+          })
+          .join('')}
+      </tbody>
+    </table>
+  `;
+
+  renderPopup({
+    e,
+    title: `Player history`,
+    id: 'playerHistory',
+    html,
+  });
+
+  addPlayerHistoryListeners();
+};
+
+const handleShowPlayerHistoryClick = async (e) => {
+  e.preventDefault();
+  const page = getPage(e.target);
+  if (!isNaN(page)) {
+    try {
+      const filter = {
+        playerID: [PLAYER_ID],
+        offset: PLAYER_HISTORY_PER_PAGE * (page - 1),
+        limit: PLAYER_HISTORY_PER_PAGE,
+        sort: 'createDate DESC',
+      };
+      const { playerHistory, dailyPlayerStats } = await requestCreator({
+        query: PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY,
+        variables: {
+          server: SERVER,
+          playerHistoryFilter: filter,
+          dailyPlayerStatsFilter: {
+            ...filter,
+            offset: filter.offset + 1,
+          },
+        },
+      });
+      renderPlayerHistory(e, page, playerHistory, dailyPlayerStats);
+    } catch (error) {
+      console.log('cannot load player history', error);
+    }
+  }
+};
+
 const handleExportPlayerVillagesButtonClick = (e) => {
   e.preventDefault();
 
@@ -628,18 +824,29 @@ const handleExportPlayerVillagesButtonClick = (e) => {
   );
 };
 
+const wrapAction = (action) => {
+  const actionWrapperTd = document.createElement('td');
+  actionWrapperTd.colSpan = '2';
+  actionWrapperTd.append(action);
+  const actionWrapperTr = document.createElement('tr');
+  actionWrapperTr.appendChild(actionWrapperTd);
+  return actionWrapperTr;
+};
+
 const renderActions = () => {
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
-  showTribeChanges.setAttribute('data-page', '1');
+  setPage(showTribeChanges, '1');
   showTribeChanges.innerHTML = 'Show tribe changes';
   showTribeChanges.addEventListener('click', handleShowTribeChangesButtonClick);
-  const showTribeChangesTd = document.createElement('td');
-  showTribeChangesTd.colSpan = '2';
-  showTribeChangesTd.append(showTribeChanges);
-  const showTribeChangesTr = document.createElement('tr');
-  showTribeChangesTr.appendChild(showTribeChangesTd);
-  actionsContainer.appendChild(showTribeChangesTr);
+  actionsContainer.appendChild(wrapAction(showTribeChanges));
+
+  const showPlayerHistory = document.createElement('a');
+  showPlayerHistory.href = '#';
+  setPage(showPlayerHistory, '1');
+  showPlayerHistory.innerHTML = 'Show player history';
+  showPlayerHistory.addEventListener('click', handleShowPlayerHistoryClick);
+  actionsContainer.appendChild(wrapAction(showPlayerHistory));
 
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';
@@ -648,21 +855,18 @@ const renderActions = () => {
     'click',
     handleExportPlayerVillagesButtonClick
   );
-  const exportPlayerVillagesTd = document.createElement('td');
-  exportPlayerVillagesTd.colSpan = '2';
-  exportPlayerVillagesTd.append(exportPlayerVillages);
-  const exportPlayerVillagesTr = document.createElement('tr');
-  exportPlayerVillagesTr.appendChild(exportPlayerVillagesTd);
-  actionsContainer.appendChild(exportPlayerVillagesTr);
+  actionsContainer.appendChild(wrapAction(exportPlayerVillages));
 };
 
 (async function () {
   try {
     renderActions();
+
     const dataFromCache = loadDataFromCache();
     if (dataFromCache && dataFromCache.player) {
       render(dataFromCache);
     }
+
     const dataFromAPI = await loadData();
     if (dataFromAPI) {
       render(dataFromAPI);
