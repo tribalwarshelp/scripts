@@ -14,11 +14,10 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      0.5
+// @version      0.51
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
-// @match        *://*.plemiona.pl/game.php*
-// @match        *://*.tribalwars.net/game.php*
+// @match        *://*/game.php*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==

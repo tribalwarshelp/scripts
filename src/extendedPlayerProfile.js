@@ -14,11 +14,10 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      0.6
+// @version      0.61
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
-// @match        *://*.plemiona.pl/game.php*&screen=info_player*
-// @match        *://*.tribalwars.net/game.php*&screen=info_player*
+// @match        *://*/game.php*&screen=info_player*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -666,7 +665,7 @@ const renderPlayerHistory = (
     <div id="${PLAYER_HISTORY_PAGINATION_CONTAINER_ID}">
       ${paginationItems.join('')}
     </div>
-    <table class="vis">
+    <table class="vis" style="border-collapse: separate; border-spacing: 2px;">
       <tbody>
         <tr>
           <th>
@@ -674,9 +673,6 @@ const renderPlayerHistory = (
           </th>
           <th>
             Tribe
-          </th>
-          <th>
-            Rank
           </th>
           <th>
             Points
@@ -723,34 +719,33 @@ const renderPlayerHistory = (
             }
             rowHTML +=
               `
-              <td>
-                ${playerHistory.rank}.
-              </td>
               <td title="${stats ? addMathSymbol(stats.points) : ''}">
-                ${playerHistory.points.toLocaleString()}
+                ${playerHistory.points.toLocaleString()} (<strong>${
+                playerHistory.rank
+              }</strong>)
               </td>
               <td title="${stats ? addMathSymbol(stats.villages) : ''}">
                 ${playerHistory.totalVillages}
               </td>
               <td title="${stats ? addMathSymbol(stats.scoreTotal) : ''}">
-                ${playerHistory.scoreTotal.toLocaleString()} (${
+                ${playerHistory.scoreTotal.toLocaleString()} (<strong>${
                 playerHistory.rankTotal
-              })
+              }</strong>)
               </td>
               <td title="${stats ? addMathSymbol(stats.scoreAtt) : ''}">
-                ${playerHistory.scoreAtt.toLocaleString()} (${
+                ${playerHistory.scoreAtt.toLocaleString()} (<strong>${
                 playerHistory.rankAtt
-              })
+              }</strong>)
               </td>
               <td title="${stats ? addMathSymbol(stats.scoreDef) : ''}">
-                ${playerHistory.scoreDef.toLocaleString()} (${
+                ${playerHistory.scoreDef.toLocaleString()} (<strong>${
                 playerHistory.rankDef
-              })
+              }</strong>)
               </td>
               <td title="${stats ? addMathSymbol(stats.scoreSup) : ''}">
-                ${playerHistory.scoreSup.toLocaleString()} (${
+                ${playerHistory.scoreSup.toLocaleString()} (<strong>${
                 playerHistory.rankSup
-              })
+              }</strong>)
               </td>
             ` + '</tr>';
 

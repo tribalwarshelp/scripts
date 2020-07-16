@@ -735,11 +735,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      0.6
+// @version      0.61
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
-// @match        *://*.plemiona.pl/game.php*&screen=info_player*
-// @match        *://*.tribalwars.net/game.php*&screen=info_player*
+// @match        *://*/game.php*&screen=info_player*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -1028,7 +1027,7 @@ const renderPlayerHistory = (e, currentPage, playerHistory, playerDailyStats) =>
     limit: PLAYER_HISTORY_PER_PAGE,
     currentPage
   });
-  const html = "\n    <div id=\"".concat(PLAYER_HISTORY_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Tribe\n          </th>\n          <th>\n            Rank\n          </th>\n          <th>\n            Points\n          </th>\n          <th>\n            Villages\n          </th>\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          <th>\n            ODS\n          </th>\n        </tr>\n        ").concat(playerHistory.items.map(playerHistory => {
+  const html = "\n    <div id=\"".concat(PLAYER_HISTORY_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Tribe\n          </th>\n          <th>\n            Points\n          </th>\n          <th>\n            Villages\n          </th>\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          <th>\n            ODS\n          </th>\n        </tr>\n        ").concat(playerHistory.items.map(playerHistory => {
     const subtracted = (0, _subDays.default)(new Date(playerHistory.createDate), 1).toISOString().split('.')[0] + 'Z';
     const stats = playerDailyStats.items.find(stats => {
       return stats.createDate === subtracted;
@@ -1045,7 +1044,7 @@ const renderPlayerHistory = (e, currentPage, playerHistory, playerDailyStats) =>
       rowHTML += '<td>-</td>';
     }
 
-    rowHTML += "\n              <td>\n                ".concat(playerHistory.rank, ".\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.points) : '', "\">\n                ").concat(playerHistory.points.toLocaleString(), "\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.villages) : '', "\">\n                ").concat(playerHistory.totalVillages, "\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreTotal) : '', "\">\n                ").concat(playerHistory.scoreTotal.toLocaleString(), " (").concat(playerHistory.rankTotal, ")\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreAtt) : '', "\">\n                ").concat(playerHistory.scoreAtt.toLocaleString(), " (").concat(playerHistory.rankAtt, ")\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreDef) : '', "\">\n                ").concat(playerHistory.scoreDef.toLocaleString(), " (").concat(playerHistory.rankDef, ")\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreSup) : '', "\">\n                ").concat(playerHistory.scoreSup.toLocaleString(), " (").concat(playerHistory.rankSup, ")\n              </td>\n            ") + '</tr>';
+    rowHTML += "\n              <td title=\"".concat(stats ? addMathSymbol(stats.points) : '', "\">\n                ").concat(playerHistory.points.toLocaleString(), " (<strong>").concat(playerHistory.rank, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.villages) : '', "\">\n                ").concat(playerHistory.totalVillages, "\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreTotal) : '', "\">\n                ").concat(playerHistory.scoreTotal.toLocaleString(), " (<strong>").concat(playerHistory.rankTotal, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreAtt) : '', "\">\n                ").concat(playerHistory.scoreAtt.toLocaleString(), " (<strong>").concat(playerHistory.rankAtt, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreDef) : '', "\">\n                ").concat(playerHistory.scoreDef.toLocaleString(), " (<strong>").concat(playerHistory.rankDef, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreSup) : '', "\">\n                ").concat(playerHistory.scoreSup.toLocaleString(), " (<strong>").concat(playerHistory.rankSup, "</strong>)\n              </td>\n            ") + '</tr>';
     return rowHTML;
   }).join(''), "\n      </tbody>\n    </table>\n  ");
   (0, _renderPopup.default)({
