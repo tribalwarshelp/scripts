@@ -295,6 +295,18 @@ const renderPlayerOtherNames = (player) => {
   `;
 };
 
+const getTodaysStatsTdStyle = (value) => {
+  const statIncreaseStyle = 'color: #000; background-color: #0f0';
+  const statDecreaseStyle = 'color: #000; background-color: #f00';
+  const defaultStyle = 'color: #000; background-color: #808080';
+
+  return value > 0
+    ? statIncreaseStyle
+    : value < 0
+    ? statDecreaseStyle
+    : defaultStyle;
+};
+
 const renderTodaysStats = (stats) => {
   let todaysStats = document.querySelector('#todaysStats');
   if (!todaysStats) {
@@ -303,8 +315,6 @@ const renderTodaysStats = (stats) => {
     todaysStats.width = '100%';
     otherElementsContainer.prepend(todaysStats);
   }
-  const statIncreaseStyle = 'color: #000; background-color: #0f0';
-  const statDecreaseStyle = 'color: #000; background-color: #f00';
 
   todaysStats.innerHTML = `
       <table width="100%" class="vis">
@@ -318,9 +328,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 Points:
               </td>
-              <td style="${
-                stats.points > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.points)}">
                 ${Math.abs(stats.points).toLocaleString()}
               </td>
             </tr>
@@ -328,9 +336,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 Rank:
               </td>
-              <td style="${
-                stats.rank > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.rank)}">
                 ${Math.abs(stats.rank)}
               </td>
             </tr>
@@ -338,9 +344,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 Villages:
               </td>
-              <td style="${
-                stats.villages > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.villages)}">
                 ${Math.abs(stats.villages).toLocaleString()}
               </td>
             </tr>
@@ -348,9 +352,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 ODA:
               </td>
-              <td style="${
-                stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.scoreAtt)}">
                 ${Math.abs(stats.scoreAtt).toLocaleString()}
               </td>
             </tr>
@@ -358,9 +360,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 ODA Rank:
               </td>
-              <td style="${
-                stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.rankAtt)}">
                 ${Math.abs(stats.rankAtt)}
               </td>
             </tr>
@@ -368,9 +368,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 ODD:
               </td>
-              <td style="${
-                stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.scoreDef)}">
                 ${Math.abs(stats.scoreDef).toLocaleString()}
               </td>
             </tr>
@@ -378,9 +376,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 ODD Rank:
               </td>
-              <td style="${
-                stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.rankDef)}">
                 ${Math.abs(stats.rankDef)}
               </td>
             </tr>
@@ -388,9 +384,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 ODS:
               </td>
-              <td style="${
-                stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.scoreSup)}">
                 ${Math.abs(stats.scoreSup).toLocaleString()}
               </td>
             </tr>
@@ -398,9 +392,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 ODS Rank:
               </td>
-              <td style="${
-                stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.rankSup)}">
                 ${Math.abs(stats.rankSup)}
               </td>
             </tr>
@@ -408,9 +400,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 OD:
               </td>
-              <td style="${
-                stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.scoreTotal)}">
                 ${Math.abs(stats.scoreTotal).toLocaleString()}
               </td>
             </tr>
@@ -418,9 +408,7 @@ const renderTodaysStats = (stats) => {
               <td>
                 OD Rank:
               </td>
-              <td style="${
-                stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle
-              }">
+              <td style="${getTodaysStatsTdStyle(stats.rankTotal)}">
                 ${Math.abs(stats.rankTotal)}
               </td>
             </tr>

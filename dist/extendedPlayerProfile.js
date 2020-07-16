@@ -352,7 +352,7 @@ var _default = function _default() {
 };
 
 exports.default = _default;
-},{}],"m41w":[function(require,module,exports) {
+},{}],"fCHX":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -706,7 +706,7 @@ var _subDays = _interopRequireDefault(require("date-fns/subDays"));
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
-var _pagination = require("./libs/pagination");
+var _pagination = require("./utils/pagination");
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
@@ -735,7 +735,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      0.5
+// @version      0.6
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*.plemiona.pl/game.php*&screen=info_player*
@@ -877,6 +877,13 @@ const renderPlayerOtherNames = player => {
   }).join(''), "\n      </tbody>\n      </table>\n  ");
 };
 
+const getTodaysStatsTdStyle = value => {
+  const statIncreaseStyle = 'color: #000; background-color: #0f0';
+  const statDecreaseStyle = 'color: #000; background-color: #f00';
+  const defaultStyle = 'color: #000; background-color: #808080';
+  return value > 0 ? statIncreaseStyle : value < 0 ? statDecreaseStyle : defaultStyle;
+};
+
 const renderTodaysStats = stats => {
   let todaysStats = document.querySelector('#todaysStats');
 
@@ -887,9 +894,7 @@ const renderTodaysStats = stats => {
     otherElementsContainer.prepend(todaysStats);
   }
 
-  const statIncreaseStyle = 'color: #000; background-color: #0f0';
-  const statDecreaseStyle = 'color: #000; background-color: #f00';
-  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stats\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(stats.points > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(stats.rank > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(stats.villages > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(stats.scoreAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(stats.rankAtt > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(stats.scoreDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(stats.rankDef > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"").concat(stats.scoreSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(stats.rankSup > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(stats.scoreTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(stats.rankTotal > 0 ? statIncreaseStyle : statDecreaseStyle, "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
+  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stats\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.points), "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rank), "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.villages), "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreAtt), "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankAtt), "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreDef), "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankDef), "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreSup), "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankSup), "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreTotal), "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankTotal), "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
 };
 
 const renderInADayRanks = player => {
@@ -1136,4 +1141,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"date-fns/subDays":"mRRL","./libs/requestCreator":"Ph2E","./libs/pagination":"m41w","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/renderPopup":"P4rL","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"date-fns/subDays":"mRRL","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/renderPopup":"P4rL","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
