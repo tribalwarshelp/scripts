@@ -22,7 +22,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.0.2
+// @version      1.0.3
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_player*
@@ -134,7 +134,6 @@ query playerHistoryAndPlayerDailyStats($server: String!,
     }
 }
 `;
-const PLAYER_HISTORY_PAGINATION_CONTAINER_ID = 'playerHistoryPagination';
 const PLAYER_HISTORY_PER_PAGE = 15;
 const ENNOBLEMENTS_QUERY = `
     query ennoblements($server: String!, $filter: EnnoblementFilter!) {

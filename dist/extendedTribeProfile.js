@@ -579,7 +579,320 @@ function isURL(url, options) {
 
 module.exports = exports.default;
 module.exports.default = exports.default;
-},{"./util/assertString":"d3m2","./isFQDN":"KGu6","./isIP":"NHAn","./util/merge":"hxfi"}],"Ph2E":[function(require,module,exports) {
+},{"./util/assertString":"d3m2","./isFQDN":"KGu6","./isIP":"NHAn","./util/merge":"hxfi"}],"kK6Q":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = requiredArgs;
+
+function requiredArgs(required, args) {
+  if (args.length < required) {
+    throw new TypeError(required + ' argument' + (required > 1 ? 's' : '') + ' required, but only ' + args.length + ' present');
+  }
+}
+},{}],"KYJg":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toDate;
+
+var _index = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name toDate
+ * @category Common Helpers
+ * @summary Convert the given argument to an instance of Date.
+ *
+ * @description
+ * Convert the given argument to an instance of Date.
+ *
+ * If the argument is an instance of Date, the function returns its clone.
+ *
+ * If the argument is a number, it is treated as a timestamp.
+ *
+ * If the argument is none of the above, the function returns Invalid Date.
+ *
+ * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
+ *
+ * @param {Date|Number} argument - the value to convert
+ * @returns {Date} the parsed date in the local time zone
+ * @throws {TypeError} 1 argument required
+ *
+ * @example
+ * // Clone the date:
+ * const result = toDate(new Date(2014, 1, 11, 11, 30, 30))
+ * //=> Tue Feb 11 2014 11:30:30
+ *
+ * @example
+ * // Convert the timestamp to date:
+ * const result = toDate(1392098430000)
+ * //=> Tue Feb 11 2014 11:30:30
+ */
+function toDate(argument) {
+  (0, _index.default)(1, arguments);
+  var argStr = Object.prototype.toString.call(argument); // Clone the date
+
+  if (argument instanceof Date || typeof argument === 'object' && argStr === '[object Date]') {
+    // Prevent the date to lose the milliseconds when passed to new Date() in IE10
+    return new Date(argument.getTime());
+  } else if (typeof argument === 'number' || argStr === '[object Number]') {
+    return new Date(argument);
+  } else {
+    if ((typeof argument === 'string' || argStr === '[object String]') && typeof console !== 'undefined') {
+      // eslint-disable-next-line no-console
+      console.warn("Starting with v2.0.0-beta.1 date-fns doesn't accept strings as arguments. Please use `parseISO` to parse strings. See: https://git.io/fjule"); // eslint-disable-next-line no-console
+
+      console.warn(new Error().stack);
+    }
+
+    return new Date(NaN);
+  }
+}
+},{"../_lib/requiredArgs/index.js":"kK6Q"}],"aFbL":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getTimezoneOffsetInMilliseconds;
+var MILLISECONDS_IN_MINUTE = 60000;
+
+function getDateMillisecondsPart(date) {
+  return date.getTime() % MILLISECONDS_IN_MINUTE;
+}
+/**
+ * Google Chrome as of 67.0.3396.87 introduced timezones with offset that includes seconds.
+ * They usually appear for dates that denote time before the timezones were introduced
+ * (e.g. for 'Europe/Prague' timezone the offset is GMT+00:57:44 before 1 October 1891
+ * and GMT+01:00:00 after that date)
+ *
+ * Date#getTimezoneOffset returns the offset in minutes and would return 57 for the example above,
+ * which would lead to incorrect calculations.
+ *
+ * This function returns the timezone offset in milliseconds that takes seconds in account.
+ */
+
+
+function getTimezoneOffsetInMilliseconds(dirtyDate) {
+  var date = new Date(dirtyDate.getTime());
+  var baseTimezoneOffset = Math.ceil(date.getTimezoneOffset());
+  date.setSeconds(0, 0);
+  var hasNegativeUTCOffset = baseTimezoneOffset > 0;
+  var millisecondsPartOfTimezoneOffset = hasNegativeUTCOffset ? (MILLISECONDS_IN_MINUTE + getDateMillisecondsPart(date)) % MILLISECONDS_IN_MINUTE : getDateMillisecondsPart(date);
+  return baseTimezoneOffset * MILLISECONDS_IN_MINUTE + millisecondsPartOfTimezoneOffset;
+}
+},{}],"DgmM":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = startOfDay;
+
+var _index = _interopRequireDefault(require("../toDate/index.js"));
+
+var _index2 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name startOfDay
+ * @category Day Helpers
+ * @summary Return the start of a day for the given date.
+ *
+ * @description
+ * Return the start of a day for the given date.
+ * The result will be in the local timezone.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} date - the original date
+ * @returns {Date} the start of a day
+ * @throws {TypeError} 1 argument required
+ *
+ * @example
+ * // The start of a day for 2 September 2014 11:55:00:
+ * var result = startOfDay(new Date(2014, 8, 2, 11, 55, 0))
+ * //=> Tue Sep 02 2014 00:00:00
+ */
+function startOfDay(dirtyDate) {
+  (0, _index2.default)(1, arguments);
+  var date = (0, _index.default)(dirtyDate);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+},{"../toDate/index.js":"KYJg","../_lib/requiredArgs/index.js":"kK6Q"}],"ieRm":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = differenceInCalendarDays;
+
+var _index = _interopRequireDefault(require("../_lib/getTimezoneOffsetInMilliseconds/index.js"));
+
+var _index2 = _interopRequireDefault(require("../startOfDay/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MILLISECONDS_IN_DAY = 86400000;
+/**
+ * @name differenceInCalendarDays
+ * @category Day Helpers
+ * @summary Get the number of calendar days between the given dates.
+ *
+ * @description
+ * Get the number of calendar days between the given dates. This means that the times are removed
+ * from the dates and then the difference in days is calculated.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} dateLeft - the later date
+ * @param {Date|Number} dateRight - the earlier date
+ * @returns {Number} the number of calendar days
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // How many calendar days are between
+ * // 2 July 2011 23:00:00 and 2 July 2012 00:00:00?
+ * var result = differenceInCalendarDays(
+ *   new Date(2012, 6, 2, 0, 0),
+ *   new Date(2011, 6, 2, 23, 0)
+ * )
+ * //=> 366
+ * // How many calendar days are between
+ * // 2 July 2011 23:59:00 and 3 July 2011 00:01:00?
+ * var result = differenceInCalendarDays(
+ *   new Date(2011, 6, 3, 0, 1),
+ *   new Date(2011, 6, 2, 23, 59)
+ * )
+ * //=> 1
+ */
+
+function differenceInCalendarDays(dirtyDateLeft, dirtyDateRight) {
+  (0, _index3.default)(2, arguments);
+  var startOfDayLeft = (0, _index2.default)(dirtyDateLeft);
+  var startOfDayRight = (0, _index2.default)(dirtyDateRight);
+  var timestampLeft = startOfDayLeft.getTime() - (0, _index.default)(startOfDayLeft);
+  var timestampRight = startOfDayRight.getTime() - (0, _index.default)(startOfDayRight); // Round the number of days to the nearest integer
+  // because the number of milliseconds in a day is not constant
+  // (e.g. it's different in the day of the daylight saving time clock shift)
+
+  return Math.round((timestampLeft - timestampRight) / MILLISECONDS_IN_DAY);
+}
+},{"../_lib/getTimezoneOffsetInMilliseconds/index.js":"aFbL","../startOfDay/index.js":"DgmM","../_lib/requiredArgs/index.js":"kK6Q"}],"mdVI":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = differenceInDays;
+
+var _index = _interopRequireDefault(require("../toDate/index.js"));
+
+var _index2 = _interopRequireDefault(require("../differenceInCalendarDays/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Like `compareAsc` but uses local time not UTC, which is needed
+// for accurate equality comparisons of UTC timestamps that end up
+// having the same representation in local time, e.g. one hour before
+// DST ends vs. the instant that DST ends.
+function compareLocalAsc(dateLeft, dateRight) {
+  var diff = dateLeft.getFullYear() - dateRight.getFullYear() || dateLeft.getMonth() - dateRight.getMonth() || dateLeft.getDate() - dateRight.getDate() || dateLeft.getHours() - dateRight.getHours() || dateLeft.getMinutes() - dateRight.getMinutes() || dateLeft.getSeconds() - dateRight.getSeconds() || dateLeft.getMilliseconds() - dateRight.getMilliseconds();
+
+  if (diff < 0) {
+    return -1;
+  } else if (diff > 0) {
+    return 1; // Return 0 if diff is 0; return NaN if diff is NaN
+  } else {
+    return diff;
+  }
+}
+/**
+ * @name differenceInDays
+ * @category Day Helpers
+ * @summary Get the number of full days between the given dates.
+ *
+ * @description
+ * Get the number of full day periods between two dates. Fractional days are
+ * truncated towards zero.
+ *
+ * One "full day" is the distance between a local time in one day to the same
+ * local time on the next or previous day. A full day can sometimes be less than
+ * or more than 24 hours if a daylight savings change happens between two dates.
+ *
+ * To ignore DST and only measure exact 24-hour periods, use this instead:
+ * `Math.floor(differenceInHours(dateLeft, dateRight)/24)|0`.
+ *
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} dateLeft - the later date
+ * @param {Date|Number} dateRight - the earlier date
+ * @returns {Number} the number of full days according to the local timezone
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // How many full days are between
+ * // 2 July 2011 23:00:00 and 2 July 2012 00:00:00?
+ * var result = differenceInDays(
+ *   new Date(2012, 6, 2, 0, 0),
+ *   new Date(2011, 6, 2, 23, 0)
+ * )
+ * //=> 365
+ * // How many full days are between
+ * // 2 July 2011 23:59:00 and 3 July 2011 00:01:00?
+ * var result = differenceInDays(
+ *   new Date(2011, 6, 3, 0, 1),
+ *   new Date(2011, 6, 2, 23, 59)
+ * )
+ * //=> 0
+ * // How many full days are between
+ * // 1 March 2020 0:00 and 1 June 2020 0:00 ?
+ * // Note: because local time is used, the
+ * // result will always be 92 days, even in
+ * // time zones where DST starts and the
+ * // period has only 92*24-1 hours.
+ * var result = differenceInDays(
+ *   new Date(2020, 5, 1),
+ *   new Date(2020, 2, 1)
+ * )
+//=> 92
+ */
+
+
+function differenceInDays(dirtyDateLeft, dirtyDateRight) {
+  (0, _index3.default)(2, arguments);
+  var dateLeft = (0, _index.default)(dirtyDateLeft);
+  var dateRight = (0, _index.default)(dirtyDateRight);
+  var sign = compareLocalAsc(dateLeft, dateRight);
+  var difference = Math.abs((0, _index2.default)(dateLeft, dateRight));
+  dateLeft.setDate(dateLeft.getDate() - sign * difference); // Math.abs(diff in full days - diff in calendar days) === 1 if last calendar day is not full
+  // If so, result must be decreased by 1 in absolute value
+
+  var isLastDayNotFull = compareLocalAsc(dateLeft, dateRight) === -sign;
+  var result = sign * (difference - isLastDayNotFull); // Prevent negative zero
+
+  return result === 0 ? 0 : result;
+}
+},{"../toDate/index.js":"KYJg","../differenceInCalendarDays/index.js":"ieRm","../_lib/requiredArgs/index.js":"kK6Q"}],"Ph2E":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1061,82 +1374,7 @@ function toInteger(dirtyNumber) {
 
   return number < 0 ? Math.ceil(number) : Math.floor(number);
 }
-},{}],"kK6Q":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = requiredArgs;
-
-function requiredArgs(required, args) {
-  if (args.length < required) {
-    throw new TypeError(required + ' argument' + (required > 1 ? 's' : '') + ' required, but only ' + args.length + ' present');
-  }
-}
-},{}],"KYJg":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = toDate;
-
-var _index = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @name toDate
- * @category Common Helpers
- * @summary Convert the given argument to an instance of Date.
- *
- * @description
- * Convert the given argument to an instance of Date.
- *
- * If the argument is an instance of Date, the function returns its clone.
- *
- * If the argument is a number, it is treated as a timestamp.
- *
- * If the argument is none of the above, the function returns Invalid Date.
- *
- * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
- *
- * @param {Date|Number} argument - the value to convert
- * @returns {Date} the parsed date in the local time zone
- * @throws {TypeError} 1 argument required
- *
- * @example
- * // Clone the date:
- * const result = toDate(new Date(2014, 1, 11, 11, 30, 30))
- * //=> Tue Feb 11 2014 11:30:30
- *
- * @example
- * // Convert the timestamp to date:
- * const result = toDate(1392098430000)
- * //=> Tue Feb 11 2014 11:30:30
- */
-function toDate(argument) {
-  (0, _index.default)(1, arguments);
-  var argStr = Object.prototype.toString.call(argument); // Clone the date
-
-  if (argument instanceof Date || typeof argument === 'object' && argStr === '[object Date]') {
-    // Prevent the date to lose the milliseconds when passed to new Date() in IE10
-    return new Date(argument.getTime());
-  } else if (typeof argument === 'number' || argStr === '[object Number]') {
-    return new Date(argument);
-  } else {
-    if ((typeof argument === 'string' || argStr === '[object String]') && typeof console !== 'undefined') {
-      // eslint-disable-next-line no-console
-      console.warn("Starting with v2.0.0-beta.1 date-fns doesn't accept strings as arguments. Please use `parseISO` to parse strings. See: https://git.io/fjule"); // eslint-disable-next-line no-console
-
-      console.warn(new Error().stack);
-    }
-
-    return new Date(NaN);
-  }
-}
-},{"../_lib/requiredArgs/index.js":"kK6Q"}],"lQIY":[function(require,module,exports) {
+},{}],"lQIY":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1361,6 +1599,8 @@ exports.formatPlayerURL = formatPlayerURL;
 
 var _isURL = _interopRequireDefault(require("validator/lib/isURL"));
 
+var _differenceInDays = _interopRequireDefault(require("date-fns/differenceInDays"));
+
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
 var _pagination = require("./utils/pagination");
@@ -1371,6 +1611,8 @@ var _renderEnnoblements = _interopRequireDefault(require("./utils/renderEnnoblem
 
 var _renderHistoryPopup = _interopRequireDefault(require("./utils/renderHistoryPopup"));
 
+var _renderPopup = _interopRequireDefault(require("./utils/renderPopup"));
+
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
@@ -1380,6 +1622,8 @@ var _localStorage = require("./utils/localStorage");
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
 var _twstats = require("./utils/twstats");
+
+var _tribalwars = require("./utils/tribalwars");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1394,7 +1638,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.6
+// @version      0.7.5
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_ally*
@@ -1407,9 +1651,10 @@ const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
 const TRIBE_QUERY = "\n    query tribe($server: String!, $id: Int!, $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n        tribe(server: $server, id: $id) {\n            id\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            createdAt\n            dominance\n        }\n        dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {\n          items {\n            rank\n            rankAtt\n            rankDef\n            rankTotal\n            points\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreTotal\n            villages\n            members\n          }\n        }\n        players(server: $server, filter: $playerFilter) {\n          items {\n            id\n            rankAtt\n            rankDef\n            rankSup\n            rankTotal\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreSup\n            scoreTotal\n            dailyGrowth\n          }\n        }\n    }\n";
 const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
-const TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY = "\nquery tribeHistoryAndTribeDailyStats($server: String!,\n     $tribeHistoryFilter: TribeHistoryFilter!,\n     $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n  tribeHistory(server: $server, filter: $tribeHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreTotal\n      rankTotal\n      createDate\n      totalMembers\n    }\n  }\n  dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreTotal\n        villages\n        createDate\n        members\n      }\n    }\n}\n";
-const TRIBE_HISTORY_PAGINATION_CONTAINER_ID = 'tribeHistoryPagination';
+const TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY = "\nquery tribeHistoryAndTribeDailyStats($server: String!,\n     $tribeHistoryFilter: TribeHistoryFilter!,\n     $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n  tribeHistory(server: $server, filter: $tribeHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreTotal\n      rankTotal\n      createDate\n      totalMembers\n    }\n  }\n  dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreDef\n        scoreTotal\n        villages\n        createDate\n        members\n      }\n    }\n}\n";
 const TRIBE_HISTORY_PER_PAGE = 15;
+const TRIBE_MEMBERS_DAILY_STATS_QUERY = "\nquery tribeMembersDailyStats($server: String!,\n     $filter: DailyPlayerStatsFilter!) {\n  dailyPlayerStats(server: $server, filter: $filter) {\n    items {\n        player {\n          id\n          name\n        }\n        points\n        scoreAtt\n        scoreDef\n        scoreSup\n        scoreTotal\n        villages\n        createDate\n      }\n    }\n}\n";
+let MEMBERS_GROWTH_MODE = 'points';
 const profileInfoTBody = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody');
 const actionsContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)');
@@ -1628,6 +1873,129 @@ const handleShowTribeHistoryClick = async e => {
   }
 };
 
+const getMembersGrowthTdStyle = value => {
+  const statIncreaseStyle = 'color: #000; background-color: #0f0';
+  const statDecreaseStyle = 'color: #000; background-color: #f00';
+  const defaultStyle = 'color: #000; background-color: #808080';
+  return value > 0 ? statIncreaseStyle : value < 0 ? statDecreaseStyle : defaultStyle;
+};
+
+const mapMembersGrowthTdValue = i => {
+  switch (MEMBERS_GROWTH_MODE) {
+    case 'points':
+      return i.points;
+
+    case 'villages':
+      return i.villages;
+
+    case 'od':
+      return i.scoreTotal;
+
+    case 'oda':
+      return i.scoreAtt;
+
+    case 'odd':
+      return i.scoreDef;
+
+    case 'ods':
+      return i.scoreSup;
+
+    default:
+      return 0;
+  }
+};
+
+const buildMembersGrowthTBody = stats => {
+  const dates = [...new Set(stats.items.map(item => item.createDate))].reverse();
+  return "\n    <tbody>\n        <tr>\n          <th>Player</th>\n          ".concat(dates.map(date => {
+    return "<th>".concat((0, _formatDate.default)(date, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }), "</th>");
+  }).join(''), "\n          <th>Total</th>\n        </tr>\n        ").concat(getMembersIDs().map(id => {
+    const filtered = stats.items.filter(item => item.player && item.player.id === id).reverse();
+    let player = undefined;
+
+    if (filtered.length > 0) {
+      player = filtered[0].player;
+    }
+
+    const tds = [];
+    let total = 0;
+
+    for (let date of dates) {
+      const i = filtered.find(i => i.createDate === date);
+      let val = 0;
+
+      if (i) {
+        val = mapMembersGrowthTdValue(i);
+      }
+
+      total += val;
+      tds.push("<td style=\"".concat(getMembersGrowthTdStyle(val), "\">").concat(val, "</td>"));
+    }
+
+    return "<tr>\n            <td>\n              ".concat(player ? "<a href=\"".concat((0, _tribalwars.formatPlayerURL)(id), "\">").concat(player.name, "</a>") : '-', "\n            </td>\n            ").concat(tds.join(''), "\n            <td style=\"").concat(getMembersGrowthTdStyle(total), "\">").concat(total, "</td>\n          </tr>");
+  }).join(''), "\n      </tbody>\n  ");
+};
+
+const MEMBERS_GROWTH_TABLE_ID = 'membersGrowth';
+const MEMBERS_GROWTH_FORM = MEMBERS_GROWTH_TABLE_ID + 'Form';
+
+const createChangeTypeHandler = stats => e => {
+  e.preventDefault();
+  MEMBERS_GROWTH_MODE = e.target[0].value;
+  document.querySelector('#' + MEMBERS_GROWTH_TABLE_ID).innerHTML = buildMembersGrowthTBody(stats);
+};
+
+const renderMembersGrowthPopup = (e, stats) => {
+  const formOptions = [['points', 'Points'], ['villages', 'Villages'], ['od', 'Opponents defeated'], ['oda', 'Opponents defeated as attacker'], ['odd', 'Opponents defeated as defender'], ['ods', 'Opponents defeated as supporter']].map(v => "<option value=\"".concat(v[0], "\">").concat(v[1], "</option>"));
+  const html = "\n    <form id=\"".concat(MEMBERS_GROWTH_FORM, "\">\n      <select>\n        ").concat(formOptions.join(''), "\n      </select>\n      <button type=\"submit\">Change</button>\n    </form>\n    <table id=\"").concat(MEMBERS_GROWTH_TABLE_ID, "\" class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      ").concat(buildMembersGrowthTBody(stats), "\n    </table>\n  ");
+  (0, _renderPopup.default)({
+    e,
+    title: "Members growth",
+    id: 'mg',
+    html
+  });
+  document.querySelector('#' + MEMBERS_GROWTH_FORM).addEventListener('submit', createChangeTypeHandler(stats));
+};
+
+const loadMembersGrowthData = async function loadMembersGrowthData() {
+  let {
+    createDateLTE,
+    createDateGT
+  } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  const membersIDs = getMembersIDs();
+  const limit = membersIDs.length * (0, _differenceInDays.default)(createDateLTE, createDateGT);
+  const filter = {
+    playerID: membersIDs,
+    limit,
+    sort: 'createDate DESC',
+    createDateLTE,
+    createDateGT
+  };
+  const data = await (0, _requestCreator.default)({
+    query: TRIBE_MEMBERS_DAILY_STATS_QUERY,
+    variables: {
+      filter,
+      server: SERVER
+    }
+  });
+  return data;
+};
+
+const handleShowMembersGrowthClick = async e => {
+  e.preventDefault();
+  const createDateGT = new Date();
+  createDateGT.setDate(createDateGT.getDate() - 7);
+  const data = await loadMembersGrowthData({
+    createDateLTE: new Date(),
+    createDateGT
+  });
+  renderMembersGrowthPopup(e, data.dailyPlayerStats);
+};
+
 const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -1650,6 +2018,11 @@ const renderActions = () => {
   showHistory.innerHTML = 'Show tribe history';
   showHistory.addEventListener('click', handleShowTribeHistoryClick);
   actionsContainer.appendChild(wrapAction(showHistory));
+  const showMembersGrowth = document.createElement('a');
+  showMembersGrowth.href = '#';
+  showMembersGrowth.innerHTML = 'Show members growth';
+  showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
+  actionsContainer.appendChild(wrapAction(showMembersGrowth));
 };
 
 (async function () {
@@ -1671,4 +2044,4 @@ const renderActions = () => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"validator/lib/isURL":"XMVV","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/renderTodaysStats":"dPMc","./utils/renderEnnoblements":"vhoq","./utils/renderHistoryPopup":"gJkK","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko"}]},{},["r4nF"], null)
+},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/renderTodaysStats":"dPMc","./utils/renderEnnoblements":"vhoq","./utils/renderHistoryPopup":"gJkK","./utils/renderPopup":"P4rL","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)

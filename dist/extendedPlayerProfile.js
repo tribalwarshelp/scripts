@@ -936,7 +936,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.0.2
+// @version      1.0.3
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_player*
@@ -957,7 +957,6 @@ const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $filter:
 const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
 const TRIBE_CHANGES_PER_PAGE = 15;
 const PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY = "\nquery playerHistoryAndPlayerDailyStats($server: String!,\n     $playerHistoryFilter: PlayerHistoryFilter!,\n     $dailyPlayerStatsFilter: DailyPlayerStatsFilter!) {\n  playerHistory(server: $server, filter: $playerHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreSup\n      rankSup\n      scoreTotal\n      rankTotal\n      tribe {\n        id\n        tag\n      }\n      createDate\n    }\n  }\n  dailyPlayerStats(server: $server, filter: $dailyPlayerStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreSup\n        scoreTotal\n        villages\n        createDate\n      }\n    }\n}\n";
-const PLAYER_HISTORY_PAGINATION_CONTAINER_ID = 'playerHistoryPagination';
 const PLAYER_HISTORY_PER_PAGE = 15;
 const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;

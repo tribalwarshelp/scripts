@@ -1,21 +1,24 @@
 import isURL from 'validator/lib/isURL';
+import differenceInDays from 'date-fns/differenceInDays';
 import requestCreator from './libs/requestCreator';
 import { setPage, getPage } from './utils/pagination';
 import renderTodaysStats from './utils/renderTodaysStats';
 import renderEnnoblements from './utils/renderEnnoblements';
 import renderHistoryPopup from './utils/renderHistoryPopup';
+import renderPopup from './utils/renderPopup';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import { setItem, getItem } from './utils/localStorage';
 import formatDate from './utils/formatDate';
 import { formatPlayerURL } from './utils/twstats';
+import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars';
 
 // ==UserScript==
 // @name         Extended Tribe Profile
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.6
+// @version      0.7.5
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_ally*
@@ -128,7 +131,6 @@ query tribeHistoryAndTribeDailyStats($server: String!,
     items {
         points
         scoreAtt
-        scoreAtt
         scoreDef
         scoreTotal
         villages
@@ -138,8 +140,28 @@ query tribeHistoryAndTribeDailyStats($server: String!,
     }
 }
 `;
-const TRIBE_HISTORY_PAGINATION_CONTAINER_ID = 'tribeHistoryPagination';
 const TRIBE_HISTORY_PER_PAGE = 15;
+const TRIBE_MEMBERS_DAILY_STATS_QUERY = `
+query tribeMembersDailyStats($server: String!,
+     $filter: DailyPlayerStatsFilter!) {
+  dailyPlayerStats(server: $server, filter: $filter) {
+    items {
+        player {
+          id
+          name
+        }
+        points
+        scoreAtt
+        scoreDef
+        scoreSup
+        scoreTotal
+        villages
+        createDate
+      }
+    }
+}
+`;
+let MEMBERS_GROWTH_MODE = 'points';
 const profileInfoTBody = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody'
 );
@@ -357,6 +379,174 @@ const handleShowTribeHistoryClick = async (e) => {
   }
 };
 
+const getMembersGrowthTdStyle = (value) => {
+  const statIncreaseStyle = 'color: #000; background-color: #0f0';
+  const statDecreaseStyle = 'color: #000; background-color: #f00';
+  const defaultStyle = 'color: #000; background-color: #808080';
+
+  return value > 0
+    ? statIncreaseStyle
+    : value < 0
+    ? statDecreaseStyle
+    : defaultStyle;
+};
+
+const mapMembersGrowthTdValue = (i) => {
+  switch (MEMBERS_GROWTH_MODE) {
+    case 'points':
+      return i.points;
+    case 'villages':
+      return i.villages;
+    case 'od':
+      return i.scoreTotal;
+    case 'oda':
+      return i.scoreAtt;
+    case 'odd':
+      return i.scoreDef;
+    case 'ods':
+      return i.scoreSup;
+    default:
+      return 0;
+  }
+};
+
+const buildMembersGrowthTBody = (stats) => {
+  const dates = [
+    ...new Set(stats.items.map((item) => item.createDate)),
+  ].reverse();
+
+  return `
+    <tbody>
+        <tr>
+          <th>Player</th>
+          ${dates
+            .map((date) => {
+              return `<th>${formatDate(date, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })}</th>`;
+            })
+            .join('')}
+          <th>Total</th>
+        </tr>
+        ${getMembersIDs()
+          .map((id) => {
+            const filtered = stats.items
+              .filter((item) => item.player && item.player.id === id)
+              .reverse();
+            let player = undefined;
+            if (filtered.length > 0) {
+              player = filtered[0].player;
+            }
+            const tds = [];
+            let total = 0;
+            for (let date of dates) {
+              const i = filtered.find((i) => i.createDate === date);
+              let val = 0;
+              if (i) {
+                val = mapMembersGrowthTdValue(i);
+              }
+              total += val;
+              tds.push(
+                `<td style="${getMembersGrowthTdStyle(val)}">${val}</td>`
+              );
+            }
+            return `<tr>
+            <td>
+              ${
+                player
+                  ? `<a href="${formatPlayerURLTribalWars(id)}">${
+                      player.name
+                    }</a>`
+                  : '-'
+              }
+            </td>
+            ${tds.join('')}
+            <td style="${getMembersGrowthTdStyle(total)}">${total}</td>
+          </tr>`;
+          })
+          .join('')}
+      </tbody>
+  `;
+};
+
+const MEMBERS_GROWTH_TABLE_ID = 'membersGrowth';
+const MEMBERS_GROWTH_FORM = MEMBERS_GROWTH_TABLE_ID + 'Form';
+
+const createChangeTypeHandler = (stats) => (e) => {
+  e.preventDefault();
+  MEMBERS_GROWTH_MODE = e.target[0].value;
+  document.querySelector(
+    '#' + MEMBERS_GROWTH_TABLE_ID
+  ).innerHTML = buildMembersGrowthTBody(stats);
+};
+
+const renderMembersGrowthPopup = (e, stats) => {
+  const formOptions = [
+    ['points', 'Points'],
+    ['villages', 'Villages'],
+    ['od', 'Opponents defeated'],
+    ['oda', 'Opponents defeated as attacker'],
+    ['odd', 'Opponents defeated as defender'],
+    ['ods', 'Opponents defeated as supporter'],
+  ].map((v) => `<option value="${v[0]}">${v[1]}</option>`);
+  const html = `
+    <form id="${MEMBERS_GROWTH_FORM}">
+      <select>
+        ${formOptions.join('')}
+      </select>
+      <button type="submit">Change</button>
+    </form>
+    <table id="${MEMBERS_GROWTH_TABLE_ID}" class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
+      ${buildMembersGrowthTBody(stats)}
+    </table>
+  `;
+
+  renderPopup({
+    e,
+    title: `Members growth`,
+    id: 'mg',
+    html,
+  });
+
+  document
+    .querySelector('#' + MEMBERS_GROWTH_FORM)
+    .addEventListener('submit', createChangeTypeHandler(stats));
+};
+
+const loadMembersGrowthData = async ({ createDateLTE, createDateGT } = {}) => {
+  const membersIDs = getMembersIDs();
+  const limit =
+    membersIDs.length * differenceInDays(createDateLTE, createDateGT);
+  const filter = {
+    playerID: membersIDs,
+    limit,
+    sort: 'createDate DESC',
+    createDateLTE,
+    createDateGT,
+  };
+  const data = await requestCreator({
+    query: TRIBE_MEMBERS_DAILY_STATS_QUERY,
+    variables: {
+      filter,
+      server: SERVER,
+    },
+  });
+  return data;
+};
+
+const handleShowMembersGrowthClick = async (e) => {
+  e.preventDefault();
+  const createDateGT = new Date();
+  createDateGT.setDate(createDateGT.getDate() - 7);
+  const data = await loadMembersGrowthData({
+    createDateLTE: new Date(),
+    createDateGT,
+  });
+  renderMembersGrowthPopup(e, data.dailyPlayerStats);
+};
+
 const wrapAction = (action) => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -380,6 +570,12 @@ const renderActions = () => {
   showHistory.innerHTML = 'Show tribe history';
   showHistory.addEventListener('click', handleShowTribeHistoryClick);
   actionsContainer.appendChild(wrapAction(showHistory));
+
+  const showMembersGrowth = document.createElement('a');
+  showMembersGrowth.href = '#';
+  showMembersGrowth.innerHTML = 'Show members growth';
+  showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
+  actionsContainer.appendChild(wrapAction(showMembersGrowth));
 };
 
 (async function () {
