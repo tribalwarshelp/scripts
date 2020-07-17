@@ -3,6 +3,7 @@ import requestCreator from './libs/requestCreator';
 import { setPage, getPage } from './utils/pagination';
 import renderTodaysStats from './utils/renderTodaysStats';
 import renderEnnoblements from './utils/renderEnnoblements';
+import renderHistoryPopup from './utils/renderHistoryPopup';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import { setItem, getItem } from './utils/localStorage';
@@ -14,7 +15,7 @@ import { formatPlayerURL } from './utils/twstats';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.4
+// @version      0.6
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_ally*
@@ -50,6 +51,7 @@ const TRIBE_QUERY = `
             scoreDef
             scoreTotal
             villages
+            members
           }
         }
         players(server: $server, filter: $playerFilter) {
@@ -102,6 +104,42 @@ const ENNOBLEMENTS_QUERY = `
     }
 `;
 const ENNOBLEMENTS_PER_PAGE = 15;
+const TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY = `
+query tribeHistoryAndTribeDailyStats($server: String!,
+     $tribeHistoryFilter: TribeHistoryFilter!,
+     $dailyTribeStatsFilter: DailyTribeStatsFilter!) {
+  tribeHistory(server: $server, filter: $tribeHistoryFilter) {
+    total
+    items {
+      totalVillages
+      points
+      rank
+      scoreAtt
+      rankAtt
+      scoreDef
+      rankDef
+      scoreTotal
+      rankTotal
+      createDate
+      totalMembers
+    }
+  }
+  dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {
+    items {
+        points
+        scoreAtt
+        scoreAtt
+        scoreDef
+        scoreTotal
+        villages
+        createDate
+        members
+      }
+    }
+}
+`;
+const TRIBE_HISTORY_PAGINATION_CONTAINER_ID = 'tribeHistoryPagination';
+const TRIBE_HISTORY_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody'
 );
@@ -285,6 +323,40 @@ const handleShowTribeEnnoblementsClick = async (e) => {
   }
 };
 
+const handleShowTribeHistoryClick = async (e) => {
+  e.preventDefault();
+  const page = getPage(e.target);
+  if (!isNaN(page)) {
+    try {
+      const filter = {
+        tribeID: [TRIBE_ID],
+        offset: TRIBE_HISTORY_PER_PAGE * (page - 1),
+        limit: TRIBE_HISTORY_PER_PAGE,
+        sort: 'createDate DESC',
+      };
+      const { tribeHistory, dailyTribeStats } = await requestCreator({
+        query: TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY,
+        variables: {
+          server: SERVER,
+          tribeHistoryFilter: filter,
+          dailyTribeStatsFilter: {
+            ...filter,
+            offset: filter.offset + 1,
+          },
+        },
+      });
+      renderHistoryPopup(e, tribeHistory, dailyTribeStats, {
+        currentPage: page,
+        limit: TRIBE_HISTORY_PER_PAGE,
+        tribe: true,
+        onPageChange: handleShowTribeHistoryClick,
+      });
+    } catch (error) {
+      console.log('cannot load tribe history', error);
+    }
+  }
+};
+
 const wrapAction = (action) => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -301,6 +373,13 @@ const renderActions = () => {
   showEnnoblements.innerHTML = 'Show tribe ennoblements';
   showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblements));
+
+  const showHistory = document.createElement('a');
+  showHistory.href = '#';
+  setPage(showHistory, '1');
+  showHistory.innerHTML = 'Show tribe history';
+  showHistory.addEventListener('click', handleShowTribeHistoryClick);
+  actionsContainer.appendChild(wrapAction(showHistory));
 };
 
 (async function () {

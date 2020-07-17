@@ -739,8 +739,8 @@ var _default = (container, stats) => {
     container.prepend(todaysStats);
   }
 
-  const renderODS = !(0, _isNil.default)(stats.rankSup);
-  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stat changes\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.points), "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rank), "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.villages), "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreAtt), "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankAtt), "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreDef), "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankDef), "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            ").concat(renderODS ? "<tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.scoreSup), "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankSup), "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>") : '', "\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreTotal), "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankTotal), "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
+  const player = !(0, _isNil.default)(stats.rankSup);
+  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stat changes\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.points), "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rank), "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.villages), "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            ").concat(!player ? "<tr>\n              <td>\n                Members:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.members), "\">\n                ").concat(Math.abs(stats.members), "\n              </td>\n            </tr>") : '', "\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreAtt), "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankAtt), "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreDef), "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankDef), "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            ").concat(player ? "<tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.scoreSup), "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankSup), "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>") : '', "\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreTotal), "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankTotal), "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
 };
 
 exports.default = _default;
@@ -1040,7 +1040,271 @@ var _default = function _default(e, ennoblements) {
 };
 
 exports.default = _default;
-},{"./pagination":"fCHX","./renderPopup":"P4rL","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"DMkL":[function(require,module,exports) {
+},{"./pagination":"fCHX","./renderPopup":"P4rL","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"VYL5":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toInteger;
+
+function toInteger(dirtyNumber) {
+  if (dirtyNumber === null || dirtyNumber === true || dirtyNumber === false) {
+    return NaN;
+  }
+
+  var number = Number(dirtyNumber);
+
+  if (isNaN(number)) {
+    return number;
+  }
+
+  return number < 0 ? Math.ceil(number) : Math.floor(number);
+}
+},{}],"kK6Q":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = requiredArgs;
+
+function requiredArgs(required, args) {
+  if (args.length < required) {
+    throw new TypeError(required + ' argument' + (required > 1 ? 's' : '') + ' required, but only ' + args.length + ' present');
+  }
+}
+},{}],"KYJg":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toDate;
+
+var _index = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name toDate
+ * @category Common Helpers
+ * @summary Convert the given argument to an instance of Date.
+ *
+ * @description
+ * Convert the given argument to an instance of Date.
+ *
+ * If the argument is an instance of Date, the function returns its clone.
+ *
+ * If the argument is a number, it is treated as a timestamp.
+ *
+ * If the argument is none of the above, the function returns Invalid Date.
+ *
+ * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
+ *
+ * @param {Date|Number} argument - the value to convert
+ * @returns {Date} the parsed date in the local time zone
+ * @throws {TypeError} 1 argument required
+ *
+ * @example
+ * // Clone the date:
+ * const result = toDate(new Date(2014, 1, 11, 11, 30, 30))
+ * //=> Tue Feb 11 2014 11:30:30
+ *
+ * @example
+ * // Convert the timestamp to date:
+ * const result = toDate(1392098430000)
+ * //=> Tue Feb 11 2014 11:30:30
+ */
+function toDate(argument) {
+  (0, _index.default)(1, arguments);
+  var argStr = Object.prototype.toString.call(argument); // Clone the date
+
+  if (argument instanceof Date || typeof argument === 'object' && argStr === '[object Date]') {
+    // Prevent the date to lose the milliseconds when passed to new Date() in IE10
+    return new Date(argument.getTime());
+  } else if (typeof argument === 'number' || argStr === '[object Number]') {
+    return new Date(argument);
+  } else {
+    if ((typeof argument === 'string' || argStr === '[object String]') && typeof console !== 'undefined') {
+      // eslint-disable-next-line no-console
+      console.warn("Starting with v2.0.0-beta.1 date-fns doesn't accept strings as arguments. Please use `parseISO` to parse strings. See: https://git.io/fjule"); // eslint-disable-next-line no-console
+
+      console.warn(new Error().stack);
+    }
+
+    return new Date(NaN);
+  }
+}
+},{"../_lib/requiredArgs/index.js":"kK6Q"}],"lQIY":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = addDays;
+
+var _index = _interopRequireDefault(require("../_lib/toInteger/index.js"));
+
+var _index2 = _interopRequireDefault(require("../toDate/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name addDays
+ * @category Day Helpers
+ * @summary Add the specified number of days to the given date.
+ *
+ * @description
+ * Add the specified number of days to the given date.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} date - the date to be changed
+ * @param {Number} amount - the amount of days to be added. Positive decimals will be rounded using `Math.floor`, decimals less than zero will be rounded using `Math.ceil`.
+ * @returns {Date} the new date with the days added
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // Add 10 days to 1 September 2014:
+ * var result = addDays(new Date(2014, 8, 1), 10)
+ * //=> Thu Sep 11 2014 00:00:00
+ */
+function addDays(dirtyDate, dirtyAmount) {
+  (0, _index3.default)(2, arguments);
+  var date = (0, _index2.default)(dirtyDate);
+  var amount = (0, _index.default)(dirtyAmount);
+
+  if (isNaN(amount)) {
+    return new Date(NaN);
+  }
+
+  if (!amount) {
+    // If 0 days, no-op to avoid changing times in the hour before end of DST
+    return date;
+  }
+
+  date.setDate(date.getDate() + amount);
+  return date;
+}
+},{"../_lib/toInteger/index.js":"VYL5","../toDate/index.js":"KYJg","../_lib/requiredArgs/index.js":"kK6Q"}],"mRRL":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = subDays;
+
+var _index = _interopRequireDefault(require("../_lib/toInteger/index.js"));
+
+var _index2 = _interopRequireDefault(require("../addDays/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name subDays
+ * @category Day Helpers
+ * @summary Subtract the specified number of days from the given date.
+ *
+ * @description
+ * Subtract the specified number of days from the given date.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} date - the date to be changed
+ * @param {Number} amount - the amount of days to be subtracted. Positive decimals will be rounded using `Math.floor`, decimals less than zero will be rounded using `Math.ceil`.
+ * @returns {Date} the new date with the days subtracted
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // Subtract 10 days from 1 September 2014:
+ * var result = subDays(new Date(2014, 8, 1), 10)
+ * //=> Fri Aug 22 2014 00:00:00
+ */
+function subDays(dirtyDate, dirtyAmount) {
+  (0, _index3.default)(2, arguments);
+  var amount = (0, _index.default)(dirtyAmount);
+  return (0, _index2.default)(dirtyDate, -amount);
+}
+},{"../_lib/toInteger/index.js":"VYL5","../addDays/index.js":"lQIY","../_lib/requiredArgs/index.js":"kK6Q"}],"gJkK":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _subDays = _interopRequireDefault(require("date-fns/subDays"));
+
+var _renderPopup = _interopRequireDefault(require("./renderPopup"));
+
+var _pagination = require("./pagination");
+
+var _formatDate = _interopRequireDefault(require("./formatDate"));
+
+var _tribalwars = require("./tribalwars");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const HISTORY_PAGINATION_CONTAINER_ID = 'historyPagination';
+
+const addMathSymbol = v => {
+  return v > 0 ? '+' + v : v;
+};
+
+var _default = function _default(e, history, daily) {
+  let {
+    currentPage = 1,
+    limit = 0,
+    onPageChange = () => {},
+    tribe = false
+  } = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const paginationItems = (0, _pagination.generatePaginationItems)({
+    total: history.total,
+    limit,
+    currentPage
+  });
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(HISTORY_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          ").concat(tribe ? '' : '<th>Tribe</th>', "\n          <th>\n          Points\n          </th>\n          <th>\n          Villages\n          </th>\n          ").concat(tribe ? '<th>Members</th>' : '', "\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          ").concat(tribe ? '' : '<th>ODS</th>', "\n        </tr>\n        ").concat(history.items.map(history => {
+    const subtracted = (0, _subDays.default)(new Date(history.createDate), 1).toISOString().split('.')[0] + 'Z';
+    const stats = daily.items.find(stats => {
+      return stats.createDate === subtracted;
+    });
+    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(history.createDate, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }), "</td>");
+
+    if (!tribe && history.tribe) {
+      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(history.tribe.id), "\">").concat(history.tribe.tag, "</a></td>");
+    } else if (!tribe) {
+      rowHTML += '<td>-</td>';
+    }
+
+    rowHTML += "\n              <td title=\"".concat(stats ? addMathSymbol(stats.points) : '', "\">\n                ").concat(history.points.toLocaleString(), " (<strong>").concat(history.rank, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.villages) : '', "\">\n                ").concat(history.totalVillages.toLocaleString(), "\n              </td>\n              ").concat(!tribe ? '' : "\n                  <td title=\"".concat(stats ? addMathSymbol(stats.members) : '', "\">\n                    ").concat(history.totalMembers, "\n                </td>\n              "), "\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreTotal) : '', "\">\n                ").concat(history.scoreTotal.toLocaleString(), " (<strong>").concat(history.rankTotal, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreAtt) : '', "\">\n                ").concat(history.scoreAtt.toLocaleString(), " (<strong>").concat(history.rankAtt, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreDef) : '', "\">\n                ").concat(history.scoreDef.toLocaleString(), " (<strong>").concat(history.rankDef, "</strong>)\n              </td>\n              ").concat(tribe ? '' : "\n                  <td title=\"".concat(stats ? addMathSymbol(stats.scoreSup) : '', "\">\n                    ").concat(history.scoreSup.toLocaleString(), " (<strong>").concat(history.rankSup, "</strong>)\n                </td>\n              "), "\n            ") + '</tr>';
+    return rowHTML;
+  }).join(''), "\n      </tbody>\n    </table>\n  ");
+  (0, _renderPopup.default)({
+    e,
+    title: "History",
+    id: 'history',
+    html
+  });
+  document.querySelectorAll('#' + HISTORY_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+    el.addEventListener('click', onPageChange);
+  });
+};
+
+exports.default = _default;
+},{"date-fns/subDays":"mRRL","./renderPopup":"P4rL","./pagination":"fCHX","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"DMkL":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1105,6 +1369,8 @@ var _renderTodaysStats = _interopRequireDefault(require("./utils/renderTodaysSta
 
 var _renderEnnoblements = _interopRequireDefault(require("./utils/renderEnnoblements"));
 
+var _renderHistoryPopup = _interopRequireDefault(require("./utils/renderHistoryPopup"));
+
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
@@ -1116,6 +1382,12 @@ var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 var _twstats = require("./utils/twstats");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 // ==UserScript==
 // @name         Extended Tribe Profile
@@ -1132,9 +1404,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const SERVER = (0, _getCurrentServer.default)();
 const TRIBE_ID = (0, _getIDFromURL.default)(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
-const TRIBE_QUERY = "\n    query tribe($server: String!, $id: Int!, $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n        tribe(server: $server, id: $id) {\n            id\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            createdAt\n            dominance\n        }\n        dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {\n          items {\n            rank\n            rankAtt\n            rankDef\n            rankTotal\n            points\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreTotal\n            villages\n          }\n        }\n        players(server: $server, filter: $playerFilter) {\n          items {\n            id\n            rankAtt\n            rankDef\n            rankSup\n            rankTotal\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreSup\n            scoreTotal\n            dailyGrowth\n          }\n        }\n    }\n";
+const TRIBE_QUERY = "\n    query tribe($server: String!, $id: Int!, $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n        tribe(server: $server, id: $id) {\n            id\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            createdAt\n            dominance\n        }\n        dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {\n          items {\n            rank\n            rankAtt\n            rankDef\n            rankTotal\n            points\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreTotal\n            villages\n            members\n          }\n        }\n        players(server: $server, filter: $playerFilter) {\n          items {\n            id\n            rankAtt\n            rankDef\n            rankSup\n            rankTotal\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreSup\n            scoreTotal\n            dailyGrowth\n          }\n        }\n    }\n";
 const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
+const TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY = "\nquery tribeHistoryAndTribeDailyStats($server: String!,\n     $tribeHistoryFilter: TribeHistoryFilter!,\n     $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n  tribeHistory(server: $server, filter: $tribeHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreTotal\n      rankTotal\n      createDate\n      totalMembers\n    }\n  }\n  dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreTotal\n        villages\n        createDate\n        members\n      }\n    }\n}\n";
+const TRIBE_HISTORY_PAGINATION_CONTAINER_ID = 'tribeHistoryPagination';
+const TRIBE_HISTORY_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody');
 const actionsContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)');
@@ -1316,6 +1591,43 @@ const handleShowTribeEnnoblementsClick = async e => {
   }
 };
 
+const handleShowTribeHistoryClick = async e => {
+  e.preventDefault();
+  const page = (0, _pagination.getPage)(e.target);
+
+  if (!isNaN(page)) {
+    try {
+      const filter = {
+        tribeID: [TRIBE_ID],
+        offset: TRIBE_HISTORY_PER_PAGE * (page - 1),
+        limit: TRIBE_HISTORY_PER_PAGE,
+        sort: 'createDate DESC'
+      };
+      const {
+        tribeHistory,
+        dailyTribeStats
+      } = await (0, _requestCreator.default)({
+        query: TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY,
+        variables: {
+          server: SERVER,
+          tribeHistoryFilter: filter,
+          dailyTribeStatsFilter: _objectSpread(_objectSpread({}, filter), {}, {
+            offset: filter.offset + 1
+          })
+        }
+      });
+      (0, _renderHistoryPopup.default)(e, tribeHistory, dailyTribeStats, {
+        currentPage: page,
+        limit: TRIBE_HISTORY_PER_PAGE,
+        tribe: true,
+        onPageChange: handleShowTribeHistoryClick
+      });
+    } catch (error) {
+      console.log('cannot load tribe history', error);
+    }
+  }
+};
+
 const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -1332,6 +1644,12 @@ const renderActions = () => {
   showEnnoblements.innerHTML = 'Show tribe ennoblements';
   showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblements));
+  const showHistory = document.createElement('a');
+  showHistory.href = '#';
+  (0, _pagination.setPage)(showHistory, '1');
+  showHistory.innerHTML = 'Show tribe history';
+  showHistory.addEventListener('click', handleShowTribeHistoryClick);
+  actionsContainer.appendChild(wrapAction(showHistory));
 };
 
 (async function () {
@@ -1353,4 +1671,4 @@ const renderActions = () => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"validator/lib/isURL":"XMVV","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/renderTodaysStats":"dPMc","./utils/renderEnnoblements":"vhoq","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko"}]},{},["r4nF"], null)
+},{"validator/lib/isURL":"XMVV","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/renderTodaysStats":"dPMc","./utils/renderEnnoblements":"vhoq","./utils/renderHistoryPopup":"gJkK","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko"}]},{},["r4nF"], null)

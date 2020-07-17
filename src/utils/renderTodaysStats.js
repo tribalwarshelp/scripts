@@ -21,7 +21,7 @@ export default (container, stats) => {
     container.prepend(todaysStats);
   }
 
-  const renderODS = !isNil(stats.rankSup);
+  const player = !isNil(stats.rankSup);
   todaysStats.innerHTML = `
       <table width="100%" class="vis">
         <tbody>
@@ -54,6 +54,18 @@ export default (container, stats) => {
                 ${Math.abs(stats.villages).toLocaleString()}
               </td>
             </tr>
+            ${
+              !player
+                ? `<tr>
+              <td>
+                Members:
+              </td>
+              <td style="${getTodaysStatsTdStyle(stats.members)}">
+                ${Math.abs(stats.members)}
+              </td>
+            </tr>`
+                : ''
+            }
             <tr>
               <td>
                 ODA:
@@ -87,7 +99,7 @@ export default (container, stats) => {
               </td>
             </tr>
             ${
-              renderODS
+              player
                 ? `<tr>
               <td>
                 ODS:

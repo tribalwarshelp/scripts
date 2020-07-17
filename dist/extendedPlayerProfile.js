@@ -392,8 +392,8 @@ var _default = (container, stats) => {
     container.prepend(todaysStats);
   }
 
-  const renderODS = !(0, _isNil.default)(stats.rankSup);
-  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stat changes\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.points), "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rank), "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.villages), "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreAtt), "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankAtt), "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreDef), "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankDef), "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            ").concat(renderODS ? "<tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.scoreSup), "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankSup), "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>") : '', "\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreTotal), "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankTotal), "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
+  const player = !(0, _isNil.default)(stats.rankSup);
+  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stat changes\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.points), "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rank), "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.villages), "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            ").concat(!player ? "<tr>\n              <td>\n                Members:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.members), "\">\n                ").concat(Math.abs(stats.members), "\n              </td>\n            </tr>") : '', "\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreAtt), "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankAtt), "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreDef), "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankDef), "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            ").concat(player ? "<tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.scoreSup), "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankSup), "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>") : '', "\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreTotal), "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankTotal), "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
 };
 
 exports.default = _default;
@@ -772,7 +772,77 @@ var _default = function _default(e, ennoblements) {
 };
 
 exports.default = _default;
-},{"./pagination":"fCHX","./renderPopup":"P4rL","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"DMkL":[function(require,module,exports) {
+},{"./pagination":"fCHX","./renderPopup":"P4rL","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"gJkK":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _subDays = _interopRequireDefault(require("date-fns/subDays"));
+
+var _renderPopup = _interopRequireDefault(require("./renderPopup"));
+
+var _pagination = require("./pagination");
+
+var _formatDate = _interopRequireDefault(require("./formatDate"));
+
+var _tribalwars = require("./tribalwars");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const HISTORY_PAGINATION_CONTAINER_ID = 'historyPagination';
+
+const addMathSymbol = v => {
+  return v > 0 ? '+' + v : v;
+};
+
+var _default = function _default(e, history, daily) {
+  let {
+    currentPage = 1,
+    limit = 0,
+    onPageChange = () => {},
+    tribe = false
+  } = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  const paginationItems = (0, _pagination.generatePaginationItems)({
+    total: history.total,
+    limit,
+    currentPage
+  });
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(HISTORY_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          ").concat(tribe ? '' : '<th>Tribe</th>', "\n          <th>\n          Points\n          </th>\n          <th>\n          Villages\n          </th>\n          ").concat(tribe ? '<th>Members</th>' : '', "\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          ").concat(tribe ? '' : '<th>ODS</th>', "\n        </tr>\n        ").concat(history.items.map(history => {
+    const subtracted = (0, _subDays.default)(new Date(history.createDate), 1).toISOString().split('.')[0] + 'Z';
+    const stats = daily.items.find(stats => {
+      return stats.createDate === subtracted;
+    });
+    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(history.createDate, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }), "</td>");
+
+    if (!tribe && history.tribe) {
+      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(history.tribe.id), "\">").concat(history.tribe.tag, "</a></td>");
+    } else if (!tribe) {
+      rowHTML += '<td>-</td>';
+    }
+
+    rowHTML += "\n              <td title=\"".concat(stats ? addMathSymbol(stats.points) : '', "\">\n                ").concat(history.points.toLocaleString(), " (<strong>").concat(history.rank, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.villages) : '', "\">\n                ").concat(history.totalVillages.toLocaleString(), "\n              </td>\n              ").concat(!tribe ? '' : "\n                  <td title=\"".concat(stats ? addMathSymbol(stats.members) : '', "\">\n                    ").concat(history.totalMembers, "\n                </td>\n              "), "\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreTotal) : '', "\">\n                ").concat(history.scoreTotal.toLocaleString(), " (<strong>").concat(history.rankTotal, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreAtt) : '', "\">\n                ").concat(history.scoreAtt.toLocaleString(), " (<strong>").concat(history.rankAtt, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreDef) : '', "\">\n                ").concat(history.scoreDef.toLocaleString(), " (<strong>").concat(history.rankDef, "</strong>)\n              </td>\n              ").concat(tribe ? '' : "\n                  <td title=\"".concat(stats ? addMathSymbol(stats.scoreSup) : '', "\">\n                    ").concat(history.scoreSup.toLocaleString(), " (<strong>").concat(history.rankSup, "</strong>)\n                </td>\n              "), "\n            ") + '</tr>';
+    return rowHTML;
+  }).join(''), "\n      </tbody>\n    </table>\n  ");
+  (0, _renderPopup.default)({
+    e,
+    title: "History",
+    id: 'history',
+    html
+  });
+  document.querySelectorAll('#' + HISTORY_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+    el.addEventListener('click', onPageChange);
+  });
+};
+
+exports.default = _default;
+},{"date-fns/subDays":"mRRL","./renderPopup":"P4rL","./pagination":"fCHX","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"DMkL":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -836,6 +906,8 @@ var _renderTodaysStats = _interopRequireDefault(require("./utils/renderTodaysSta
 var _renderPopup = _interopRequireDefault(require("./utils/renderPopup"));
 
 var _renderEnnoblements = _interopRequireDefault(require("./utils/renderEnnoblements"));
+
+var _renderHistoryPopup = _interopRequireDefault(require("./utils/renderHistoryPopup"));
 
 var _pagination = require("./utils/pagination");
 
@@ -1122,45 +1194,6 @@ const handleShowTribeChangesButtonClick = async e => {
   }
 };
 
-const addMathSymbol = v => {
-  return v > 0 ? '+' + v : v;
-};
-
-const renderPlayerHistory = (e, currentPage, playerHistory, playerDailyStats) => {
-  const paginationItems = (0, _pagination.generatePaginationItems)({
-    total: playerHistory.total,
-    limit: PLAYER_HISTORY_PER_PAGE,
-    currentPage
-  });
-  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PLAYER_HISTORY_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Tribe\n          </th>\n          <th>\n            Points\n          </th>\n          <th>\n            Villages\n          </th>\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          <th>\n            ODS\n          </th>\n        </tr>\n        ").concat(playerHistory.items.map(playerHistory => {
-    const subtracted = (0, _subDays.default)(new Date(playerHistory.createDate), 1).toISOString().split('.')[0] + 'Z';
-    const stats = playerDailyStats.items.find(stats => {
-      return stats.createDate === subtracted;
-    });
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(playerHistory.createDate, {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }), "</td>");
-
-    if (playerHistory.tribe) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(playerHistory.tribe.id), "\">").concat(playerHistory.tribe.tag, "</a></td>");
-    } else {
-      rowHTML += '<td>-</td>';
-    }
-
-    rowHTML += "\n              <td title=\"".concat(stats ? addMathSymbol(stats.points) : '', "\">\n                ").concat(playerHistory.points.toLocaleString(), " (<strong>").concat(playerHistory.rank, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.villages) : '', "\">\n                ").concat(playerHistory.totalVillages, "\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreTotal) : '', "\">\n                ").concat(playerHistory.scoreTotal.toLocaleString(), " (<strong>").concat(playerHistory.rankTotal, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreAtt) : '', "\">\n                ").concat(playerHistory.scoreAtt.toLocaleString(), " (<strong>").concat(playerHistory.rankAtt, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreDef) : '', "\">\n                ").concat(playerHistory.scoreDef.toLocaleString(), " (<strong>").concat(playerHistory.rankDef, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreSup) : '', "\">\n                ").concat(playerHistory.scoreSup.toLocaleString(), " (<strong>").concat(playerHistory.rankSup, "</strong>)\n              </td>\n            ") + '</tr>';
-    return rowHTML;
-  }).join(''), "\n      </tbody>\n    </table>\n  ");
-  (0, _renderPopup.default)({
-    e,
-    title: "Player history",
-    id: 'playerHistory',
-    html
-  });
-  addPaginationListeners(PLAYER_HISTORY_PAGINATION_CONTAINER_ID, handleShowPlayerHistoryClick);
-};
-
 const handleShowPlayerHistoryClick = async e => {
   e.preventDefault();
   const page = (0, _pagination.getPage)(e.target);
@@ -1186,7 +1219,12 @@ const handleShowPlayerHistoryClick = async e => {
           })
         }
       });
-      renderPlayerHistory(e, page, playerHistory, dailyPlayerStats);
+      (0, _renderHistoryPopup.default)(e, playerHistory, dailyPlayerStats, {
+        currentPage: page,
+        limit: PLAYER_HISTORY_PER_PAGE,
+        onPageChange: handleShowPlayerHistoryClick,
+        tribe: false
+      });
     } catch (error) {
       console.log('cannot load player history', error);
     }
@@ -1279,4 +1317,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"date-fns/subDays":"mRRL","./libs/requestCreator":"Ph2E","./utils/renderTodaysStats":"dPMc","./utils/renderPopup":"P4rL","./utils/renderEnnoblements":"vhoq","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"date-fns/subDays":"mRRL","./libs/requestCreator":"Ph2E","./utils/renderTodaysStats":"dPMc","./utils/renderPopup":"P4rL","./utils/renderEnnoblements":"vhoq","./utils/renderHistoryPopup":"gJkK","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)

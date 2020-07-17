@@ -3,6 +3,7 @@ import requestCreator from './libs/requestCreator';
 import renderTodaysStats from './utils/renderTodaysStats';
 import renderPopup from './utils/renderPopup';
 import renderEnnoblements from './utils/renderEnnoblements';
+import renderHistoryPopup from './utils/renderHistoryPopup';
 import {
   generatePaginationItems,
   getContainerStyles,
@@ -13,13 +14,7 @@ import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
 import { formatPlayerURL } from './utils/twstats';
-import {
-  formatTribeURL,
-  formatPlayerURL as formatPlayerURLTribalWars,
-  formatVillageName,
-  formatVillageURL,
-  loadInADayData,
-} from './utils/tribalwars';
+import { formatTribeURL, loadInADayData } from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -27,7 +22,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1
+// @version      1.0.1
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_player*
@@ -566,129 +561,6 @@ const handleShowTribeChangesButtonClick = async (e) => {
   }
 };
 
-const addMathSymbol = (v) => {
-  return v > 0 ? '+' + v : v;
-};
-
-const renderPlayerHistory = (
-  e,
-  currentPage,
-  playerHistory,
-  playerDailyStats
-) => {
-  const paginationItems = generatePaginationItems({
-    total: playerHistory.total,
-    limit: PLAYER_HISTORY_PER_PAGE,
-    currentPage,
-  });
-  const html = `
-    <div style="${getContainerStyles()}" id="${PLAYER_HISTORY_PAGINATION_CONTAINER_ID}">
-      ${paginationItems.join('')}
-    </div>
-    <table class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
-      <tbody>
-        <tr>
-          <th>
-            Date
-          </th>
-          <th>
-            Tribe
-          </th>
-          <th>
-            Points
-          </th>
-          <th>
-            Villages
-          </th>
-          <th>
-            OD
-          </th>
-          <th>
-            ODA
-          </th>
-          <th>
-            ODD
-          </th>
-          <th>
-            ODS
-          </th>
-        </tr>
-        ${playerHistory.items
-          .map((playerHistory) => {
-            const subtracted =
-              subDays(new Date(playerHistory.createDate), 1)
-                .toISOString()
-                .split('.')[0] + 'Z';
-            const stats = playerDailyStats.items.find((stats) => {
-              return stats.createDate === subtracted;
-            });
-
-            let rowHTML =
-              '<tr>' +
-              `<td>${formatDate(playerHistory.createDate, {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              })}</td>`;
-            if (playerHistory.tribe) {
-              rowHTML += `<td><a href="${formatTribeURL(
-                playerHistory.tribe.id
-              )}">${playerHistory.tribe.tag}</a></td>`;
-            } else {
-              rowHTML += '<td>-</td>';
-            }
-            rowHTML +=
-              `
-              <td title="${stats ? addMathSymbol(stats.points) : ''}">
-                ${playerHistory.points.toLocaleString()} (<strong>${
-                playerHistory.rank
-              }</strong>)
-              </td>
-              <td title="${stats ? addMathSymbol(stats.villages) : ''}">
-                ${playerHistory.totalVillages}
-              </td>
-              <td title="${stats ? addMathSymbol(stats.scoreTotal) : ''}">
-                ${playerHistory.scoreTotal.toLocaleString()} (<strong>${
-                playerHistory.rankTotal
-              }</strong>)
-              </td>
-              <td title="${stats ? addMathSymbol(stats.scoreAtt) : ''}">
-                ${playerHistory.scoreAtt.toLocaleString()} (<strong>${
-                playerHistory.rankAtt
-              }</strong>)
-              </td>
-              <td title="${stats ? addMathSymbol(stats.scoreDef) : ''}">
-                ${playerHistory.scoreDef.toLocaleString()} (<strong>${
-                playerHistory.rankDef
-              }</strong>)
-              </td>
-              <td title="${stats ? addMathSymbol(stats.scoreSup) : ''}">
-                ${playerHistory.scoreSup.toLocaleString()} (<strong>${
-                playerHistory.rankSup
-              }</strong>)
-              </td>
-            ` + '</tr>';
-
-            return rowHTML;
-          })
-          .join('')}
-      </tbody>
-    </table>
-  `;
-
-  renderPopup({
-    e,
-    title: `Player history`,
-    id: 'playerHistory',
-    html,
-  });
-
-  addPaginationListeners(
-    PLAYER_HISTORY_PAGINATION_CONTAINER_ID,
-    handleShowPlayerHistoryClick
-  );
-};
-
 const handleShowPlayerHistoryClick = async (e) => {
   e.preventDefault();
   const page = getPage(e.target);
@@ -711,7 +583,12 @@ const handleShowPlayerHistoryClick = async (e) => {
           },
         },
       });
-      renderPlayerHistory(e, page, playerHistory, dailyPlayerStats);
+      renderHistoryPopup(e, playerHistory, dailyPlayerStats, {
+        currentPage: page,
+        limit: PLAYER_HISTORY_PER_PAGE,
+        onPageChange: handleShowPlayerHistoryClick,
+        tribe: false,
+      });
     } catch (error) {
       console.log('cannot load player history', error);
     }
