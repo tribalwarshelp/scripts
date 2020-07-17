@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "date-fns": "^2.14.0",
-    "parcel": "^1.12.4"
+    "parcel": "^1.12.4",
+    "validator": "^13.1.1"
   },
   "browserslist": [
     "since 2017-06"
