@@ -1,5 +1,9 @@
 const ATTRIBUTE = 'data-page';
 
+export const getContainerStyles = () => {
+  return 'display: flex; flex-direction: row; flex-wrap: wrap;';
+};
+
 export const setPage = (el, page = 1) => {
   if (!el instanceof HTMLElement) {
     throw new Error('Expected HTMLElement as the first argument');

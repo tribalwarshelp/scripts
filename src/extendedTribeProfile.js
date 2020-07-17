@@ -1,6 +1,8 @@
 import isURL from 'validator/lib/isURL';
 import requestCreator from './libs/requestCreator';
+import { setPage, getPage } from './utils/pagination';
 import renderTodaysStats from './utils/renderTodaysStats';
+import renderEnnoblements from './utils/renderEnnoblements';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import { setItem, getItem } from './utils/localStorage';
@@ -12,7 +14,7 @@ import { formatPlayerURL } from './utils/twstats';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.3.1
+// @version      0.4
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_ally*
@@ -67,9 +69,43 @@ const TRIBE_QUERY = `
         }
     }
 `;
+const ENNOBLEMENTS_QUERY = `
+    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
+      ennoblements(server: $server, filter: $filter) {
+        total
+        items {
+          village {
+            id
+            name
+            x
+            y
+          }
+          oldOwner {
+            id
+            name
+          }
+          oldOwnerTribe {
+            id
+            tag
+          }
+          newOwner {
+            id
+            name
+          }
+          newOwnerTribe {
+            id
+            tag
+          }
+          ennobledAt
+        }
+      }
+    }
+`;
+const ENNOBLEMENTS_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody'
 );
+const actionsContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)'
 );
@@ -222,10 +258,56 @@ const render = ({ tribe, dailyTribeStats, players }) => {
   }
 };
 
+const handleShowTribeEnnoblementsClick = async (e) => {
+  e.preventDefault();
+  const page = getPage(e.target);
+  if (!isNaN(page)) {
+    const data = await requestCreator({
+      query: ENNOBLEMENTS_QUERY,
+      variables: {
+        filter: {
+          or: {
+            oldOwnerTribeID: [TRIBE_ID],
+            newOwnerTribeID: [TRIBE_ID],
+          },
+          offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
+          limit: ENNOBLEMENTS_PER_PAGE,
+          sort: 'ennobledAt DESC',
+        },
+        server: SERVER,
+      },
+    });
+    renderEnnoblements(e, data.ennoblements, {
+      currentPage: page,
+      limit: ENNOBLEMENTS_PER_PAGE,
+      onPageChange: handleShowTribeEnnoblementsClick,
+    });
+  }
+};
+
+const wrapAction = (action) => {
+  const actionWrapperTd = document.createElement('td');
+  actionWrapperTd.colSpan = '2';
+  actionWrapperTd.append(action);
+  const actionWrapperTr = document.createElement('tr');
+  actionWrapperTr.appendChild(actionWrapperTd);
+  return actionWrapperTr;
+};
+
+const renderActions = () => {
+  const showEnnoblements = document.createElement('a');
+  showEnnoblements.href = '#';
+  setPage(showEnnoblements, '1');
+  showEnnoblements.innerHTML = 'Show tribe ennoblements';
+  showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
+  actionsContainer.appendChild(wrapAction(showEnnoblements));
+};
+
 (async function () {
   try {
     document.querySelector('#content_value > table:nth-child(3)').style.width =
       '100%';
+    renderActions();
 
     const dataFromCache = loadDataFromCache();
     if (dataFromCache && dataFromCache.tribe) {
