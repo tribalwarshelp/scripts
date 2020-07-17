@@ -27,7 +27,7 @@ export default (container, stats) => {
         <tbody>
           <tr>
             <th colspan="2">
-              Today's stats
+              Today's stat changes
             </th>
           </tr>
             <tr>
