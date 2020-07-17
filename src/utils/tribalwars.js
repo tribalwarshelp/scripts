@@ -30,6 +30,11 @@ export const formatVillageURL = (id) => {
   );
 };
 
+export const formatVillageName = (n = '', x = 500, y = 500) => {
+  const continent = 'K' + String(y)[0] + String(x)[0];
+  return `${n} (${x}|${y}) ${continent}`;
+};
+
 export const loadInADayData = async (type, { name, ...rest } = {}) => {
   try {
     const response = await fetch(

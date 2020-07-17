@@ -6,6 +6,7 @@ import {
   formatTribeURL,
   formatPlayerURL,
   formatVillageURL,
+  formatVillageName,
 } from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
 
@@ -14,7 +15,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      0.51
+// @version      0.52
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
 // @match        *://*/game.php*
@@ -172,10 +173,11 @@ const formatPlayerHTML = (player) => {
 };
 
 const formatVillageHTML = (village) => {
-  const continent = 'K' + String(village.y)[0] + String(village.x)[0];
-  return `<a href="${formatVillageURL(village.id)}">${village.name} (${
-    village.x
-  }|${village.y}) ${continent}</a>`;
+  return `<a href="${formatVillageURL(village.id)}">${formatVillageName(
+    village.name,
+    village.x,
+    village.y
+  )}</a>`;
 };
 
 const formatEnnoblementRows = (ennoblements) => {

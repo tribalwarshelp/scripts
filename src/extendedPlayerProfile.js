@@ -6,7 +6,13 @@ import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
 import renderPopup from './utils/renderPopup';
 import { formatPlayerURL } from './utils/twstats';
-import { formatTribeURL, loadInADayData } from './utils/tribalwars';
+import {
+  formatTribeURL,
+  formatPlayerURL as formatPlayerURLTribalWars,
+  formatVillageName,
+  formatVillageURL,
+  loadInADayData,
+} from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -14,7 +20,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      0.61
+// @version      0.7
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_player*
@@ -128,6 +134,40 @@ query playerHistoryAndPlayerDailyStats($server: String!,
 `;
 const PLAYER_HISTORY_PAGINATION_CONTAINER_ID = 'playerHistoryPagination';
 const PLAYER_HISTORY_PER_PAGE = 15;
+const ENNOBLEMENTS_QUERY = `
+    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
+      ennoblements(server: $server, filter: $filter) {
+        total
+        items {
+          village {
+            id
+            name
+            x
+            y
+          }
+          oldOwner {
+            id
+            name
+          }
+          oldOwnerTribe {
+            id
+            tag
+          }
+          newOwner {
+            id
+            name
+          }
+          newOwnerTribe {
+            id
+            tag
+          }
+          ennobledAt
+        }
+      }
+    }
+`;
+const ENNOBLEMENTS_PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
+const ENNOBLEMENTS_PER_PAGE = 15;
 
 const profileInfoTBody = document.querySelector('#player_info > tbody');
 const actionsContainer =
@@ -552,12 +592,10 @@ const render = ({ player, dailyPlayerStats }) => {
   }
 };
 
-const addTribeChangesListeners = () => {
-  document
-    .querySelectorAll('#' + TRIBE_CHANGES_PAGINATION_CONTAINER_ID + ' a')
-    .forEach((el) => {
-      el.addEventListener('click', handleShowTribeChangesButtonClick);
-    });
+const addPaginationListeners = (id, fn) => {
+  document.querySelectorAll('#' + id + ' a').forEach((el) => {
+    el.addEventListener('click', fn);
+  });
 };
 
 const renderTribeChanges = (e, currentPage, tribeChanges) => {
@@ -570,7 +608,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     <div id="${TRIBE_CHANGES_PAGINATION_CONTAINER_ID}">
       ${paginationItems.join('')}
     </div>
-    <table class="vis">
+    <table class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
       <tbody>
         <tr>
           <th>
@@ -601,7 +639,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
             } else {
               rowHTML += '<td>-</td>';
             }
-            return rowHTML;
+            return rowHTML + '</tr>';
           })
           .join('')}
       </tbody>
@@ -615,7 +653,10 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     html,
   });
 
-  addTribeChangesListeners();
+  addPaginationListeners(
+    TRIBE_CHANGES_PAGINATION_CONTAINER_ID,
+    handleShowTribeChangesButtonClick
+  );
 };
 
 const handleShowTribeChangesButtonClick = async (e) => {
@@ -638,14 +679,6 @@ const handleShowTribeChangesButtonClick = async (e) => {
   }
 };
 
-const addPlayerHistoryListeners = () => {
-  document
-    .querySelectorAll('#' + PLAYER_HISTORY_PAGINATION_CONTAINER_ID + ' a')
-    .forEach((el) => {
-      el.addEventListener('click', handleShowPlayerHistoryClick);
-    });
-};
-
 const addMathSymbol = (v) => {
   return v > 0 ? '+' + v : v;
 };
@@ -665,7 +698,7 @@ const renderPlayerHistory = (
     <div id="${PLAYER_HISTORY_PAGINATION_CONTAINER_ID}">
       ${paginationItems.join('')}
     </div>
-    <table class="vis" style="border-collapse: separate; border-spacing: 2px;">
+    <table class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
       <tbody>
         <tr>
           <th>
@@ -763,7 +796,10 @@ const renderPlayerHistory = (
     html,
   });
 
-  addPlayerHistoryListeners();
+  addPaginationListeners(
+    PLAYER_HISTORY_PAGINATION_CONTAINER_ID,
+    handleShowPlayerHistoryClick
+  );
 };
 
 const handleShowPlayerHistoryClick = async (e) => {
@@ -792,6 +828,110 @@ const handleShowPlayerHistoryClick = async (e) => {
     } catch (error) {
       console.log('cannot load player history', error);
     }
+  }
+};
+
+const renderPlayerEnnoblements = (e, currentPage, ennoblements) => {
+  const paginationItems = generatePaginationItems({
+    total: ennoblements.total,
+    limit: ENNOBLEMENTS_PER_PAGE,
+    currentPage,
+  });
+  const getPlayerTd = (player, tribe) => {
+    if (player) {
+      return `<td><a href="${formatPlayerURLTribalWars(player.id)}">${
+        player.name
+      } (${
+        tribe ? `<a href="${formatTribeURL(tribe.id)}">${tribe.tag}</a>` : '-'
+      })</a></td>`;
+    }
+    return '<td>-</td>';
+  };
+  const html = `
+    <div id="${ENNOBLEMENTS_PAGINATION_CONTAINER_ID}">
+      ${paginationItems.join('')}
+    </div>
+    <table class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
+      <tbody>
+        <tr>
+          <th>
+            Date
+          </th>
+          <th>
+            Village
+          </th>
+          <th>
+            New Owner
+          </th>
+          <th>
+            Old Owner
+          </th>
+        </tr>
+        ${ennoblements.items
+          .map((ennoblement) => {
+            let rowHTML =
+              '<tr>' + `<td>${formatDate(ennoblement.ennobledAt)}</td>`;
+            if (ennoblement.village) {
+              rowHTML += `<td><a href="${formatVillageURL(
+                ennoblement.village.id
+              )}">${formatVillageName(
+                ennoblement.village.name,
+                ennoblement.village.x,
+                ennoblement.village.y
+              )}</a></td>`;
+            } else {
+              rowHTML += '<td>-</td>';
+            }
+
+            rowHTML += getPlayerTd(
+              ennoblement.newOwner,
+              ennoblement.newOwnerTribe
+            );
+            rowHTML += getPlayerTd(
+              ennoblement.oldOwner,
+              ennoblement.oldOwnerTribe
+            );
+
+            return rowHTML + '</tr>';
+          })
+          .join('')}
+      </tbody>
+    </table>
+  `;
+
+  renderPopup({
+    e,
+    title: `Ennoblements`,
+    id: 'ennoblements',
+    html,
+  });
+
+  addPaginationListeners(
+    ENNOBLEMENTS_PAGINATION_CONTAINER_ID,
+    handleShowPlayerEnnoblementsClick
+  );
+};
+
+const handleShowPlayerEnnoblementsClick = async (e) => {
+  e.preventDefault();
+  const page = getPage(e.target);
+  if (!isNaN(page)) {
+    const data = await requestCreator({
+      query: ENNOBLEMENTS_QUERY,
+      variables: {
+        filter: {
+          or: {
+            oldOwnerID: [PLAYER_ID],
+            newOwnerID: [PLAYER_ID],
+          },
+          offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
+          limit: ENNOBLEMENTS_PER_PAGE,
+          sort: 'ennobledAt DESC',
+        },
+        server: SERVER,
+      },
+    });
+    renderPlayerEnnoblements(e, page, data.ennoblements);
   }
 };
 
@@ -830,6 +970,13 @@ const renderActions = () => {
   showPlayerHistory.innerHTML = 'Show player history';
   showPlayerHistory.addEventListener('click', handleShowPlayerHistoryClick);
   actionsContainer.appendChild(wrapAction(showPlayerHistory));
+
+  const showEnnoblements = document.createElement('a');
+  showEnnoblements.href = '#';
+  setPage(showEnnoblements, '1');
+  showEnnoblements.innerHTML = 'Show player ennoblements';
+  showEnnoblements.addEventListener('click', handleShowPlayerEnnoblementsClick);
+  actionsContainer.appendChild(wrapAction(showEnnoblements));
 
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';

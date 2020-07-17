@@ -315,7 +315,7 @@ exports.default = InADayParser;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadInADayData = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.loadInADayData = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
 
 var _InADayParser = _interopRequireDefault(require("../libs/InADayParser"));
 
@@ -351,6 +351,16 @@ const formatVillageURL = id => {
 };
 
 exports.formatVillageURL = formatVillageURL;
+
+const formatVillageName = function formatVillageName() {
+  let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+  let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+  const continent = 'K' + String(y)[0] + String(x)[0];
+  return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
+};
+
+exports.formatVillageName = formatVillageName;
 
 const loadInADayData = async function loadInADayData(type) {
   let _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
@@ -445,7 +455,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      0.51
+// @version      0.52
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
 // @match        *://*/game.php*
@@ -559,8 +569,7 @@ const formatPlayerHTML = player => {
 };
 
 const formatVillageHTML = village => {
-  const continent = 'K' + String(village.y)[0] + String(village.x)[0];
-  return "<a href=\"".concat((0, _tribalwars.formatVillageURL)(village.id), "\">").concat(village.name, " (").concat(village.x, "|").concat(village.y, ") ").concat(continent, "</a>");
+  return "<a href=\"".concat((0, _tribalwars.formatVillageURL)(village.id), "\">").concat((0, _tribalwars.formatVillageName)(village.name, village.x, village.y), "</a>");
 };
 
 const formatEnnoblementRows = ennoblements => {
