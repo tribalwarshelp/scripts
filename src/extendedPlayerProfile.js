@@ -654,20 +654,20 @@ const renderActions = () => {
   const showPlayerHistory = document.createElement('a');
   showPlayerHistory.href = '#';
   setPage(showPlayerHistory, '1');
-  showPlayerHistory.innerHTML = 'Show player history';
+  showPlayerHistory.innerHTML = 'Show history';
   showPlayerHistory.addEventListener('click', handleShowPlayerHistoryClick);
   actionsContainer.appendChild(wrapAction(showPlayerHistory));
 
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   setPage(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show player ennoblements';
+  showEnnoblements.innerHTML = 'Show ennoblements';
   showEnnoblements.addEventListener('click', handleShowPlayerEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblements));
 
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';
-  exportPlayerVillages.innerHTML = `Export player's villages`;
+  exportPlayerVillages.innerHTML = `Export villages`;
   exportPlayerVillages.addEventListener(
     'click',
     handleExportPlayerVillagesButtonClick
