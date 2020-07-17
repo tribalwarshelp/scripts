@@ -1,4 +1,5 @@
 import requestCreator from './libs/requestCreator';
+import renderTodaysStats from './utils/renderTodaysStats';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import { setItem, getItem } from './utils/localStorage';
@@ -21,7 +22,7 @@ const SERVER = getCurrentServer();
 const TRIBE_ID = getIDFromURL(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
 const TRIBE_QUERY = `
-    query tribe($server: String!, $id: Int!) {
+    query tribe($server: String!, $id: Int!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {
         tribe(server: $server, id: $id) {
             id
             bestRank
@@ -33,10 +34,27 @@ const TRIBE_QUERY = `
             createdAt
             dominance
         }
+        dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {
+          items {
+            rank
+            rankAtt
+            rankDef
+            rankTotal
+            points
+            scoreAtt
+            scoreAtt
+            scoreDef
+            scoreTotal
+            villages
+          }
+        }
     }
 `;
 const profileInfoTBody = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody'
+);
+const otherElementsContainer = document.querySelector(
+  '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)'
 );
 
 const loadDataFromCache = () => {
@@ -53,6 +71,11 @@ const loadData = async () => {
     variables: {
       server: SERVER,
       id: TRIBE_ID,
+      dailyTribeStatsFilter: {
+        sort: 'createDate DESC',
+        limit: 1,
+        tribeID: [TRIBE_ID],
+      },
     },
   });
   cacheTribeData(data);
@@ -72,7 +95,7 @@ const renderTr = ({ title, data, id }) => {
   tr.children[1].innerHTML = data;
 };
 
-const render = ({ tribe }) => {
+const render = ({ tribe, dailyTribeStats }) => {
   [
     {
       title: 'Created at:',
@@ -105,6 +128,10 @@ const render = ({ tribe }) => {
   ].forEach((data) => {
     renderTr(data);
   });
+
+  if (dailyTribeStats && dailyTribeStats.items.length > 0) {
+    renderTodaysStats(otherElementsContainer, dailyTribeStats.items[0]);
+  }
 };
 
 (async function () {

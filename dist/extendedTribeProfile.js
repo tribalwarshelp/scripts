@@ -158,7 +158,52 @@ var _default = function _default() {
 };
 
 exports.default = _default;
-},{}],"tQUs":[function(require,module,exports) {
+},{}],"yQib":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = v => v === undefined || v === null;
+
+exports.default = _default;
+},{}],"dPMc":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _isNil = _interopRequireDefault(require("./isNil"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const getTodaysStatsTdStyle = value => {
+  const statIncreaseStyle = 'color: #000; background-color: #0f0';
+  const statDecreaseStyle = 'color: #000; background-color: #f00';
+  const defaultStyle = 'color: #000; background-color: #808080';
+  return value > 0 ? statIncreaseStyle : value < 0 ? statDecreaseStyle : defaultStyle;
+};
+
+var _default = (container, stats) => {
+  let todaysStats = container.querySelector('#todaysStats');
+
+  if (!todaysStats) {
+    todaysStats = document.createElement('div');
+    todaysStats.id = 'todaysStats';
+    todaysStats.width = '100%';
+    container.prepend(todaysStats);
+  }
+
+  const renderODS = !(0, _isNil.default)(stats.rankSup);
+  todaysStats.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              Today's stats\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Points:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.points), "\">\n                ").concat(Math.abs(stats.points).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rank), "\">\n                ").concat(Math.abs(stats.rank), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.villages), "\">\n                ").concat(Math.abs(stats.villages).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreAtt), "\">\n                ").concat(Math.abs(stats.scoreAtt).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODA Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankAtt), "\">\n                ").concat(Math.abs(stats.rankAtt), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreDef), "\">\n                ").concat(Math.abs(stats.scoreDef).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankDef), "\">\n                ").concat(Math.abs(stats.rankDef), "\n              </td>\n            </tr>\n            ").concat(renderODS ? "<tr>\n              <td>\n                ODS:\n              </td>\n              <td style=\"".concat(getTodaysStatsTdStyle(stats.scoreSup), "\">\n                ").concat(Math.abs(stats.scoreSup).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ODS Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankSup), "\">\n                ").concat(Math.abs(stats.rankSup), "\n              </td>\n            </tr>") : '', "\n            <tr>\n              <td>\n                OD:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.scoreTotal), "\">\n                ").concat(Math.abs(stats.scoreTotal).toLocaleString(), "\n              </td>\n            </tr>\n            <tr>\n              <td>\n                OD Rank:\n              </td>\n              <td style=\"").concat(getTodaysStatsTdStyle(stats.rankTotal), "\">\n                ").concat(Math.abs(stats.rankTotal), "\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
+};
+
+exports.default = _default;
+},{"./isNil":"yQib"}],"tQUs":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -231,6 +276,8 @@ exports.default = _default;
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
+var _renderTodaysStats = _interopRequireDefault(require("./utils/renderTodaysStats"));
+
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
@@ -256,8 +303,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const SERVER = (0, _getCurrentServer.default)();
 const TRIBE_ID = (0, _getIDFromURL.default)(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
-const TRIBE_QUERY = "\n    query tribe($server: String!, $id: Int!) {\n        tribe(server: $server, id: $id) {\n            id\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            createdAt\n            dominance\n        }\n    }\n";
+const TRIBE_QUERY = "\n    query tribe($server: String!, $id: Int!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n        tribe(server: $server, id: $id) {\n            id\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            createdAt\n            dominance\n        }\n        dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {\n          items {\n            rank\n            rankAtt\n            rankDef\n            rankTotal\n            points\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreTotal\n            villages\n          }\n        }\n    }\n";
 const profileInfoTBody = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody');
+const otherElementsContainer = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)');
 
 const loadDataFromCache = () => {
   return (0, _localStorage.getItem)(LOCAL_STORAGE_KEY);
@@ -273,7 +321,12 @@ const loadData = async () => {
     query: TRIBE_QUERY,
     variables: {
       server: SERVER,
-      id: TRIBE_ID
+      id: TRIBE_ID,
+      dailyTribeStatsFilter: {
+        sort: 'createDate DESC',
+        limit: 1,
+        tribeID: [TRIBE_ID]
+      }
     }
   });
   cacheTribeData(data);
@@ -302,7 +355,8 @@ const renderTr = (_ref) => {
 
 const render = (_ref2) => {
   let {
-    tribe
+    tribe,
+    dailyTribeStats
   } = _ref2;
   [{
     title: 'Created at:',
@@ -327,6 +381,10 @@ const render = (_ref2) => {
   }].forEach(data => {
     renderTr(data);
   });
+
+  if (dailyTribeStats && dailyTribeStats.items.length > 0) {
+    (0, _renderTodaysStats.default)(otherElementsContainer, dailyTribeStats.items[0]);
+  }
 };
 
 (async function () {
@@ -346,4 +404,4 @@ const render = (_ref2) => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf"}]},{},["r4nF"], null)
+},{"./libs/requestCreator":"Ph2E","./utils/renderTodaysStats":"dPMc","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf"}]},{},["r4nF"], null)
