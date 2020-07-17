@@ -745,7 +745,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      0.7
+// @version      0.71
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_player*
@@ -941,7 +941,7 @@ const render = (_ref2) => {
     id: 'best_rank'
   }, {
     title: 'Most points:',
-    data: player.mostPoints + ' ' + "(".concat((0, _formatDate.default)(player.mostPointsAt), ")"),
+    data: player.mostPoints.toLocaleString() + ' ' + "(".concat((0, _formatDate.default)(player.mostPointsAt), ")"),
     id: 'most_points'
   }, {
     title: 'Most villages:',
