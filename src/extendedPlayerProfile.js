@@ -1,4 +1,3 @@
-import subDays from 'date-fns/subDays';
 import requestCreator from './libs/requestCreator';
 import renderTodaysStats from './utils/renderTodaysStats';
 import renderPopup from './utils/renderPopup';
