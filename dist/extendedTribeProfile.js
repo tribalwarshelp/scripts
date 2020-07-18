@@ -1638,7 +1638,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.8
+// @version      0.9
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_ally*
@@ -1655,6 +1655,9 @@ const TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY = "\nquery tribeHistoryAndTribeD
 const TRIBE_HISTORY_PER_PAGE = 15;
 const TRIBE_MEMBERS_DAILY_STATS_QUERY = "\nquery tribeMembersDailyStats($server: String!,\n     $filter: DailyPlayerStatsFilter!) {\n  dailyPlayerStats(server: $server, filter: $filter) {\n    items {\n        player {\n          id\n          name\n        }\n        points\n        scoreAtt\n        scoreDef\n        scoreSup\n        scoreTotal\n        villages\n        createDate\n      }\n    }\n}\n";
 let MEMBERS_GROWTH_MODE = 'points';
+const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $filter: TribeChangeFilter!) {\n      tribeChanges(server: $server, filter: $filter) {\n        total\n        items {\n          player {\n            id\n            name\n          }\n          newTribe {\n            id\n            tag\n          }\n          createdAt\n        }\n      }\n    }\n";
+const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
+const TRIBE_CHANGES_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody');
 const actionsContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)');
@@ -1996,6 +1999,59 @@ const handleShowMembersGrowthClick = async e => {
   renderMembersGrowthPopup(e, data.dailyPlayerStats);
 };
 
+const renderTribeChanges = (e, currentPage, tribeChanges) => {
+  const paginationItems = (0, _pagination.generatePaginationItems)({
+    total: tribeChanges.total,
+    limit: TRIBE_CHANGES_PER_PAGE,
+    currentPage
+  });
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Player\n          </th>\n          <th>\n            Action\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
+    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
+
+    if (tribeChange.player) {
+      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatPlayerURL)(tribeChange.player.id), "\">").concat(tribeChange.player.name, "</a></td>");
+    } else {
+      rowHTML += '<td>-</td>';
+    }
+
+    rowHTML += "<td><strong>".concat(tribeChange.newTribe && tribeChange.newTribe.id === TRIBE_ID ? 'Joined' : 'Left', "</strong></td>");
+    return rowHTML + '</tr>';
+  }).join(''), "\n      </tbody>\n    </table>\n  ");
+  (0, _renderPopup.default)({
+    e,
+    title: "Tribe changes",
+    id: 'tribeChanges',
+    html
+  });
+  document.querySelectorAll('#' + TRIBE_CHANGES_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+    el.addEventListener('click', handleShowTribeChangesClick);
+  });
+};
+
+const handleShowTribeChangesClick = async e => {
+  e.preventDefault();
+  const page = (0, _pagination.getPage)(e.target);
+
+  if (!isNaN(page)) {
+    const data = await (0, _requestCreator.default)({
+      query: TRIBE_CHANGES_QUERY,
+      variables: {
+        filter: {
+          or: {
+            oldTribeID: [TRIBE_ID],
+            newTribeID: [TRIBE_ID]
+          },
+          offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
+          limit: TRIBE_CHANGES_PER_PAGE,
+          sort: 'createdAt DESC'
+        },
+        server: SERVER
+      }
+    });
+    renderTribeChanges(e, page, data.tribeChanges);
+  }
+};
+
 const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -2009,15 +2065,21 @@ const renderActions = () => {
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   (0, _pagination.setPage)(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show tribe ennoblements';
+  showEnnoblements.innerHTML = 'Show ennoblements';
   showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblements));
   const showHistory = document.createElement('a');
   showHistory.href = '#';
   (0, _pagination.setPage)(showHistory, '1');
-  showHistory.innerHTML = 'Show tribe history';
+  showHistory.innerHTML = 'Show history';
   showHistory.addEventListener('click', handleShowTribeHistoryClick);
   actionsContainer.appendChild(wrapAction(showHistory));
+  const showTribeChanges = document.createElement('a');
+  showTribeChanges.href = '#';
+  (0, _pagination.setPage)(showTribeChanges, '1');
+  showTribeChanges.innerHTML = 'Show tribe changes';
+  showTribeChanges.addEventListener('click', handleShowTribeChangesClick);
+  actionsContainer.appendChild(wrapAction(showTribeChanges));
   const showMembersGrowth = document.createElement('a');
   showMembersGrowth.href = '#';
   showMembersGrowth.innerHTML = 'Show members growth';
