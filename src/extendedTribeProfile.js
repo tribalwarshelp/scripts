@@ -18,7 +18,7 @@ import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.7.5
+// @version      0.8
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_ally*
@@ -449,7 +449,9 @@ const buildMembersGrowthTBody = (stats) => {
               }
               total += val;
               tds.push(
-                `<td style="${getMembersGrowthTdStyle(val)}">${val}</td>`
+                `<td style="${getMembersGrowthTdStyle(
+                  val
+                )}">${val.toLocaleString()}</td>`
               );
             }
             return `<tr>
@@ -463,7 +465,9 @@ const buildMembersGrowthTBody = (stats) => {
               }
             </td>
             ${tds.join('')}
-            <td style="${getMembersGrowthTdStyle(total)}">${total}</td>
+            <td style="${getMembersGrowthTdStyle(
+              total
+            )}"><strong>${total.toLocaleString()}</strong></td>
           </tr>`;
           })
           .join('')}
@@ -490,7 +494,12 @@ const renderMembersGrowthPopup = (e, stats) => {
     ['oda', 'Opponents defeated as attacker'],
     ['odd', 'Opponents defeated as defender'],
     ['ods', 'Opponents defeated as supporter'],
-  ].map((v) => `<option value="${v[0]}">${v[1]}</option>`);
+  ].map(
+    (v) =>
+      `<option ${
+        MEMBERS_GROWTH_MODE === v[0] ? 'selected="selected"' : ''
+      } value="${v[0]}">${v[1]}</option>`
+  );
   const html = `
     <form id="${MEMBERS_GROWTH_FORM}">
       <select>

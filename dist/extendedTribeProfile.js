@@ -1638,7 +1638,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.7.5
+// @version      0.8
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*&screen=info_ally*
@@ -1933,10 +1933,10 @@ const buildMembersGrowthTBody = stats => {
       }
 
       total += val;
-      tds.push("<td style=\"".concat(getMembersGrowthTdStyle(val), "\">").concat(val, "</td>"));
+      tds.push("<td style=\"".concat(getMembersGrowthTdStyle(val), "\">").concat(val.toLocaleString(), "</td>"));
     }
 
-    return "<tr>\n            <td>\n              ".concat(player ? "<a href=\"".concat((0, _tribalwars.formatPlayerURL)(id), "\">").concat(player.name, "</a>") : '-', "\n            </td>\n            ").concat(tds.join(''), "\n            <td style=\"").concat(getMembersGrowthTdStyle(total), "\">").concat(total, "</td>\n          </tr>");
+    return "<tr>\n            <td>\n              ".concat(player ? "<a href=\"".concat((0, _tribalwars.formatPlayerURL)(id), "\">").concat(player.name, "</a>") : '-', "\n            </td>\n            ").concat(tds.join(''), "\n            <td style=\"").concat(getMembersGrowthTdStyle(total), "\"><strong>").concat(total.toLocaleString(), "</strong></td>\n          </tr>");
   }).join(''), "\n      </tbody>\n  ");
 };
 
@@ -1950,7 +1950,7 @@ const createChangeTypeHandler = stats => e => {
 };
 
 const renderMembersGrowthPopup = (e, stats) => {
-  const formOptions = [['points', 'Points'], ['villages', 'Villages'], ['od', 'Opponents defeated'], ['oda', 'Opponents defeated as attacker'], ['odd', 'Opponents defeated as defender'], ['ods', 'Opponents defeated as supporter']].map(v => "<option value=\"".concat(v[0], "\">").concat(v[1], "</option>"));
+  const formOptions = [['points', 'Points'], ['villages', 'Villages'], ['od', 'Opponents defeated'], ['oda', 'Opponents defeated as attacker'], ['odd', 'Opponents defeated as defender'], ['ods', 'Opponents defeated as supporter']].map(v => "<option ".concat(MEMBERS_GROWTH_MODE === v[0] ? 'selected="selected"' : '', " value=\"").concat(v[0], "\">").concat(v[1], "</option>"));
   const html = "\n    <form id=\"".concat(MEMBERS_GROWTH_FORM, "\">\n      <select>\n        ").concat(formOptions.join(''), "\n      </select>\n      <button type=\"submit\">Change</button>\n    </form>\n    <table id=\"").concat(MEMBERS_GROWTH_TABLE_ID, "\" class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      ").concat(buildMembersGrowthTBody(stats), "\n    </table>\n  ");
   (0, _renderPopup.default)({
     e,
