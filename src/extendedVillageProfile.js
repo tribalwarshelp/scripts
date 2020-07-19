@@ -9,10 +9,10 @@ import renderEnnoblementsPopup from './utils/renderEnnoblements';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.5
+// @version      0.5.1
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
-// @match        *://*/game.php*&screen=info_village*
+// @match        *://*/game.php*screen=info_village*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==

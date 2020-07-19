@@ -21,10 +21,10 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.0.3
+// @version      1.0.4
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
-// @match        *://*/game.php*&screen=info_player*
+// @match        *://*/game.php*screen=info_player*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
