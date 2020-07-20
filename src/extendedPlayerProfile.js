@@ -1,8 +1,8 @@
 import requestCreator from './libs/requestCreator';
 import renderTodaysStats from './utils/renderTodaysStats';
-import renderPopup from './utils/renderPopup';
-import renderEnnoblements from './utils/renderEnnoblements';
-import renderHistoryPopup from './utils/renderHistoryPopup';
+import showPopup from './utils/showPopup';
+import showEnnoblementsPopup from './utils/showEnnoblementsPopup';
+import showHistoryPopup from './utils/showHistoryPopup';
 import {
   generatePaginationItems,
   getContainerStyles,
@@ -37,7 +37,7 @@ if (isNaN(PLAYER_ID) || !PLAYER_ID) {
 }
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
 const PLAYER_QUERY = `
-    query pageData($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {
+    query player($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {
         player(server: $server, id: $id) {
             id
             name
@@ -169,13 +169,13 @@ const ENNOBLEMENTS_QUERY = `
 const ENNOBLEMENTS_PER_PAGE = 15;
 
 const profileInfoTBody = document.querySelector('#player_info > tbody');
-const actionsContainer =
+const actionContainer =
   PLAYER_ID === CURRENT_PLAYER_ID
     ? profileInfoTBody
     : document.querySelector(
         '#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody'
       );
-const otherElementsContainer = document.querySelector(
+const otherElementContainer = document.querySelector(
   PLAYER_ID === CURRENT_PLAYER_ID
     ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)'
     : '#content_value > table > tbody > tr > td:nth-child(2)'
@@ -271,7 +271,7 @@ const renderPlayerServers = (player) => {
         </tr>
      </tbody>
     `;
-    otherElementsContainer.prepend(playerServers);
+    otherElementContainer.prepend(playerServers);
   }
   playerServers.querySelector('td').innerHTML = player.servers
     .sort()
@@ -291,7 +291,7 @@ const renderPlayerOtherNames = (player) => {
     playerOtherNames = document.createElement('div');
     playerOtherNames.id = 'playerOtherNames';
     playerOtherNames.width = '100%';
-    otherElementsContainer.prepend(playerOtherNames);
+    otherElementContainer.prepend(playerOtherNames);
   }
   playerOtherNames.innerHTML = `
       <table width="100%" class="vis">
@@ -339,7 +339,7 @@ const renderInADayRanks = (player) => {
     inADayRanks = document.createElement('div');
     inADayRanks.id = 'inADayRanks';
     inADayRanks.width = '100%';
-    otherElementsContainer.prepend(inADayRanks);
+    otherElementContainer.prepend(inADayRanks);
   }
 
   inADayRanks.innerHTML = `
@@ -462,7 +462,7 @@ const render = ({ player, dailyPlayerStats }) => {
 
   renderInADayRanks(player);
   if (dailyPlayerStats && dailyPlayerStats.items.length > 0) {
-    renderTodaysStats(otherElementsContainer, dailyPlayerStats.items[0]);
+    renderTodaysStats(otherElementContainer, dailyPlayerStats.items[0]);
   }
   if (player.nameChanges.length > 0) {
     renderPlayerOtherNames(player);
@@ -470,12 +470,6 @@ const render = ({ player, dailyPlayerStats }) => {
   if (player.servers.length > 0) {
     renderPlayerServers(player);
   }
-};
-
-const addPaginationListeners = (id, fn) => {
-  document.querySelectorAll('#' + id + ' a').forEach((el) => {
-    el.addEventListener('click', fn);
-  });
 };
 
 const renderTribeChanges = (e, currentPage, tribeChanges) => {
@@ -526,17 +520,18 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     </table>
   `;
 
-  renderPopup({
+  showPopup({
     e,
     title: `Tribe changes`,
     id: 'tribeChanges',
     html,
   });
 
-  addPaginationListeners(
-    TRIBE_CHANGES_PAGINATION_CONTAINER_ID,
-    handleShowTribeChangesButtonClick
-  );
+  document
+    .querySelectorAll('#' + TRIBE_CHANGES_PAGINATION_CONTAINER_ID + ' a')
+    .forEach((el) => {
+      el.addEventListener('click', handleShowTribeChangesButtonClick);
+    });
 };
 
 const handleShowTribeChangesButtonClick = async (e) => {
@@ -581,7 +576,7 @@ const handleShowPlayerHistoryClick = async (e) => {
           },
         },
       });
-      renderHistoryPopup(e, playerHistory, dailyPlayerStats, {
+      showHistoryPopup(e, playerHistory, dailyPlayerStats, {
         currentPage: page,
         limit: PLAYER_HISTORY_PER_PAGE,
         onPageChange: handleShowPlayerHistoryClick,
@@ -612,7 +607,7 @@ const handleShowPlayerEnnoblementsClick = async (e) => {
         server: SERVER,
       },
     });
-    renderEnnoblements(e, data.ennoblements, {
+    showEnnoblementsPopup(e, data.ennoblements, {
       currentPage: page,
       limit: ENNOBLEMENTS_PER_PAGE,
       onPageChange: handleShowPlayerEnnoblementsClick,
@@ -647,21 +642,21 @@ const renderActions = () => {
   setPage(showTribeChanges, '1');
   showTribeChanges.innerHTML = 'Show tribe changes';
   showTribeChanges.addEventListener('click', handleShowTribeChangesButtonClick);
-  actionsContainer.appendChild(wrapAction(showTribeChanges));
+  actionContainer.appendChild(wrapAction(showTribeChanges));
 
   const showPlayerHistory = document.createElement('a');
   showPlayerHistory.href = '#';
   setPage(showPlayerHistory, '1');
   showPlayerHistory.innerHTML = 'Show history';
   showPlayerHistory.addEventListener('click', handleShowPlayerHistoryClick);
-  actionsContainer.appendChild(wrapAction(showPlayerHistory));
+  actionContainer.appendChild(wrapAction(showPlayerHistory));
 
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   setPage(showEnnoblements, '1');
   showEnnoblements.innerHTML = 'Show ennoblements';
   showEnnoblements.addEventListener('click', handleShowPlayerEnnoblementsClick);
-  actionsContainer.appendChild(wrapAction(showEnnoblements));
+  actionContainer.appendChild(wrapAction(showEnnoblements));
 
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';
@@ -670,7 +665,7 @@ const renderActions = () => {
     'click',
     handleExportPlayerVillagesButtonClick
   );
-  actionsContainer.appendChild(wrapAction(exportPlayerVillages));
+  actionContainer.appendChild(wrapAction(exportPlayerVillages));
 };
 
 (async function () {

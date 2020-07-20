@@ -1,10 +1,10 @@
 import subDays from 'date-fns/subDays';
-import renderPopup from './renderPopup';
+import showPopup from './showPopup';
 import { generatePaginationItems, getContainerStyles } from './pagination';
 import formatDate from './formatDate';
 import { formatTribeURL } from './tribalwars';
 
-const HISTORY_PAGINATION_CONTAINER_ID = 'historyPagination';
+const PAGINATION_CONTAINER_ID = 'historyPagination';
 
 const addMathSymbol = (v) => {
   return v > 0 ? '+' + v : v;
@@ -22,7 +22,7 @@ export default (
     currentPage,
   });
   const html = `
-    <div style="${getContainerStyles()}" id="${HISTORY_PAGINATION_CONTAINER_ID}">
+    <div style="${getContainerStyles()}" id="${PAGINATION_CONTAINER_ID}">
       ${paginationItems.join('')}
     </div>
     <table class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
@@ -128,7 +128,7 @@ export default (
     </table>
   `;
 
-  renderPopup({
+  showPopup({
     e,
     title: `History`,
     id: 'history',
@@ -136,7 +136,7 @@ export default (
   });
 
   document
-    .querySelectorAll('#' + HISTORY_PAGINATION_CONTAINER_ID + ' a')
+    .querySelectorAll('#' + PAGINATION_CONTAINER_ID + ' a')
     .forEach((el) => {
       el.addEventListener('click', onPageChange);
     });

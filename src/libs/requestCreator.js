@@ -1,7 +1,7 @@
 export const API_URI = 'https://api.tribalwarshelp.com/graphql';
 
 export default ({ query, variables = {} } = {}) => {
-  return fetch('https://api.tribalwarshelp.com/graphql', {
+  return fetch(API_URI, {
     method: 'POST',
     body: JSON.stringify({
       query,

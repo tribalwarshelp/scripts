@@ -1,5 +1,5 @@
 import requestCreator from './libs/requestCreator';
-import renderPopup from './utils/renderPopup';
+import showPopup from './utils/showPopup';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
 import {
@@ -9,13 +9,14 @@ import {
   formatVillageName,
 } from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
+import loadTranslations from './i18n/latestEnnoblements';
 
 // ==UserScript==
 // @name         Latest ennoblements
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      0.52
+// @version      1
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
 // @match        *://*/game.php*
@@ -66,6 +67,7 @@ const DEFAULT_FILTER = {
   oldOwner: '',
   oldOwnerTribe: '',
 };
+const translations = loadTranslations();
 
 const loadLatestEnnoblementsFromCache = () => {
   return getItem(CACHE_LOCAL_STORAGE_KEY);
@@ -198,30 +200,30 @@ const renderLatestEnnoblements = (ennoblements = [], filters = {}) => {
   };
   const html = `
         <form style="margin-bottom: 15px" id="${FILTER_FORM_ID}">
-          <h3 style="margin-bottom: 5px">Filters</h3>
-          <input type="text" placeholder="New owner" value="${
-            prepared.newOwner
-          }" />
-          <input type="text" placeholder="New owner tribe" value="${
-            prepared.newOwnerTribe
-          }" />
-          <input type="text" placeholder="Old owner" value="${
-            prepared.oldOwner
-          }" />
-          <input type="text" placeholder="Old owner tribe" value="${
-            prepared.oldOwnerTribe
-          }" />
+          <h3 style="margin-bottom: 5px">${translations.filters}</h3>
+          <input type="text" placeholder="${translations.newOwner}" value="${
+    prepared.newOwner
+  }" />
+          <input type="text" placeholder="${
+            translations.newOwnerTribe
+          }" value="${prepared.newOwnerTribe}" />
+          <input type="text" placeholder="${translations.oldOwner}" value="${
+    prepared.oldOwner
+  }" />
+          <input type="text" placeholder="${
+            translations.oldOwnerTribe
+          }" value="${prepared.oldOwnerTribe}" />
           <div>
-            <button type="submit">Apply</button>
+            <button type="submit">${translations.apply}</button>
           </div>
         </form>
         <table class="vis" id="${TABLE_ID}" style="width: 100%">
           <thead>
             <tr>
-              <th>Village</th>
-              <th>New owner</th>
-              <th>Old owner</th>
-              <th>Date</th>
+              <th>${translations.village}</th>
+              <th>${translations.newOwner}</th>
+              <th>${translations.oldOwner}</th>
+              <th>${translations.date}</th>
             </tr>
           </thead>
           <tbody>
@@ -232,9 +234,9 @@ const renderLatestEnnoblements = (ennoblements = [], filters = {}) => {
         </table>
         `;
 
-  renderPopup({
+  showPopup({
     e: { clientY: 60 },
-    title: `Ennoblements ${SERVER}`,
+    title: translations.ennoblements,
     id: 'ennoblements',
     html,
   });
@@ -268,7 +270,7 @@ const renderButton = () => {
 
   const button = document.createElement('a');
   button.innerHTML = `<img src="${ICON_URL}">`;
-  button.title = 'Show latest ennoblements';
+  button.title = translations.showLatestEnnoblements;
   button.style.cursor = 'pointer';
   button.addEventListener('click', handleButtonClick);
   container.append(button);

@@ -8,9 +8,9 @@ import {
   getContainerStyles,
 } from './utils/pagination';
 import renderTodaysStats from './utils/renderTodaysStats';
-import renderEnnoblements from './utils/renderEnnoblements';
-import renderHistoryPopup from './utils/renderHistoryPopup';
-import renderPopup from './utils/renderPopup';
+import showEnnoblementsPopup from './utils/showEnnoblementsPopup';
+import showHistoryPopup from './utils/showHistoryPopup';
+import showPopup from './utils/showPopup';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import { setItem, getItem } from './utils/localStorage';
@@ -362,7 +362,7 @@ const handleShowTribeEnnoblementsClick = async (e) => {
         server: SERVER,
       },
     });
-    renderEnnoblements(e, data.ennoblements, {
+    showEnnoblementsPopup(e, data.ennoblements, {
       currentPage: page,
       limit: ENNOBLEMENTS_PER_PAGE,
       onPageChange: handleShowTribeEnnoblementsClick,
@@ -392,7 +392,7 @@ const handleShowTribeHistoryClick = async (e) => {
           },
         },
       });
-      renderHistoryPopup(e, tribeHistory, dailyTribeStats, {
+      showHistoryPopup(e, tribeHistory, dailyTribeStats, {
         currentPage: page,
         limit: TRIBE_HISTORY_PER_PAGE,
         tribe: true,
@@ -537,7 +537,7 @@ const renderMembersGrowthPopup = (e, stats) => {
     </table>
   `;
 
-  renderPopup({
+  showPopup({
     e,
     title: `Members growth`,
     id: 'mg',
@@ -628,7 +628,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     </table>
   `;
 
-  renderPopup({
+  showPopup({
     e,
     title: `Tribe changes`,
     id: 'tribeChanges',
@@ -707,6 +707,7 @@ const renderActions = () => {
   try {
     document.querySelector('#content_value > table:nth-child(3)').style.width =
       '100%';
+
     renderActions();
 
     const dataFromCache = loadDataFromCache();

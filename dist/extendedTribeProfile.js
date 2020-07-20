@@ -907,7 +907,7 @@ var _default = function _default() {
     query,
     variables = {}
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  return fetch('https://api.tribalwarshelp.com/graphql', {
+  return fetch(API_URI, {
     method: 'POST',
     body: JSON.stringify({
       query,
@@ -1057,7 +1057,7 @@ var _default = (container, stats) => {
 };
 
 exports.default = _default;
-},{"./isNil":"yQib"}],"P4rL":[function(require,module,exports) {
+},{"./isNil":"yQib"}],"chDM":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1289,7 +1289,7 @@ const loadInADayData = async function loadInADayData(type) {
 };
 
 exports.loadInADayData = loadInADayData;
-},{"../libs/InADayParser":"dSAr"}],"vhoq":[function(require,module,exports) {
+},{"../libs/InADayParser":"dSAr"}],"VMe7":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1299,7 +1299,7 @@ exports.default = void 0;
 
 var _pagination = require("./pagination");
 
-var _renderPopup = _interopRequireDefault(require("./renderPopup"));
+var _showPopup = _interopRequireDefault(require("./showPopup"));
 
 var _formatDate = _interopRequireDefault(require("./formatDate"));
 
@@ -1307,7 +1307,7 @@ var _tribalwars = require("./tribalwars");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const ENNOBLEMENTS_PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
+const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
@@ -1328,7 +1328,7 @@ var _default = function _default(e, ennoblements) {
     limit,
     currentPage
   });
-  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(ENNOBLEMENTS_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Village\n          </th>\n          <th>\n            New Owner\n          </th>\n          <th>\n            Old Owner\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Village\n          </th>\n          <th>\n            New Owner\n          </th>\n          <th>\n            Old Owner\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
@@ -1341,19 +1341,19 @@ var _default = function _default(e, ennoblements) {
     rowHTML += getPlayerTd(ennoblement.oldOwner, ennoblement.oldOwnerTribe);
     return rowHTML + '</tr>';
   }).join(''), "\n      </tbody>\n    </table>\n  ");
-  (0, _renderPopup.default)({
+  (0, _showPopup.default)({
     e,
     title: "Ennoblements",
     id: 'ennoblements',
     html
   });
-  document.querySelectorAll('#' + ENNOBLEMENTS_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+  document.querySelectorAll('#' + PAGINATION_CONTAINER_ID + ' a').forEach(el => {
     el.addEventListener('click', onPageChange);
   });
 };
 
 exports.default = _default;
-},{"./pagination":"fCHX","./renderPopup":"P4rL","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"VYL5":[function(require,module,exports) {
+},{"./pagination":"fCHX","./showPopup":"chDM","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"VYL5":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1472,7 +1472,7 @@ function subDays(dirtyDate, dirtyAmount) {
   var amount = (0, _index.default)(dirtyAmount);
   return (0, _index2.default)(dirtyDate, -amount);
 }
-},{"../_lib/toInteger/index.js":"VYL5","../addDays/index.js":"lQIY","../_lib/requiredArgs/index.js":"kK6Q"}],"gJkK":[function(require,module,exports) {
+},{"../_lib/toInteger/index.js":"VYL5","../addDays/index.js":"lQIY","../_lib/requiredArgs/index.js":"kK6Q"}],"jHKY":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1482,7 +1482,7 @@ exports.default = void 0;
 
 var _subDays = _interopRequireDefault(require("date-fns/subDays"));
 
-var _renderPopup = _interopRequireDefault(require("./renderPopup"));
+var _showPopup = _interopRequireDefault(require("./showPopup"));
 
 var _pagination = require("./pagination");
 
@@ -1492,7 +1492,7 @@ var _tribalwars = require("./tribalwars");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const HISTORY_PAGINATION_CONTAINER_ID = 'historyPagination';
+const PAGINATION_CONTAINER_ID = 'historyPagination';
 
 const addMathSymbol = v => {
   return v > 0 ? '+' + v : v;
@@ -1510,7 +1510,7 @@ var _default = function _default(e, history, daily) {
     limit,
     currentPage
   });
-  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(HISTORY_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          ").concat(tribe ? '' : '<th>Tribe</th>', "\n          <th>\n          Points\n          </th>\n          <th>\n          Villages\n          </th>\n          ").concat(tribe ? '<th>Members</th>' : '', "\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          ").concat(tribe ? '' : '<th>ODS</th>', "\n        </tr>\n        ").concat(history.items.map(history => {
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          ").concat(tribe ? '' : '<th>Tribe</th>', "\n          <th>\n          Points\n          </th>\n          <th>\n          Villages\n          </th>\n          ").concat(tribe ? '<th>Members</th>' : '', "\n          <th>\n            OD\n          </th>\n          <th>\n            ODA\n          </th>\n          <th>\n            ODD\n          </th>\n          ").concat(tribe ? '' : '<th>ODS</th>', "\n        </tr>\n        ").concat(history.items.map(history => {
     const subtracted = (0, _subDays.default)(new Date(history.createDate), 1).toISOString().split('.')[0] + 'Z';
     const stats = daily.items.find(stats => {
       return stats.createDate === subtracted;
@@ -1530,19 +1530,19 @@ var _default = function _default(e, history, daily) {
     rowHTML += "\n              <td title=\"".concat(stats ? addMathSymbol(stats.points) : '', "\">\n                ").concat(history.points.toLocaleString(), " (<strong>").concat(history.rank, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.villages) : '', "\">\n                ").concat(history.totalVillages.toLocaleString(), "\n              </td>\n              ").concat(!tribe ? '' : "\n                  <td title=\"".concat(stats ? addMathSymbol(stats.members) : '', "\">\n                    ").concat(history.totalMembers, "\n                </td>\n              "), "\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreTotal) : '', "\">\n                ").concat(history.scoreTotal.toLocaleString(), " (<strong>").concat(history.rankTotal, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreAtt) : '', "\">\n                ").concat(history.scoreAtt.toLocaleString(), " (<strong>").concat(history.rankAtt, "</strong>)\n              </td>\n              <td title=\"").concat(stats ? addMathSymbol(stats.scoreDef) : '', "\">\n                ").concat(history.scoreDef.toLocaleString(), " (<strong>").concat(history.rankDef, "</strong>)\n              </td>\n              ").concat(tribe ? '' : "\n                  <td title=\"".concat(stats ? addMathSymbol(stats.scoreSup) : '', "\">\n                    ").concat(history.scoreSup.toLocaleString(), " (<strong>").concat(history.rankSup, "</strong>)\n                </td>\n              "), "\n            ") + '</tr>';
     return rowHTML;
   }).join(''), "\n      </tbody>\n    </table>\n  ");
-  (0, _renderPopup.default)({
+  (0, _showPopup.default)({
     e,
     title: "History",
     id: 'history',
     html
   });
-  document.querySelectorAll('#' + HISTORY_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+  document.querySelectorAll('#' + PAGINATION_CONTAINER_ID + ' a').forEach(el => {
     el.addEventListener('click', onPageChange);
   });
 };
 
 exports.default = _default;
-},{"date-fns/subDays":"mRRL","./renderPopup":"P4rL","./pagination":"fCHX","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"DMkL":[function(require,module,exports) {
+},{"date-fns/subDays":"mRRL","./showPopup":"chDM","./pagination":"fCHX","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"DMkL":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1607,11 +1607,11 @@ var _pagination = require("./utils/pagination");
 
 var _renderTodaysStats = _interopRequireDefault(require("./utils/renderTodaysStats"));
 
-var _renderEnnoblements = _interopRequireDefault(require("./utils/renderEnnoblements"));
+var _showEnnoblementsPopup = _interopRequireDefault(require("./utils/showEnnoblementsPopup"));
 
-var _renderHistoryPopup = _interopRequireDefault(require("./utils/renderHistoryPopup"));
+var _showHistoryPopup = _interopRequireDefault(require("./utils/showHistoryPopup"));
 
-var _renderPopup = _interopRequireDefault(require("./utils/renderPopup"));
+var _showPopup = _interopRequireDefault(require("./utils/showPopup"));
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
@@ -1831,7 +1831,7 @@ const handleShowTribeEnnoblementsClick = async e => {
         server: SERVER
       }
     });
-    (0, _renderEnnoblements.default)(e, data.ennoblements, {
+    (0, _showEnnoblementsPopup.default)(e, data.ennoblements, {
       currentPage: page,
       limit: ENNOBLEMENTS_PER_PAGE,
       onPageChange: handleShowTribeEnnoblementsClick
@@ -1864,7 +1864,7 @@ const handleShowTribeHistoryClick = async e => {
           })
         }
       });
-      (0, _renderHistoryPopup.default)(e, tribeHistory, dailyTribeStats, {
+      (0, _showHistoryPopup.default)(e, tribeHistory, dailyTribeStats, {
         currentPage: page,
         limit: TRIBE_HISTORY_PER_PAGE,
         tribe: true,
@@ -1955,7 +1955,7 @@ const createChangeTypeHandler = stats => e => {
 const renderMembersGrowthPopup = (e, stats) => {
   const formOptions = [['points', 'Points'], ['villages', 'Villages'], ['od', 'Opponents defeated'], ['oda', 'Opponents defeated as attacker'], ['odd', 'Opponents defeated as defender'], ['ods', 'Opponents defeated as supporter']].map(v => "<option ".concat(MEMBERS_GROWTH_MODE === v[0] ? 'selected="selected"' : '', " value=\"").concat(v[0], "\">").concat(v[1], "</option>"));
   const html = "\n    <form id=\"".concat(MEMBERS_GROWTH_FORM, "\">\n      <select>\n        ").concat(formOptions.join(''), "\n      </select>\n      <button type=\"submit\">Change</button>\n    </form>\n    <table id=\"").concat(MEMBERS_GROWTH_TABLE_ID, "\" class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      ").concat(buildMembersGrowthTBody(stats), "\n    </table>\n  ");
-  (0, _renderPopup.default)({
+  (0, _showPopup.default)({
     e,
     title: "Members growth",
     id: 'mg',
@@ -2017,7 +2017,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     rowHTML += "<td><strong>".concat(tribeChange.newTribe && tribeChange.newTribe.id === TRIBE_ID ? 'Joined' : 'Left', "</strong></td>");
     return rowHTML + '</tr>';
   }).join(''), "\n      </tbody>\n    </table>\n  ");
-  (0, _renderPopup.default)({
+  (0, _showPopup.default)({
     e,
     title: "Tribe changes",
     id: 'tribeChanges',
@@ -2106,4 +2106,4 @@ const renderActions = () => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/renderTodaysStats":"dPMc","./utils/renderEnnoblements":"vhoq","./utils/renderHistoryPopup":"gJkK","./utils/renderPopup":"P4rL","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)
+},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/renderTodaysStats":"dPMc","./utils/showEnnoblementsPopup":"VMe7","./utils/showHistoryPopup":"jHKY","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)

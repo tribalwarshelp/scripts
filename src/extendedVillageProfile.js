@@ -2,7 +2,7 @@ import requestCreator from './libs/requestCreator';
 import { setPage, getPage } from './utils/pagination';
 import getCurrentServer from './utils/getCurrentServer';
 import getIDFromURL from './utils/getIDFromURL';
-import renderEnnoblementsPopup from './utils/renderEnnoblements';
+import showEnnoblementsPopup from './utils/showEnnoblementsPopup';
 
 // ==UserScript==
 // @name         Extended Village Profile
@@ -72,7 +72,7 @@ const handleShowTribeEnnoblementsClick = async (e) => {
         server: SERVER,
       },
     });
-    renderEnnoblementsPopup(e, data.ennoblements, {
+    showEnnoblementsPopup(e, data.ennoblements, {
       currentPage: page,
       limit: ENNOBLEMENTS_PER_PAGE,
       onPageChange: handleShowTribeEnnoblementsClick,
@@ -90,12 +90,15 @@ const wrapAction = (action) => {
 };
 
 const renderActions = () => {
-  const showEnnoblements = document.createElement('a');
-  showEnnoblements.href = '#';
-  setPage(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show ennoblements';
-  showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
-  actionsContainer.appendChild(wrapAction(showEnnoblements));
+  const showEnnoblementsPopup = document.createElement('a');
+  showEnnoblementsPopup.href = '#';
+  setPage(showEnnoblementsPopup, '1');
+  showEnnoblementsPopup.innerHTML = 'Show ennoblements';
+  showEnnoblementsPopup.addEventListener(
+    'click',
+    handleShowTribeEnnoblementsClick
+  );
+  actionsContainer.appendChild(wrapAction(showEnnoblementsPopup));
 };
 
 (function () {

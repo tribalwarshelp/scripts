@@ -132,7 +132,7 @@ var _default = function _default() {
     query,
     variables = {}
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  return fetch('https://api.tribalwarshelp.com/graphql', {
+  return fetch(API_URI, {
     method: 'POST',
     body: JSON.stringify({
       query,
@@ -158,7 +158,7 @@ var _default = function _default() {
 };
 
 exports.default = _default;
-},{}],"P4rL":[function(require,module,exports) {
+},{}],"chDM":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -427,12 +427,47 @@ const setItem = (key, payload) => {
 };
 
 exports.setItem = setItem;
+},{}],"FxgK":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    showLatestEnnoblements: 'Pokaż najnowsze przejęcia',
+    village: 'Wioska',
+    newOwner: 'Nowy właściciel',
+    oldOwner: 'Poprzedni właściciel',
+    date: 'Data',
+    filters: 'Filtry',
+    apply: 'Zastosuj',
+    ennoblements: 'Przejęcia'
+  },
+  en_DK: {
+    showLatestEnnoblements: 'Show latest ennoblements',
+    village: 'Village',
+    newOwner: 'New owner',
+    newOwnerTribe: 'New owner tribe',
+    oldOwner: 'Old owner',
+    oldOwnerTribe: 'Old owner tribe',
+    filters: 'Filters',
+    date: 'Date',
+    apply: 'Apply',
+    ennoblements: 'Ennoblements'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
 },{}],"hkfB":[function(require,module,exports) {
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
-var _renderPopup = _interopRequireDefault(require("./utils/renderPopup"));
+var _showPopup = _interopRequireDefault(require("./utils/showPopup"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
@@ -441,6 +476,8 @@ var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 var _tribalwars = require("./utils/tribalwars");
 
 var _localStorage = require("./utils/localStorage");
+
+var _latestEnnoblements = _interopRequireDefault(require("./i18n/latestEnnoblements"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -455,7 +492,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      0.52
+// @version      1
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
 // @match        *://*/game.php*
@@ -475,6 +512,7 @@ const DEFAULT_FILTER = {
   oldOwner: '',
   oldOwnerTribe: ''
 };
+const translations = (0, _latestEnnoblements.default)();
 
 const loadLatestEnnoblementsFromCache = () => {
   return (0, _localStorage.getItem)(CACHE_LOCAL_STORAGE_KEY);
@@ -584,12 +622,12 @@ const renderLatestEnnoblements = function renderLatestEnnoblements() {
 
   const prepared = _objectSpread(_objectSpread({}, DEFAULT_FILTER), filters);
 
-  const html = "\n        <form style=\"margin-bottom: 15px\" id=\"".concat(FILTER_FORM_ID, "\">\n          <h3 style=\"margin-bottom: 5px\">Filters</h3>\n          <input type=\"text\" placeholder=\"New owner\" value=\"").concat(prepared.newOwner, "\" />\n          <input type=\"text\" placeholder=\"New owner tribe\" value=\"").concat(prepared.newOwnerTribe, "\" />\n          <input type=\"text\" placeholder=\"Old owner\" value=\"").concat(prepared.oldOwner, "\" />\n          <input type=\"text\" placeholder=\"Old owner tribe\" value=\"").concat(prepared.oldOwnerTribe, "\" />\n          <div>\n            <button type=\"submit\">Apply</button>\n          </div>\n        </form>\n        <table class=\"vis\" id=\"").concat(TABLE_ID, "\" style=\"width: 100%\">\n          <thead>\n            <tr>\n              <th>Village</th>\n              <th>New owner</th>\n              <th>Old owner</th>\n              <th>Date</th>\n            </tr>\n          </thead>\n          <tbody>\n            ").concat(formatEnnoblementRows(filterEnnoblements(ennoblements, prepared)).join(''), "\n          </tbody>\n        </table>\n        ");
-  (0, _renderPopup.default)({
+  const html = "\n        <form style=\"margin-bottom: 15px\" id=\"".concat(FILTER_FORM_ID, "\">\n          <h3 style=\"margin-bottom: 5px\">").concat(translations.filters, "</h3>\n          <input type=\"text\" placeholder=\"").concat(translations.newOwner, "\" value=\"").concat(prepared.newOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.newOwnerTribe, "\" value=\"").concat(prepared.newOwnerTribe, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwner, "\" value=\"").concat(prepared.oldOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwnerTribe, "\" value=\"").concat(prepared.oldOwnerTribe, "\" />\n          <div>\n            <button type=\"submit\">").concat(translations.apply, "</button>\n          </div>\n        </form>\n        <table class=\"vis\" id=\"").concat(TABLE_ID, "\" style=\"width: 100%\">\n          <thead>\n            <tr>\n              <th>").concat(translations.village, "</th>\n              <th>").concat(translations.newOwner, "</th>\n              <th>").concat(translations.oldOwner, "</th>\n              <th>").concat(translations.date, "</th>\n            </tr>\n          </thead>\n          <tbody>\n            ").concat(formatEnnoblementRows(filterEnnoblements(ennoblements, prepared)).join(''), "\n          </tbody>\n        </table>\n        ");
+  (0, _showPopup.default)({
     e: {
       clientY: 60
     },
-    title: "Ennoblements ".concat(SERVER),
+    title: translations.ennoblements,
     id: 'ennoblements',
     html
   });
@@ -622,7 +660,7 @@ const renderButton = () => {
   container.style.zIndex = '50000';
   const button = document.createElement('a');
   button.innerHTML = "<img src=\"".concat(ICON_URL, "\">");
-  button.title = 'Show latest ennoblements';
+  button.title = translations.showLatestEnnoblements;
   button.style.cursor = 'pointer';
   button.addEventListener('click', handleButtonClick);
   container.append(button);
@@ -632,4 +670,4 @@ const renderButton = () => {
 (function () {
   renderButton();
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/renderPopup":"P4rL","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["hkfB"], null)
+},{"./libs/requestCreator":"Ph2E","./utils/showPopup":"chDM","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH","./i18n/latestEnnoblements":"FxgK"}]},{},["hkfB"], null)

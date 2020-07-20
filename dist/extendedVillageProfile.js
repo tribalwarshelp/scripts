@@ -132,7 +132,7 @@ var _default = function _default() {
     query,
     variables = {}
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  return fetch('https://api.tribalwarshelp.com/graphql', {
+  return fetch(API_URI, {
     method: 'POST',
     body: JSON.stringify({
       query,
@@ -259,7 +259,7 @@ exports.default = void 0;
 var _default = url => parseInt(new URLSearchParams(url).get('id'));
 
 exports.default = _default;
-},{}],"P4rL":[function(require,module,exports) {
+},{}],"chDM":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -480,7 +480,7 @@ const loadInADayData = async function loadInADayData(type) {
 };
 
 exports.loadInADayData = loadInADayData;
-},{"../libs/InADayParser":"dSAr"}],"vhoq":[function(require,module,exports) {
+},{"../libs/InADayParser":"dSAr"}],"VMe7":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -490,7 +490,7 @@ exports.default = void 0;
 
 var _pagination = require("./pagination");
 
-var _renderPopup = _interopRequireDefault(require("./renderPopup"));
+var _showPopup = _interopRequireDefault(require("./showPopup"));
 
 var _formatDate = _interopRequireDefault(require("./formatDate"));
 
@@ -498,7 +498,7 @@ var _tribalwars = require("./tribalwars");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const ENNOBLEMENTS_PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
+const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
@@ -519,7 +519,7 @@ var _default = function _default(e, ennoblements) {
     limit,
     currentPage
   });
-  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(ENNOBLEMENTS_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Village\n          </th>\n          <th>\n            New Owner\n          </th>\n          <th>\n            Old Owner\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Village\n          </th>\n          <th>\n            New Owner\n          </th>\n          <th>\n            Old Owner\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
@@ -532,19 +532,19 @@ var _default = function _default(e, ennoblements) {
     rowHTML += getPlayerTd(ennoblement.oldOwner, ennoblement.oldOwnerTribe);
     return rowHTML + '</tr>';
   }).join(''), "\n      </tbody>\n    </table>\n  ");
-  (0, _renderPopup.default)({
+  (0, _showPopup.default)({
     e,
     title: "Ennoblements",
     id: 'ennoblements',
     html
   });
-  document.querySelectorAll('#' + ENNOBLEMENTS_PAGINATION_CONTAINER_ID + ' a').forEach(el => {
+  document.querySelectorAll('#' + PAGINATION_CONTAINER_ID + ' a').forEach(el => {
     el.addEventListener('click', onPageChange);
   });
 };
 
 exports.default = _default;
-},{"./pagination":"fCHX","./renderPopup":"P4rL","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
+},{"./pagination":"fCHX","./showPopup":"chDM","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
@@ -555,7 +555,7 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
-var _renderEnnoblements = _interopRequireDefault(require("./utils/renderEnnoblements"));
+var _showEnnoblementsPopup = _interopRequireDefault(require("./utils/showEnnoblementsPopup"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -594,7 +594,7 @@ const handleShowTribeEnnoblementsClick = async e => {
         server: SERVER
       }
     });
-    (0, _renderEnnoblements.default)(e, data.ennoblements, {
+    (0, _showEnnoblementsPopup.default)(e, data.ennoblements, {
       currentPage: page,
       limit: ENNOBLEMENTS_PER_PAGE,
       onPageChange: handleShowTribeEnnoblementsClick
@@ -612,15 +612,15 @@ const wrapAction = action => {
 };
 
 const renderActions = () => {
-  const showEnnoblements = document.createElement('a');
-  showEnnoblements.href = '#';
-  (0, _pagination.setPage)(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show ennoblements';
-  showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
-  actionsContainer.appendChild(wrapAction(showEnnoblements));
+  const showEnnoblementsPopup = document.createElement('a');
+  showEnnoblementsPopup.href = '#';
+  (0, _pagination.setPage)(showEnnoblementsPopup, '1');
+  showEnnoblementsPopup.innerHTML = 'Show ennoblements';
+  showEnnoblementsPopup.addEventListener('click', handleShowTribeEnnoblementsClick);
+  actionsContainer.appendChild(wrapAction(showEnnoblementsPopup));
 };
 
 (function () {
   renderActions();
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/renderEnnoblements":"vhoq"}]},{},["UdfQ"], null)
+},{"./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/showEnnoblementsPopup":"VMe7"}]},{},["UdfQ"], null)

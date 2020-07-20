@@ -1,5 +1,5 @@
 import { generatePaginationItems, getContainerStyles } from './pagination';
-import renderPopup from './renderPopup';
+import showPopup from './showPopup';
 import formatDate from './formatDate';
 import {
   formatTribeURL,
@@ -8,7 +8,7 @@ import {
   formatVillageURL,
 } from './tribalwars';
 
-const ENNOBLEMENTS_PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
+const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
@@ -32,7 +32,7 @@ export default (
     currentPage,
   });
   const html = `
-    <div style="${getContainerStyles()}" id="${ENNOBLEMENTS_PAGINATION_CONTAINER_ID}">
+    <div style="${getContainerStyles()}" id="${PAGINATION_CONTAINER_ID}">
       ${paginationItems.join('')}
     </div>
     <table class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
@@ -83,7 +83,7 @@ export default (
     </table>
   `;
 
-  renderPopup({
+  showPopup({
     e,
     title: `Ennoblements`,
     id: 'ennoblements',
@@ -91,7 +91,7 @@ export default (
   });
 
   document
-    .querySelectorAll('#' + ENNOBLEMENTS_PAGINATION_CONTAINER_ID + ' a')
+    .querySelectorAll('#' + PAGINATION_CONTAINER_ID + ' a')
     .forEach((el) => {
       el.addEventListener('click', onPageChange);
     });
