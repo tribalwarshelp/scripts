@@ -1,4 +1,7 @@
+import getTranslations from '../i18n/renderTodaysStats';
 import isNil from './isNil';
+
+const translations = getTranslations();
 
 const getTodaysStatsTdStyle = (value) => {
   const statIncreaseStyle = 'color: #000; background-color: #0f0';
@@ -27,12 +30,12 @@ export default (container, stats) => {
         <tbody>
           <tr>
             <th colspan="2">
-              Today's stat changes
+              ${translations.title}
             </th>
           </tr>
             <tr>
               <td>
-                Points:
+                ${translations.points}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.points)}">
                 ${Math.abs(stats.points).toLocaleString()}
@@ -40,7 +43,7 @@ export default (container, stats) => {
             </tr>
             <tr>
               <td>
-                Rank:
+                ${translations.rank}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.rank)}">
                 ${Math.abs(stats.rank)}
@@ -48,7 +51,7 @@ export default (container, stats) => {
             </tr>
             <tr>
               <td>
-                Villages:
+                ${translations.villages}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.villages)}">
                 ${Math.abs(stats.villages).toLocaleString()}
@@ -58,7 +61,7 @@ export default (container, stats) => {
               !player
                 ? `<tr>
               <td>
-                Members:
+                ${translations.members}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.members)}">
                 ${Math.abs(stats.members)}
@@ -68,7 +71,7 @@ export default (container, stats) => {
             }
             <tr>
               <td>
-                ODA:
+                ${translations.oda}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.scoreAtt)}">
                 ${Math.abs(stats.scoreAtt).toLocaleString()}
@@ -76,7 +79,7 @@ export default (container, stats) => {
             </tr>
             <tr>
               <td>
-                ODA Rank:
+                ${translations.odaRank}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.rankAtt)}">
                 ${Math.abs(stats.rankAtt)}
@@ -84,7 +87,7 @@ export default (container, stats) => {
             </tr>
             <tr>
               <td>
-                ODD:
+                ${translations.odd}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.scoreDef)}">
                 ${Math.abs(stats.scoreDef).toLocaleString()}
@@ -92,7 +95,7 @@ export default (container, stats) => {
             </tr>
             <tr>
               <td>
-                ODD Rank:
+                ${translations.oddRank}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.rankDef)}">
                 ${Math.abs(stats.rankDef)}
@@ -102,7 +105,7 @@ export default (container, stats) => {
               player
                 ? `<tr>
               <td>
-                ODS:
+                ${translations.ods}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.scoreSup)}">
                 ${Math.abs(stats.scoreSup).toLocaleString()}
@@ -110,7 +113,7 @@ export default (container, stats) => {
             </tr>
             <tr>
               <td>
-                ODS Rank:
+                ${translations.odsRank}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.rankSup)}">
                 ${Math.abs(stats.rankSup)}
@@ -120,7 +123,7 @@ export default (container, stats) => {
             }
             <tr>
               <td>
-                OD:
+                ${translations.od}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.scoreTotal)}">
                 ${Math.abs(stats.scoreTotal).toLocaleString()}
@@ -128,7 +131,7 @@ export default (container, stats) => {
             </tr>
             <tr>
               <td>
-                OD Rank:
+                ${translations.odRank}:
               </td>
               <td style="${getTodaysStatsTdStyle(stats.rankTotal)}">
                 ${Math.abs(stats.rankTotal)}
