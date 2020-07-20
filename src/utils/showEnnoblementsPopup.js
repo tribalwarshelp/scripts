@@ -1,3 +1,4 @@
+import getTranslations from '../i18n/showEnnoblementsPopup';
 import { generatePaginationItems, getContainerStyles } from './pagination';
 import showPopup from './showPopup';
 import formatDate from './formatDate';
@@ -9,6 +10,7 @@ import {
 } from './tribalwars';
 
 const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
+const translations = getTranslations();
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
@@ -39,16 +41,16 @@ export default (
       <tbody>
         <tr>
           <th>
-            Date
+            ${translations.date}
           </th>
           <th>
-            Village
+            ${translations.village}
           </th>
           <th>
-            New Owner
+            ${translations.newOwner}
           </th>
           <th>
-            Old Owner
+            ${translations.oldOwner}
           </th>
         </tr>
         ${ennoblements.items
@@ -85,7 +87,7 @@ export default (
 
   showPopup({
     e,
-    title: `Ennoblements`,
+    title: translations.title,
     id: 'ennoblements',
     html,
   });

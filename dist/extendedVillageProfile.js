@@ -259,6 +259,33 @@ exports.default = void 0;
 var _default = url => parseInt(new URLSearchParams(url).get('id'));
 
 exports.default = _default;
+},{}],"tKRp":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    date: 'Data',
+    newOwner: 'Nowy właściciel',
+    oldOwner: 'Stary właściciel',
+    village: 'Wioska',
+    title: 'Przejęcia'
+  },
+  en_DK: {
+    date: 'Date',
+    newOwner: 'New owner',
+    oldOwner: 'Old owner',
+    village: 'Village',
+    title: 'Ennoblements'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
 },{}],"chDM":[function(require,module,exports) {
 "use strict";
 
@@ -488,6 +515,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _showEnnoblementsPopup = _interopRequireDefault(require("../i18n/showEnnoblementsPopup"));
+
 var _pagination = require("./pagination");
 
 var _showPopup = _interopRequireDefault(require("./showPopup"));
@@ -499,6 +528,7 @@ var _tribalwars = require("./tribalwars");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
+const translations = (0, _showEnnoblementsPopup.default)();
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
@@ -519,7 +549,7 @@ var _default = function _default(e, ennoblements) {
     limit,
     currentPage
   });
-  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Village\n          </th>\n          <th>\n            New Owner\n          </th>\n          <th>\n            Old Owner\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.village, "\n          </th>\n          <th>\n            ").concat(translations.newOwner, "\n          </th>\n          <th>\n            ").concat(translations.oldOwner, "\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
@@ -534,7 +564,7 @@ var _default = function _default(e, ennoblements) {
   }).join(''), "\n      </tbody>\n    </table>\n  ");
   (0, _showPopup.default)({
     e,
-    title: "Ennoblements",
+    title: translations.title,
     id: 'ennoblements',
     html
   });
@@ -544,7 +574,7 @@ var _default = function _default(e, ennoblements) {
 };
 
 exports.default = _default;
-},{"./pagination":"fCHX","./showPopup":"chDM","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
+},{"../i18n/showEnnoblementsPopup":"tKRp","./pagination":"fCHX","./showPopup":"chDM","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
@@ -564,7 +594,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.5.1
+// @version      0.5.2
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
