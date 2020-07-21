@@ -267,15 +267,21 @@ var _default = function _default() {
     html,
     id
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  inlinePopup(e, id, null, {
-    offset_x: 0,
-    offset_y: 0
-  }, html, title);
   const popup = document.querySelector(POPUP_SELECTOR);
 
   if (popup) {
     popup.style.width = 'auto';
-    popup.style.maxWidth = '800px';
+    popup.style.maxWidth = '1000px';
+  }
+
+  if (popup.classList.contains('show')) {
+    popup.querySelector('#inline_popup_title').innerHTML = title;
+    popup.querySelector('#inline_popup_content').innerHTML = html;
+  } else {
+    inlinePopup(e, id, null, {
+      offset_x: 0,
+      offset_y: 0
+    }, html, title);
   }
 
   const popupWrapper = document.querySelector(POPUP_WRAPPER_SELECTOR);
@@ -1011,7 +1017,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.0.5
+// @version      1.0.8
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
