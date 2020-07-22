@@ -892,7 +892,88 @@ function differenceInDays(dirtyDateLeft, dirtyDateRight) {
 
   return result === 0 ? 0 : result;
 }
-},{"../toDate/index.js":"KYJg","../differenceInCalendarDays/index.js":"ieRm","../_lib/requiredArgs/index.js":"kK6Q"}],"Ph2E":[function(require,module,exports) {
+},{"../toDate/index.js":"KYJg","../differenceInCalendarDays/index.js":"ieRm","../_lib/requiredArgs/index.js":"kK6Q"}],"iFDG":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    date: 'Data',
+    createdAt: 'Data założenia',
+    dominance: 'Dominacja',
+    bestRank: 'Najlepszy ranking',
+    mostPoints: 'Najwięcej punktów',
+    mostVillages: 'Najwięcej wiosek',
+    player: 'Gracz',
+    points: 'Punkty',
+    villages: 'Wioski',
+    opponentsDefeated: 'Pokonani przeciwnicy',
+    opponentsDefeatedAsAttacker: 'Pokonani przeciwnicy jako agresor',
+    opponentsDefeatedAsDefender: 'Pokonani przeciwnicy jako obrońca',
+    opponentsDefeatedAsSupporter: 'Pokonani przeciwnicy jako wspierający',
+    change: 'Zmień',
+    left: 'Opuścił',
+    joined: 'Dołączył',
+    tribeChanges: 'Zmiany plemion',
+    membersGrowth: 'Rozwój graczy',
+    act: 'Akcja',
+    total: 'Razem',
+    oda: 'RA',
+    odd: 'RO',
+    ods: 'RW',
+    od: 'Pokonani ogólnie',
+    dailyGrowth: 'Dzienny przyrost',
+    playerLinks: 'Linki',
+    action: {
+      showTribeChanges: 'Pokaż zmiany plemion',
+      showEnnoblements: 'Pokaż przejęcia',
+      showMembersGrowth: 'Pokaż rozwój graczy',
+      showHistory: 'Pokaż historię'
+    }
+  },
+  en_DK: {
+    date: 'Date',
+    createdAt: 'Created at',
+    dominance: 'Dominance',
+    bestRank: 'Best rank',
+    mostPoints: 'Most points',
+    mostVillages: 'Most villages',
+    player: 'Player',
+    points: 'Points',
+    villages: 'Villages',
+    opponentsDefeated: 'Opponents defeated',
+    opponentsDefeatedAsAttacker: 'Opponents defeated as attacker',
+    opponentsDefeatedAsDefender: 'Opponents defeated as defender',
+    opponentsDefeatedAsSupporter: 'Opponents defeated as supporter',
+    change: 'Change',
+    membersGrowth: 'Members growth',
+    tribeChanges: 'Tribe changes',
+    left: 'Left',
+    joined: 'Joined',
+    act: 'Action',
+    total: 'Total',
+    oda: 'ODA',
+    odd: 'ODD',
+    ods: 'ODS',
+    od: 'OD',
+    dailyGrowth: 'Daily growth',
+    playerLinks: 'Player links',
+    action: {
+      showTribeChanges: 'Show tribe changes',
+      showEnnoblements: 'Show ennoblements',
+      showMembersGrowth: 'Show members growth',
+      showHistory: 'Show history'
+    }
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
+},{}],"Ph2E":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1725,6 +1806,8 @@ var _isURL = _interopRequireDefault(require("validator/lib/isURL"));
 
 var _differenceInDays = _interopRequireDefault(require("date-fns/differenceInDays"));
 
+var _extendedTribeProfile = _interopRequireDefault(require("./i18n/extendedTribeProfile"));
+
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
 var _pagination = require("./utils/pagination");
@@ -1762,7 +1845,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.9.6
+// @version      1.0.0
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -1786,6 +1869,7 @@ const profileInfoTBody = document.querySelector('#content_value > table:nth-chil
 const actionsContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)');
 const membersContainer = document.querySelector('#content_value > table.vis > tbody');
+const translations = (0, _extendedTribeProfile.default)();
 
 const loadDataFromCache = () => {
   return (0, _localStorage.getItem)(LOCAL_STORAGE_KEY);
@@ -1856,7 +1940,7 @@ const extendMembersData = players => {
   const heading = membersContainer.querySelector('tr:first-child');
 
   if (heading.children.length !== 11) {
-    ['ODA', 'ODD', 'ODS', 'OD', 'Daily growth', 'Player links'].forEach(v => {
+    [translations.oda, translations.odd, translations.ods, translations.od, translations.dailyGrowth, translations.playerLinks].forEach(v => {
       const th = document.createElement('th');
       th.innerHTML = v;
       heading.appendChild(th);
@@ -1886,7 +1970,7 @@ const extendMembersData = players => {
           if (typeof data[0] === 'number') {
             td.innerHTML = "".concat(data[0].toLocaleString(), " (<strong>").concat(data[1], "</strong>)");
           } else if ((0, _isURL.default)(data[0])) {
-            td.innerHTML = "<a href=\"".concat(data[0], "\">").concat(data[1], "</a>");
+            td.innerHTML = "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"".concat(data[0], "\">").concat(data[1], "</a>");
           }
         } else if (typeof data === 'number') {
           td.innerHTML = data.toLocaleString();
@@ -1903,23 +1987,23 @@ const render = (_ref2) => {
     players
   } = _ref2;
   [{
-    title: 'Created at:',
+    title: translations.createdAt + ':',
     data: (0, _formatDate.default)(tribe.createdAt),
     id: 'created_at'
   }, {
-    title: 'Dominance:',
+    title: translations.dominance + ':',
     data: tribe.dominance.toFixed(2) + '%',
     id: 'dominance'
   }, {
-    title: 'Best rank:',
+    title: translations.bestRank + ':',
     data: tribe.bestRank + ' ' + "(".concat((0, _formatDate.default)(tribe.bestRankAt), ")"),
     id: 'best_rank'
   }, {
-    title: 'Most points:',
+    title: translations.mostPoints + ':',
     data: tribe.mostPoints.toLocaleString() + ' ' + "(".concat((0, _formatDate.default)(tribe.mostPointsAt), ")"),
     id: 'most_points'
   }, {
-    title: 'Most villages:',
+    title: translations.mostVillages + ':',
     data: tribe.mostVillages + ' ' + "(".concat((0, _formatDate.default)(tribe.mostVillagesAt), ")"),
     id: 'most_villages'
   }].forEach(data => {
@@ -2034,13 +2118,13 @@ const mapMembersGrowthTdValue = i => {
 
 const buildMembersGrowthTBody = stats => {
   const dates = [...new Set(stats.items.map(item => item.createDate))].reverse();
-  return "\n    <tbody>\n        <tr>\n          <th>Player</th>\n          ".concat(dates.map(date => {
+  return "\n    <tbody>\n        <tr>\n          <th>".concat(translations.player, "</th>\n          ").concat(dates.map(date => {
     return "<th>".concat((0, _formatDate.default)(date, {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
     }), "</th>");
-  }).join(''), "\n          <th>Total</th>\n        </tr>\n        ").concat(getMembersIDs().map(id => {
+  }).join(''), "\n          <th>").concat(translations.total, "</th>\n        </tr>\n        ").concat(getMembersIDs().map(id => {
     const filtered = stats.items.filter(item => item.player && item.player.id === id).reverse();
     let player = undefined;
 
@@ -2077,11 +2161,11 @@ const createChangeTypeHandler = stats => e => {
 };
 
 const renderMembersGrowthPopup = (e, stats) => {
-  const formOptions = [['points', 'Points'], ['villages', 'Villages'], ['od', 'Opponents defeated'], ['oda', 'Opponents defeated as attacker'], ['odd', 'Opponents defeated as defender'], ['ods', 'Opponents defeated as supporter']].map(v => "<option ".concat(MEMBERS_GROWTH_MODE === v[0] ? 'selected="selected"' : '', " value=\"").concat(v[0], "\">").concat(v[1], "</option>"));
-  const html = "\n    <form id=\"".concat(MEMBERS_GROWTH_FORM, "\">\n      <select>\n        ").concat(formOptions.join(''), "\n      </select>\n      <button type=\"submit\">Change</button>\n    </form>\n    <table id=\"").concat(MEMBERS_GROWTH_TABLE_ID, "\" class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      ").concat(buildMembersGrowthTBody(stats), "\n    </table>\n  ");
+  const formOptions = [['points', translations.points], ['villages', translations.villages], ['od', translations.opponentsDefeated], ['oda', translations.opponentsDefeatedAsAttacker], ['odd', translations.opponentsDefeatedAsDefender], ['ods', translations.opponentsDefeatedAsSupporter]].map(v => "<option ".concat(MEMBERS_GROWTH_MODE === v[0] ? 'selected="selected"' : '', " value=\"").concat(v[0], "\">").concat(v[1], "</option>"));
+  const html = "\n    <form id=\"".concat(MEMBERS_GROWTH_FORM, "\">\n      <select>\n        ").concat(formOptions.join(''), "\n      </select>\n      <button type=\"submit\">").concat(translations.change, "</button>\n    </form>\n    <table id=\"").concat(MEMBERS_GROWTH_TABLE_ID, "\" class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      ").concat(buildMembersGrowthTBody(stats), "\n    </table>\n  ");
   (0, _showPopup.default)({
     e,
-    title: "Members growth",
+    title: translations.membersGrowth,
     id: 'mg',
     html
   });
@@ -2129,7 +2213,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     limit: TRIBE_CHANGES_PER_PAGE,
     currentPage
   });
-  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            Player\n          </th>\n          <th>\n            Action\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.player, "\n          </th>\n          <th>\n            ").concat(translations.act, "\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
 
     if (tribeChange.player) {
@@ -2138,12 +2222,12 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
       rowHTML += '<td>-</td>';
     }
 
-    rowHTML += "<td><strong>".concat(tribeChange.newTribe && tribeChange.newTribe.id === TRIBE_ID ? 'Joined' : 'Left', "</strong></td>");
+    rowHTML += "<td><strong>".concat(tribeChange.newTribe && tribeChange.newTribe.id === TRIBE_ID ? translations.joined : translations.left, "</strong></td>");
     return rowHTML + '</tr>';
   }).join(''), "\n      </tbody>\n    </table>\n  ");
   (0, _showPopup.default)({
     e,
-    title: "Tribe changes",
+    title: translations.tribeChanges,
     id: 'tribeChanges',
     html
   });
@@ -2189,24 +2273,24 @@ const renderActions = () => {
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   (0, _pagination.setPage)(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show ennoblements';
+  showEnnoblements.innerHTML = translations.action.showEnnoblements;
   showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblements));
   const showHistory = document.createElement('a');
   showHistory.href = '#';
   (0, _pagination.setPage)(showHistory, '1');
-  showHistory.innerHTML = 'Show history';
+  showHistory.innerHTML = translations.action.showHistory;
   showHistory.addEventListener('click', handleShowTribeHistoryClick);
   actionsContainer.appendChild(wrapAction(showHistory));
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   (0, _pagination.setPage)(showTribeChanges, '1');
-  showTribeChanges.innerHTML = 'Show tribe changes';
+  showTribeChanges.innerHTML = translations.action.showTribeChanges;
   showTribeChanges.addEventListener('click', handleShowTribeChangesClick);
   actionsContainer.appendChild(wrapAction(showTribeChanges));
   const showMembersGrowth = document.createElement('a');
   showMembersGrowth.href = '#';
-  showMembersGrowth.innerHTML = 'Show members growth';
+  showMembersGrowth.innerHTML = translations.action.showMembersGrowth;
   showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
   actionsContainer.appendChild(wrapAction(showMembersGrowth));
 };
@@ -2230,4 +2314,4 @@ const renderActions = () => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)
+},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./i18n/extendedTribeProfile":"iFDG","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)

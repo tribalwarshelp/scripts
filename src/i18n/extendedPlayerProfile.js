@@ -20,6 +20,7 @@ const translations = {
     resourcesGathered: 'Zebrane surowce',
     villagesConquered: 'Podbite wioski',
     exportedVillages: 'Wyeksportowane wioski',
+    tribeChanges: 'Zmiany plemion',
     action: {
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
@@ -48,6 +49,7 @@ const translations = {
     resourcesGathered: 'Resources gathered',
     villagesConquered: 'Villages conquered',
     exportedVillages: 'Exported villages',
+    tribeChanges: 'Tribe changes',
     action: {
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',

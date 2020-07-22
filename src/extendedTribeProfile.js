@@ -1,5 +1,6 @@
 import isURL from 'validator/lib/isURL';
 import differenceInDays from 'date-fns/differenceInDays';
+import getTranslations from './i18n/extendedTribeProfile';
 import requestCreator from './libs/requestCreator';
 import {
   setPage,
@@ -23,7 +24,7 @@ import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.9.6
+// @version      1.0.0
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -197,6 +198,7 @@ const otherElementsContainer = document.querySelector(
 const membersContainer = document.querySelector(
   '#content_value > table.vis > tbody'
 );
+const translations = getTranslations();
 
 const loadDataFromCache = () => {
   return getItem(LOCAL_STORAGE_KEY);
@@ -257,7 +259,14 @@ const extendMembersData = (players) => {
   membersContainer.parentElement.style.width = '100%';
   const heading = membersContainer.querySelector('tr:first-child');
   if (heading.children.length !== 11) {
-    ['ODA', 'ODD', 'ODS', 'OD', 'Daily growth', 'Player links'].forEach((v) => {
+    [
+      translations.oda,
+      translations.odd,
+      translations.ods,
+      translations.od,
+      translations.dailyGrowth,
+      translations.playerLinks,
+    ].forEach((v) => {
       const th = document.createElement('th');
       th.innerHTML = v;
       heading.appendChild(th);
@@ -290,7 +299,7 @@ const extendMembersData = (players) => {
               data[1]
             }</strong>)`;
           } else if (isURL(data[0])) {
-            td.innerHTML = `<a href="${data[0]}">${data[1]}</a>`;
+            td.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="${data[0]}">${data[1]}</a>`;
           }
         } else if (typeof data === 'number') {
           td.innerHTML = data.toLocaleString();
@@ -303,22 +312,22 @@ const extendMembersData = (players) => {
 const render = ({ tribe, dailyTribeStats, players }) => {
   [
     {
-      title: 'Created at:',
+      title: translations.createdAt + ':',
       data: formatDate(tribe.createdAt),
       id: 'created_at',
     },
     {
-      title: 'Dominance:',
+      title: translations.dominance + ':',
       data: tribe.dominance.toFixed(2) + '%',
       id: 'dominance',
     },
     {
-      title: 'Best rank:',
+      title: translations.bestRank + ':',
       data: tribe.bestRank + ' ' + `(${formatDate(tribe.bestRankAt)})`,
       id: 'best_rank',
     },
     {
-      title: 'Most points:',
+      title: translations.mostPoints + ':',
       data:
         tribe.mostPoints.toLocaleString() +
         ' ' +
@@ -326,7 +335,7 @@ const render = ({ tribe, dailyTribeStats, players }) => {
       id: 'most_points',
     },
     {
-      title: 'Most villages:',
+      title: translations.mostVillages + ':',
       data: tribe.mostVillages + ' ' + `(${formatDate(tribe.mostVillagesAt)})`,
       id: 'most_villages',
     },
@@ -443,7 +452,7 @@ const buildMembersGrowthTBody = (stats) => {
   return `
     <tbody>
         <tr>
-          <th>Player</th>
+          <th>${translations.player}</th>
           ${dates
             .map((date) => {
               return `<th>${formatDate(date, {
@@ -453,7 +462,7 @@ const buildMembersGrowthTBody = (stats) => {
               })}</th>`;
             })
             .join('')}
-          <th>Total</th>
+          <th>${translations.total}</th>
         </tr>
         ${getMembersIDs()
           .map((id) => {
@@ -513,12 +522,12 @@ const createChangeTypeHandler = (stats) => (e) => {
 
 const renderMembersGrowthPopup = (e, stats) => {
   const formOptions = [
-    ['points', 'Points'],
-    ['villages', 'Villages'],
-    ['od', 'Opponents defeated'],
-    ['oda', 'Opponents defeated as attacker'],
-    ['odd', 'Opponents defeated as defender'],
-    ['ods', 'Opponents defeated as supporter'],
+    ['points', translations.points],
+    ['villages', translations.villages],
+    ['od', translations.opponentsDefeated],
+    ['oda', translations.opponentsDefeatedAsAttacker],
+    ['odd', translations.opponentsDefeatedAsDefender],
+    ['ods', translations.opponentsDefeatedAsSupporter],
   ].map(
     (v) =>
       `<option ${
@@ -530,7 +539,7 @@ const renderMembersGrowthPopup = (e, stats) => {
       <select>
         ${formOptions.join('')}
       </select>
-      <button type="submit">Change</button>
+      <button type="submit">${translations.change}</button>
     </form>
     <table id="${MEMBERS_GROWTH_TABLE_ID}" class="vis" style="border-collapse: separate; border-spacing: 2px; width: 100%;">
       ${buildMembersGrowthTBody(stats)}
@@ -539,7 +548,7 @@ const renderMembersGrowthPopup = (e, stats) => {
 
   showPopup({
     e,
-    title: `Members growth`,
+    title: translations.membersGrowth,
     id: 'mg',
     html,
   });
@@ -596,13 +605,13 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
       <tbody>
         <tr>
           <th>
-            Date
+            ${translations.date}
           </th>
           <th>
-            Player
+            ${translations.player}
           </th>
           <th>
-            Action
+            ${translations.act}
           </th>
         </tr>
         ${tribeChanges.items
@@ -618,8 +627,8 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
             }
             rowHTML += `<td><strong>${
               tribeChange.newTribe && tribeChange.newTribe.id === TRIBE_ID
-                ? 'Joined'
-                : 'Left'
+                ? translations.joined
+                : translations.left
             }</strong></td>`;
             return rowHTML + '</tr>';
           })
@@ -630,7 +639,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
 
   showPopup({
     e,
-    title: `Tribe changes`,
+    title: translations.tribeChanges,
     id: 'tribeChanges',
     html,
   });
@@ -678,27 +687,27 @@ const renderActions = () => {
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   setPage(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show ennoblements';
+  showEnnoblements.innerHTML = translations.action.showEnnoblements;
   showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblements));
 
   const showHistory = document.createElement('a');
   showHistory.href = '#';
   setPage(showHistory, '1');
-  showHistory.innerHTML = 'Show history';
+  showHistory.innerHTML = translations.action.showHistory;
   showHistory.addEventListener('click', handleShowTribeHistoryClick);
   actionsContainer.appendChild(wrapAction(showHistory));
 
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   setPage(showTribeChanges, '1');
-  showTribeChanges.innerHTML = 'Show tribe changes';
+  showTribeChanges.innerHTML = translations.action.showTribeChanges;
   showTribeChanges.addEventListener('click', handleShowTribeChangesClick);
   actionsContainer.appendChild(wrapAction(showTribeChanges));
 
   const showMembersGrowth = document.createElement('a');
   showMembersGrowth.href = '#';
-  showMembersGrowth.innerHTML = 'Show members growth';
+  showMembersGrowth.innerHTML = translations.action.showMembersGrowth;
   showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
   actionsContainer.appendChild(wrapAction(showMembersGrowth));
 };

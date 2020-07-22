@@ -22,7 +22,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.0
+// @version      1.1.1
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -524,7 +524,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
 
   showPopup({
     e,
-    title: `Tribe changes`,
+    title: translations.tribeChanges,
     id: 'tribeChanges',
     html,
   });

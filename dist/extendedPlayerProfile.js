@@ -187,6 +187,7 @@ const translations = {
     resourcesGathered: 'Zebrane surowce',
     villagesConquered: 'Podbite wioski',
     exportedVillages: 'Wyeksportowane wioski',
+    tribeChanges: 'Zmiany plemion',
     action: {
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
@@ -215,6 +216,7 @@ const translations = {
     resourcesGathered: 'Resources gathered',
     villagesConquered: 'Villages conquered',
     exportedVillages: 'Exported villages',
+    tribeChanges: 'Tribe changes',
     action: {
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
@@ -1129,7 +1131,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.0
+// @version      1.1.1
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -1353,7 +1355,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
   }).join(''), "\n      </tbody>\n    </table>\n  ");
   (0, _showPopup.default)({
     e,
-    title: "Tribe changes",
+    title: translations.tribeChanges,
     id: 'tribeChanges',
     html
   });
