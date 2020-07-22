@@ -1,4 +1,5 @@
 import requestCreator from './libs/requestCreator';
+import getTranslations from './i18n/extendedPlayerProfile';
 import renderTodaysStats from './common/renderTodaysStats';
 import showPopup from './utils/showPopup';
 import showEnnoblementsPopup from './common/showEnnoblementsPopup';
@@ -21,7 +22,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.0.9
+// @version      1.1.0
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -180,6 +181,7 @@ const otherElementContainer = document.querySelector(
     ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)'
     : '#content_value > table > tbody > tr > td:nth-child(2)'
 );
+const translations = getTranslations();
 
 const loadDataFromCache = () => {
   return getItem(LOCAL_STORAGE_KEY);
@@ -262,7 +264,7 @@ const renderPlayerServers = (player) => {
      <tbody>
         <tr>
           <th>
-            Player's servers
+            ${translations.playerServers}
           </th>
         </tr>
         <tr>
@@ -298,13 +300,13 @@ const renderPlayerOtherNames = (player) => {
         <tbody>
           <tr>
             <th>
-              Old name
+            ${translations.oldName}
             </th>
             <th>
-              New name
+            ${translations.newName}
             </th>
             <th>
-              Date
+            ${translations.date}
             </th>
           </tr>
         ${player.nameChanges
@@ -347,12 +349,12 @@ const renderInADayRanks = (player) => {
         <tbody>
           <tr>
             <th colspan="2">
-              'In a day' best scores
+              ${translations.inADayBestScores}
             </th>
           </tr>
             <tr>
               <td>
-                Units defeated while attacking:
+                ${translations.unitsDefeatedWhileAttacking}
               </td>
               <td>
                 ${player.inADay.att.score.toLocaleString()} (${
@@ -362,7 +364,7 @@ const renderInADayRanks = (player) => {
             </tr>
             <tr>
               <td>
-                Units defeated while defending:
+                ${translations.unitsDefeatedWhileDefending}
               </td>
               <td>
                 ${player.inADay.def.score.toLocaleString()} (${
@@ -372,7 +374,7 @@ const renderInADayRanks = (player) => {
             </tr>
             <tr>
               <td>
-                Units defeated while supporting:
+                ${translations.unitsDefeatedWhileSupporting}
               </td>
               <td>
                 ${player.inADay.sup.score.toLocaleString()} (${
@@ -382,7 +384,7 @@ const renderInADayRanks = (player) => {
             </tr>
             <tr>
               <td>
-                Resources plundered:
+                ${translations.resourcesPlundered}
               </td>
               <td>
                 ${player.inADay.lootRes.score.toLocaleString()} (${
@@ -392,7 +394,7 @@ const renderInADayRanks = (player) => {
             </tr>
             <tr>
               <td>
-                Villages plundered:
+                ${translations.villagesPlundered}
               </td>
               <td>
                 ${player.inADay.lootVil.score.toLocaleString()} (${
@@ -402,7 +404,7 @@ const renderInADayRanks = (player) => {
             </tr>
             <tr>
               <td>
-                Resources gathered:
+                ${translations.resourcesGathered}
               </td>
               <td>
                 ${player.inADay.scavenge.score.toLocaleString()} (${
@@ -412,7 +414,7 @@ const renderInADayRanks = (player) => {
             </tr>
             <tr>
               <td>
-                Villages conquered:
+                ${translations.villagesConquered}
               </td>
               <td>
                 ${player.inADay.conquer.score.toLocaleString()} (${
@@ -428,22 +430,22 @@ const renderInADayRanks = (player) => {
 const render = ({ player, dailyPlayerStats }) => {
   [
     {
-      title: 'Joined at:',
+      title: translations.joinedAt + ':',
       data: formatDate(player.joinedAt),
       id: 'joined_at',
     },
     {
-      title: 'Daily growth:',
+      title: translations.dailyGrowth + ':',
       data: player.dailyGrowth.toLocaleString(),
       id: 'dg',
     },
     {
-      title: 'Best rank:',
+      title: translations.bestRank + ':',
       data: player.bestRank + ' ' + `(${formatDate(player.bestRankAt)})`,
       id: 'best_rank',
     },
     {
-      title: 'Most points:',
+      title: translations.mostPoints + ':',
       data:
         player.mostPoints.toLocaleString() +
         ' ' +
@@ -451,7 +453,7 @@ const render = ({ player, dailyPlayerStats }) => {
       id: 'most_points',
     },
     {
-      title: 'Most villages:',
+      title: translations.mostVillages + ':',
       data:
         player.mostVillages + ' ' + `(${formatDate(player.mostVillagesAt)})`,
       id: 'most_villages',
@@ -486,13 +488,13 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
       <tbody>
         <tr>
           <th>
-            Date
+            ${translations.date}
           </th>
           <th>
-            New tribe
+            ${translations.newTribe}
           </th>
           <th>
-            Old tribe
+            ${translations.oldTribe}
           </th>
         </tr>
         ${tribeChanges.items
@@ -619,7 +621,7 @@ const handleExportPlayerVillagesButtonClick = (e) => {
   e.preventDefault();
 
   Dialog.show(
-    'Exported villages',
+    translations.exportedVillages,
     `<textarea cols=30 rows=8 readonly>${document
       .querySelector('#villages_list')
       .innerHTML.match(/(\d+)\|(\d+)/g)
@@ -640,27 +642,27 @@ const renderActions = () => {
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   setPage(showTribeChanges, '1');
-  showTribeChanges.innerHTML = 'Show tribe changes';
+  showTribeChanges.innerHTML = translations.action.showTribeChanges;
   showTribeChanges.addEventListener('click', handleShowTribeChangesButtonClick);
   actionContainer.appendChild(wrapAction(showTribeChanges));
 
   const showPlayerHistory = document.createElement('a');
   showPlayerHistory.href = '#';
   setPage(showPlayerHistory, '1');
-  showPlayerHistory.innerHTML = 'Show history';
+  showPlayerHistory.innerHTML = translations.action.showHistory;
   showPlayerHistory.addEventListener('click', handleShowPlayerHistoryClick);
   actionContainer.appendChild(wrapAction(showPlayerHistory));
 
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   setPage(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show ennoblements';
+  showEnnoblements.innerHTML = translations.action.showEnnoblements;
   showEnnoblements.addEventListener('click', handleShowPlayerEnnoblementsClick);
   actionContainer.appendChild(wrapAction(showEnnoblements));
 
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';
-  exportPlayerVillages.innerHTML = `Export villages`;
+  exportPlayerVillages.innerHTML = translations.action.exportVillages;
   exportPlayerVillages.addEventListener(
     'click',
     handleExportPlayerVillagesButtonClick

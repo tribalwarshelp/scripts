@@ -158,6 +158,75 @@ var _default = function _default() {
 };
 
 exports.default = _default;
+},{}],"I8dv":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    date: 'Data',
+    newTribe: 'Nowe plemię',
+    oldTribe: 'Poprzednie plemię',
+    joinedAt: 'Dołączył',
+    dailyGrowth: 'Dzienny przyrost',
+    bestRank: 'Najlepszy ranking',
+    mostPoints: 'Najwięcej punktów',
+    mostVillages: 'Najwięcej wiosek',
+    oldName: 'Poprzedni nick',
+    newName: 'Nowy nick',
+    playerServers: "Serwery gracza",
+    inADayBestScores: "Dzienne rankingi",
+    unitsDefeatedWhileAttacking: 'Jako atakujący',
+    unitsDefeatedWhileDefending: 'Jako obrońca',
+    unitsDefeatedWhileSupporting: 'Jako wspierający',
+    resourcesPlundered: 'Sfarmione surowce',
+    villagesPlundered: 'Splądrowane wioski',
+    resourcesGathered: 'Zebrane surowce',
+    villagesConquered: 'Podbite wioski',
+    exportedVillages: 'Wyeksportowane wioski',
+    action: {
+      showTribeChanges: 'Pokaż zmiany plemion',
+      showEnnoblements: 'Pokaż przejęcia',
+      exportVillages: 'Wyeksportuj wioski',
+      showHistory: 'Pokaż historię'
+    }
+  },
+  en_DK: {
+    date: 'Date',
+    newTribe: 'New tribe',
+    oldTribe: 'Old tribe',
+    joinedAt: 'Joined at',
+    dailyGrowth: 'Daily growth',
+    bestRank: 'Best rank',
+    mostPoints: 'Most points',
+    mostVillages: 'Most villages',
+    oldName: 'Old name',
+    newName: 'New name',
+    playerServers: "Player's servers",
+    inADayBestScores: "'In a day' best scores",
+    unitsDefeatedWhileAttacking: 'Units defeated while attacking',
+    unitsDefeatedWhileDefending: 'Units defeated while defending',
+    unitsDefeatedWhileSupporting: 'Units defeated while supporting',
+    resourcesPlundered: 'Resources plundered',
+    villagesPlundered: 'Villages plundered',
+    resourcesGathered: 'Resources gathered',
+    villagesConquered: 'Villages conquered',
+    exportedVillages: 'Exported villages',
+    action: {
+      showTribeChanges: 'Show tribe changes',
+      showEnnoblements: 'Show ennoblements',
+      exportVillages: 'Export villages',
+      showHistory: 'Show history'
+    }
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
 },{}],"l9PO":[function(require,module,exports) {
 "use strict";
 
@@ -1023,6 +1092,8 @@ exports.setItem = setItem;
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
+var _extendedPlayerProfile = _interopRequireDefault(require("./i18n/extendedPlayerProfile"));
+
 var _renderTodaysStats = _interopRequireDefault(require("./common/renderTodaysStats"));
 
 var _showPopup = _interopRequireDefault(require("./utils/showPopup"));
@@ -1058,7 +1129,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.0.9
+// @version      1.1.0
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -1085,6 +1156,7 @@ const ENNOBLEMENTS_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector('#player_info > tbody');
 const actionContainer = PLAYER_ID === CURRENT_PLAYER_ID ? profileInfoTBody : document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
 const otherElementContainer = document.querySelector(PLAYER_ID === CURRENT_PLAYER_ID ? '#content_value > table:nth-child(7) > tbody > tr > td:nth-child(2)' : '#content_value > table > tbody > tr > td:nth-child(2)');
+const translations = (0, _extendedPlayerProfile.default)();
 
 const loadDataFromCache = () => {
   return (0, _localStorage.getItem)(LOCAL_STORAGE_KEY);
@@ -1174,7 +1246,7 @@ const renderPlayerServers = player => {
     playerServers.id = 'playerServers';
     playerServers.classList.add('vis');
     playerServers.width = '100%';
-    playerServers.innerHTML = "\n     <tbody>\n        <tr>\n          <th>\n            Player's servers\n          </th>\n        </tr>\n        <tr>\n          <td>\n          </td>\n        </tr>\n     </tbody>\n    ";
+    playerServers.innerHTML = "\n     <tbody>\n        <tr>\n          <th>\n            ".concat(translations.playerServers, "\n          </th>\n        </tr>\n        <tr>\n          <td>\n          </td>\n        </tr>\n     </tbody>\n    ");
     otherElementContainer.prepend(playerServers);
   }
 
@@ -1191,7 +1263,7 @@ const renderPlayerOtherNames = player => {
     otherElementContainer.prepend(playerOtherNames);
   }
 
-  playerOtherNames.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th>\n              Old name\n            </th>\n            <th>\n              New name\n            </th>\n            <th>\n              Date\n            </th>\n          </tr>\n        ".concat(player.nameChanges.map(nameChange => {
+  playerOtherNames.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th>\n            ".concat(translations.oldName, "\n            </th>\n            <th>\n            ").concat(translations.newName, "\n            </th>\n            <th>\n            ").concat(translations.date, "\n            </th>\n          </tr>\n        ").concat(player.nameChanges.map(nameChange => {
     return "\n            <tr>\n              <td>\n                ".concat(nameChange.oldName, "\n              </td>\n              <td>\n                ").concat(nameChange.newName, "\n              </td>\n              <td>\n                ").concat((0, _formatDate.default)(nameChange.changeDate, {
       year: 'numeric',
       month: '2-digit',
@@ -1210,7 +1282,7 @@ const renderInADayRanks = player => {
     otherElementContainer.prepend(inADayRanks);
   }
 
-  inADayRanks.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              'In a day' best scores\n            </th>\n          </tr>\n            <tr>\n              <td>\n                Units defeated while attacking:\n              </td>\n              <td>\n                ".concat(player.inADay.att.score.toLocaleString(), " (").concat(player.inADay.att.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Units defeated while defending:\n              </td>\n              <td>\n                ").concat(player.inADay.def.score.toLocaleString(), " (").concat(player.inADay.def.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Units defeated while supporting:\n              </td>\n              <td>\n                ").concat(player.inADay.sup.score.toLocaleString(), " (").concat(player.inADay.sup.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Resources plundered:\n              </td>\n              <td>\n                ").concat(player.inADay.lootRes.score.toLocaleString(), " (").concat(player.inADay.lootRes.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages plundered:\n              </td>\n              <td>\n                ").concat(player.inADay.lootVil.score.toLocaleString(), " (").concat(player.inADay.lootVil.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Resources gathered:\n              </td>\n              <td>\n                ").concat(player.inADay.scavenge.score.toLocaleString(), " (").concat(player.inADay.scavenge.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                Villages conquered:\n              </td>\n              <td>\n                ").concat(player.inADay.conquer.score.toLocaleString(), " (").concat(player.inADay.conquer.rank, ".)\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
+  inADayRanks.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th colspan=\"2\">\n              ".concat(translations.inADayBestScores, "\n            </th>\n          </tr>\n            <tr>\n              <td>\n                ").concat(translations.unitsDefeatedWhileAttacking, "\n              </td>\n              <td>\n                ").concat(player.inADay.att.score.toLocaleString(), " (").concat(player.inADay.att.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ").concat(translations.unitsDefeatedWhileDefending, "\n              </td>\n              <td>\n                ").concat(player.inADay.def.score.toLocaleString(), " (").concat(player.inADay.def.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ").concat(translations.unitsDefeatedWhileSupporting, "\n              </td>\n              <td>\n                ").concat(player.inADay.sup.score.toLocaleString(), " (").concat(player.inADay.sup.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ").concat(translations.resourcesPlundered, "\n              </td>\n              <td>\n                ").concat(player.inADay.lootRes.score.toLocaleString(), " (").concat(player.inADay.lootRes.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ").concat(translations.villagesPlundered, "\n              </td>\n              <td>\n                ").concat(player.inADay.lootVil.score.toLocaleString(), " (").concat(player.inADay.lootVil.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ").concat(translations.resourcesGathered, "\n              </td>\n              <td>\n                ").concat(player.inADay.scavenge.score.toLocaleString(), " (").concat(player.inADay.scavenge.rank, ".)\n              </td>\n            </tr>\n            <tr>\n              <td>\n                ").concat(translations.villagesConquered, "\n              </td>\n              <td>\n                ").concat(player.inADay.conquer.score.toLocaleString(), " (").concat(player.inADay.conquer.rank, ".)\n              </td>\n            </tr>\n      </tbody>\n      </table>\n  ");
 };
 
 const render = (_ref2) => {
@@ -1219,23 +1291,23 @@ const render = (_ref2) => {
     dailyPlayerStats
   } = _ref2;
   [{
-    title: 'Joined at:',
+    title: translations.joinedAt + ':',
     data: (0, _formatDate.default)(player.joinedAt),
     id: 'joined_at'
   }, {
-    title: 'Daily growth:',
+    title: translations.dailyGrowth + ':',
     data: player.dailyGrowth.toLocaleString(),
     id: 'dg'
   }, {
-    title: 'Best rank:',
+    title: translations.bestRank + ':',
     data: player.bestRank + ' ' + "(".concat((0, _formatDate.default)(player.bestRankAt), ")"),
     id: 'best_rank'
   }, {
-    title: 'Most points:',
+    title: translations.mostPoints + ':',
     data: player.mostPoints.toLocaleString() + ' ' + "(".concat((0, _formatDate.default)(player.mostPointsAt), ")"),
     id: 'most_points'
   }, {
-    title: 'Most villages:',
+    title: translations.mostVillages + ':',
     data: player.mostVillages + ' ' + "(".concat((0, _formatDate.default)(player.mostVillagesAt), ")"),
     id: 'most_villages'
   }].forEach(data => {
@@ -1262,7 +1334,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     limit: TRIBE_CHANGES_PER_PAGE,
     currentPage
   });
-  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            Date\n          </th>\n          <th>\n            New tribe\n          </th>\n          <th>\n            Old tribe\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
+  const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.newTribe, "\n          </th>\n          <th>\n            ").concat(translations.oldTribe, "\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
 
     if (tribeChange.newTribe) {
@@ -1378,7 +1450,7 @@ const handleShowPlayerEnnoblementsClick = async e => {
 
 const handleExportPlayerVillagesButtonClick = e => {
   e.preventDefault();
-  Dialog.show('Exported villages', "<textarea cols=30 rows=8 readonly>".concat(document.querySelector('#villages_list').innerHTML.match(/(\d+)\|(\d+)/g).join(' '), "</textarea>"));
+  Dialog.show(translations.exportedVillages, "<textarea cols=30 rows=8 readonly>".concat(document.querySelector('#villages_list').innerHTML.match(/(\d+)\|(\d+)/g).join(' '), "</textarea>"));
 };
 
 const wrapAction = action => {
@@ -1394,24 +1466,24 @@ const renderActions = () => {
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   (0, _pagination.setPage)(showTribeChanges, '1');
-  showTribeChanges.innerHTML = 'Show tribe changes';
+  showTribeChanges.innerHTML = translations.action.showTribeChanges;
   showTribeChanges.addEventListener('click', handleShowTribeChangesButtonClick);
   actionContainer.appendChild(wrapAction(showTribeChanges));
   const showPlayerHistory = document.createElement('a');
   showPlayerHistory.href = '#';
   (0, _pagination.setPage)(showPlayerHistory, '1');
-  showPlayerHistory.innerHTML = 'Show history';
+  showPlayerHistory.innerHTML = translations.action.showHistory;
   showPlayerHistory.addEventListener('click', handleShowPlayerHistoryClick);
   actionContainer.appendChild(wrapAction(showPlayerHistory));
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   (0, _pagination.setPage)(showEnnoblements, '1');
-  showEnnoblements.innerHTML = 'Show ennoblements';
+  showEnnoblements.innerHTML = translations.action.showEnnoblements;
   showEnnoblements.addEventListener('click', handleShowPlayerEnnoblementsClick);
   actionContainer.appendChild(wrapAction(showEnnoblements));
   const exportPlayerVillages = document.createElement('a');
   exportPlayerVillages.href = '#';
-  exportPlayerVillages.innerHTML = "Export villages";
+  exportPlayerVillages.innerHTML = translations.action.exportVillages;
   exportPlayerVillages.addEventListener('click', handleExportPlayerVillagesButtonClick);
   actionContainer.appendChild(wrapAction(exportPlayerVillages));
 };
@@ -1434,4 +1506,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
