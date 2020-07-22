@@ -1,10 +1,15 @@
 import subDays from 'date-fns/subDays';
-import showPopup from './showPopup';
-import { generatePaginationItems, getContainerStyles } from './pagination';
-import formatDate from './formatDate';
-import { formatTribeURL } from './tribalwars';
+import getTranslations from '../i18n/showHistoryPopup';
+import showPopup from '../utils/showPopup';
+import {
+  generatePaginationItems,
+  getContainerStyles,
+} from '../utils/pagination';
+import formatDate from '../utils/formatDate';
+import { formatTribeURL } from '../utils/tribalwars';
 
 const PAGINATION_CONTAINER_ID = 'historyPagination';
+const translations = getTranslations();
 
 const addMathSymbol = (v) => {
   return v > 0 ? '+' + v : v;
@@ -29,26 +34,26 @@ export default (
       <tbody>
         <tr>
           <th>
-            Date
+            ${translations.date}
           </th>
-          ${tribe ? '' : '<th>Tribe</th>'}
+          ${tribe ? '' : `<th>${translations.tribe}</th>`}
           <th>
-          Points
-          </th>
-          <th>
-          Villages
-          </th>
-          ${tribe ? '<th>Members</th>' : ''}
-          <th>
-            OD
+          ${translations.points}
           </th>
           <th>
-            ODA
+          ${translations.villages}
+          </th>
+          ${tribe ? `<th>${translations.members}</th>` : ''}
+          <th>
+            ${translations.od}
           </th>
           <th>
-            ODD
+            ${translations.oda}
           </th>
-          ${tribe ? '' : '<th>ODS</th>'}
+          <th>
+            ${translations.odd}
+          </th>
+          ${tribe ? '' : `<th>${translations.ods}</th>`}
         </tr>
         ${history.items
           .map((history) => {
@@ -130,7 +135,7 @@ export default (
 
   showPopup({
     e,
-    title: `History`,
+    title: translations.title,
     id: 'history',
     html,
   });

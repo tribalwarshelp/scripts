@@ -1,8 +1,8 @@
 import requestCreator from './libs/requestCreator';
-import renderTodaysStats from './utils/renderTodaysStats';
+import renderTodaysStats from './common/renderTodaysStats';
 import showPopup from './utils/showPopup';
-import showEnnoblementsPopup from './utils/showEnnoblementsPopup';
-import showHistoryPopup from './utils/showHistoryPopup';
+import showEnnoblementsPopup from './common/showEnnoblementsPopup';
+import showHistoryPopup from './common/showHistoryPopup';
 import {
   generatePaginationItems,
   getContainerStyles,
@@ -21,7 +21,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.0.8
+// @version      1.0.9
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*

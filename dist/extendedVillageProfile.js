@@ -158,6 +158,29 @@ var _default = function _default() {
 };
 
 exports.default = _default;
+},{}],"LNef":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    action: {
+      showEnnoblements: 'Pokaż przejęcia'
+    }
+  },
+  en_DK: {
+    action: {
+      showEnnoblements: 'Show ennoblements'
+    }
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
 },{}],"fCHX":[function(require,module,exports) {
 "use strict";
 
@@ -513,7 +536,7 @@ const loadInADayData = async function loadInADayData(type) {
 };
 
 exports.loadInADayData = loadInADayData;
-},{"../libs/InADayParser":"dSAr"}],"VMe7":[function(require,module,exports) {
+},{"../libs/InADayParser":"dSAr"}],"vNT1":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -523,13 +546,13 @@ exports.default = void 0;
 
 var _showEnnoblementsPopup = _interopRequireDefault(require("../i18n/showEnnoblementsPopup"));
 
-var _pagination = require("./pagination");
+var _pagination = require("../utils/pagination");
 
-var _showPopup = _interopRequireDefault(require("./showPopup"));
+var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
-var _formatDate = _interopRequireDefault(require("./formatDate"));
+var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
 
-var _tribalwars = require("./tribalwars");
+var _tribalwars = require("../utils/tribalwars");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -580,10 +603,12 @@ var _default = function _default(e, ennoblements) {
 };
 
 exports.default = _default;
-},{"../i18n/showEnnoblementsPopup":"tKRp","./pagination":"fCHX","./showPopup":"chDM","./formatDate":"V6Mf","./tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
+},{"../i18n/showEnnoblementsPopup":"tKRp","../utils/pagination":"fCHX","../utils/showPopup":"chDM","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
+
+var _extendedVillageProfile = _interopRequireDefault(require("./i18n/extendedVillageProfile"));
 
 var _pagination = require("./utils/pagination");
 
@@ -591,7 +616,7 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
-var _showEnnoblementsPopup = _interopRequireDefault(require("./utils/showEnnoblementsPopup"));
+var _showEnnoblementsPopup = _interopRequireDefault(require("./common/showEnnoblementsPopup"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -600,7 +625,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.5.5
+// @version      0.5.6
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -612,6 +637,7 @@ const VILLAGE_ID = (0, _getIDFromURL.default)(window.location.search);
 const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
 const actionsContainer = document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
+const translations = (0, _extendedVillageProfile.default)();
 
 const handleShowTribeEnnoblementsClick = async e => {
   e.preventDefault();
@@ -651,7 +677,7 @@ const renderActions = () => {
   const showEnnoblementsPopup = document.createElement('a');
   showEnnoblementsPopup.href = '#';
   (0, _pagination.setPage)(showEnnoblementsPopup, '1');
-  showEnnoblementsPopup.innerHTML = 'Show ennoblements';
+  showEnnoblementsPopup.innerHTML = translations.action.showEnnoblements;
   showEnnoblementsPopup.addEventListener('click', handleShowTribeEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblementsPopup));
 };
@@ -659,4 +685,4 @@ const renderActions = () => {
 (function () {
   renderActions();
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/showEnnoblementsPopup":"VMe7"}]},{},["UdfQ"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)

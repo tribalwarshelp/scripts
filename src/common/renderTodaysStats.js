@@ -1,5 +1,5 @@
 import getTranslations from '../i18n/renderTodaysStats';
-import isNil from './isNil';
+import isNil from '../utils/isNil';
 
 const translations = getTranslations();
 

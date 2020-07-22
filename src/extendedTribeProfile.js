@@ -7,9 +7,9 @@ import {
   generatePaginationItems,
   getContainerStyles,
 } from './utils/pagination';
-import renderTodaysStats from './utils/renderTodaysStats';
-import showEnnoblementsPopup from './utils/showEnnoblementsPopup';
-import showHistoryPopup from './utils/showHistoryPopup';
+import renderTodaysStats from './common/renderTodaysStats';
+import showEnnoblementsPopup from './common/showEnnoblementsPopup';
+import showHistoryPopup from './common/showHistoryPopup';
 import showPopup from './utils/showPopup';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
@@ -23,7 +23,7 @@ import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      0.9.5
+// @version      0.9.6
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*

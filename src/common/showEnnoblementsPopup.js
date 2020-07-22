@@ -1,13 +1,16 @@
 import getTranslations from '../i18n/showEnnoblementsPopup';
-import { generatePaginationItems, getContainerStyles } from './pagination';
-import showPopup from './showPopup';
-import formatDate from './formatDate';
+import {
+  generatePaginationItems,
+  getContainerStyles,
+} from '../utils/pagination';
+import showPopup from '../utils/showPopup';
+import formatDate from '../utils/formatDate';
 import {
   formatTribeURL,
   formatPlayerURL as formatPlayerURLTribalWars,
   formatVillageName,
   formatVillageURL,
-} from './tribalwars';
+} from '../utils/tribalwars';
 
 const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
 const translations = getTranslations();

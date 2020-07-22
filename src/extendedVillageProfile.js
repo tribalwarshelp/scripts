@@ -1,15 +1,16 @@
 import requestCreator from './libs/requestCreator';
+import getTranslations from './i18n/extendedVillageProfile';
 import { setPage, getPage } from './utils/pagination';
 import getCurrentServer from './utils/getCurrentServer';
 import getIDFromURL from './utils/getIDFromURL';
-import showEnnoblementsPopup from './utils/showEnnoblementsPopup';
+import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 
 // ==UserScript==
 // @name         Extended Village Profile
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.5.5
+// @version      0.5.6
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -55,6 +56,7 @@ const ENNOBLEMENTS_PER_PAGE = 15;
 const actionsContainer = document.querySelector(
   '#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody'
 );
+const translations = getTranslations();
 
 const handleShowTribeEnnoblementsClick = async (e) => {
   e.preventDefault();
@@ -93,7 +95,7 @@ const renderActions = () => {
   const showEnnoblementsPopup = document.createElement('a');
   showEnnoblementsPopup.href = '#';
   setPage(showEnnoblementsPopup, '1');
-  showEnnoblementsPopup.innerHTML = 'Show ennoblements';
+  showEnnoblementsPopup.innerHTML = translations.action.showEnnoblements;
   showEnnoblementsPopup.addEventListener(
     'click',
     handleShowTribeEnnoblementsClick
