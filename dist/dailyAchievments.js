@@ -158,6 +158,35 @@ var _default = function _default() {
 };
 
 exports.default = _default;
+},{}],"rX6I":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    title: 'Dzienne osiągnięcia - prawdopodobni gracze',
+    warning: 'Pamiętaj! Ten skrypt pokazuje wykalkulowane przez TribalWars wyniki, nie pokonane jednostki.',
+    aotd: 'Agresor dnia',
+    dotd: 'Obrońca dnia',
+    sotd: 'Pomocnik dnia',
+    gpotd: 'Mocarstwo dnia'
+  },
+  en_DK: {
+    title: 'Daily achievements - probable players',
+    warning: 'Remember! This script shows scores, not defeated units.',
+    aotd: 'Attacker of the day',
+    dotd: 'Defender of the day',
+    sotd: 'Supporter of the day',
+    gpotd: 'Great power of the day'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
 },{}],"KWxH":[function(require,module,exports) {
 "use strict";
 
@@ -374,6 +403,8 @@ exports.default = _default;
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
+var _dailyAchievments = _interopRequireDefault(require("./i18n/dailyAchievments"));
+
 var _localStorage = require("./utils/localStorage");
 
 var _tribalwars = require("./utils/tribalwars");
@@ -393,7 +424,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
-// @version      0.3.0
+// @version      0.4.0
 // @description  Daily achievements
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player&mode=awards*
@@ -404,6 +435,7 @@ const LOCAL_STORAGE_KEY = 'kichiyaki_daily_achievements';
 const SERVER_QUERY = "\n    query server($server: String!) {\n        server(key: $server) {\n            key\n            historyUpdatedAt\n        }\n    }\n";
 const DAILY_STATS_QUERY = "\n    query data($server: String!, $createDateGTE: Time!) {\n        dailyPlayerStatsOrderedByScoreAtt: dailyPlayerStats(server: $server, filter: { sort: \"scoreAtt DESC\", createDateGTE: $createDateGTE, playerFilter: { sort: \"id DESC\" }, limit: 5 }) {\n            items {\n                scoreAtt\n                player {\n                    id\n                    name\n                }\n            }\n        }\n        dailyPlayerStatsOrderedByScoreDef: dailyPlayerStats(server: $server, filter: { sort: \"scoreDef DESC\", createDateGTE: $createDateGTE, playerFilter: { sort: \"id DESC\" }, limit: 5 }) {\n            items {\n                scoreDef\n                player {\n                    id\n                    name\n                }\n            }\n        }\n        dailyPlayerStatsOrderedByScoreSup: dailyPlayerStats(server: $server, filter: { sort: \"scoreSup DESC\", createDateGTE: $createDateGTE, playerFilter: { sort: \"id DESC\" }, limit: 5 }) {\n            items {\n                scoreSup\n                player {\n                    id\n                    name\n                }\n            }\n        }\n        dailyPlayerStatsOrderedByVillages: dailyPlayerStats(server: $server, filter: { sort: \"villages DESC\", createDateGTE: $createDateGTE, playerFilter: { sort: \"id DESC\" }, limit: 5 }) {\n            items {\n                villages\n                player {\n                    id\n                    name\n                }\n            }\n        }\n    }\n";
 let container = undefined;
+const translations = (0, _dailyAchievments.default)();
 
 const loadDataFromCache = () => {
   return (0, _localStorage.getItem)(LOCAL_STORAGE_KEY);
@@ -444,7 +476,7 @@ const render = (_ref) => {
     dailyPlayerStatsOrderedByScoreSup,
     dailyPlayerStatsOrderedByVillages
   } = _ref;
-  const html = "\n        <div class=\"award-group-head\">Daily achievements - probable players</div>\n        <div class=\"award-group-content\" style=\"text-align: center;\">\n            <div style=\"padding: 10px;\">\n                <p><strong>Attacker of the day</strong></p>\n                ".concat(dailyPlayerStatsOrderedByScoreAtt.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreAtt.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>Defender of the day</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreDef.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreDef.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>Supporter of the day</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreSup.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreSup.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>Great power of the day</strong></p>\n                ").concat(dailyPlayerStatsOrderedByVillages.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.villages.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n        </div>\n        <div class=\"award-group-foot\"></div>\n    ");
+  const html = "\n        <div class=\"award-group-head\">".concat(translations.title, "</div>\n        <div class=\"award-group-content\" style=\"text-align: center;\">\n            <div style=\"padding: 10px;\">\n                <h3 style=\"color: red;\"><strong>").concat(translations.warning, "</strong></h3>\n                <p><strong>").concat(translations.aotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreAtt.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreAtt.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.dotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreDef.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreDef.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.sotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreSup.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreSup.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.gpotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByVillages.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.villages.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n        </div>\n        <div class=\"award-group-foot\"></div>\n    ");
 
   if (!container) {
     container = document.createElement('div');
@@ -472,4 +504,4 @@ const render = (_ref) => {
     console.log('dailyAchievements', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/getCurrentServer":"DMkL"}]},{},["cELE"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/dailyAchievments":"rX6I","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/getCurrentServer":"DMkL"}]},{},["cELE"], null)

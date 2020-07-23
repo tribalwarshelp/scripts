@@ -1,4 +1,5 @@
 import requestCreator from './libs/requestCreator';
+import getTranslations from './i18n/dailyAchievments';
 import { setItem, getItem } from './utils/localStorage';
 import { formatPlayerURL } from './utils/tribalwars';
 import getCurrentServer from './utils/getCurrentServer';
@@ -8,7 +9,7 @@ import getCurrentServer from './utils/getCurrentServer';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
-// @version      0.3.0
+// @version      0.4.0
 // @description  Daily achievements
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player&mode=awards*
@@ -66,6 +67,7 @@ const DAILY_STATS_QUERY = `
     }
 `;
 let container = undefined;
+const translations = getTranslations();
 
 const loadDataFromCache = () => {
   return getItem(LOCAL_STORAGE_KEY);
@@ -107,10 +109,13 @@ const render = ({
   dailyPlayerStatsOrderedByVillages,
 }) => {
   const html = `
-        <div class="award-group-head">Daily achievements - probable players</div>
+        <div class="award-group-head">${translations.title}</div>
         <div class="award-group-content" style="text-align: center;">
             <div style="padding: 10px;">
-                <p><strong>Attacker of the day</strong></p>
+                <h3 style="color: red;"><strong>${
+                  translations.warning
+                }</strong></h3>
+                <p><strong>${translations.aotd}</strong></p>
                 ${dailyPlayerStatsOrderedByScoreAtt.items
                   .map(
                     (item, index) =>
@@ -124,7 +129,7 @@ const render = ({
             </div>
             <hr>
             <div style="padding: 10px;">
-                <p><strong>Defender of the day</strong></p>
+                <p><strong>${translations.dotd}</strong></p>
                 ${dailyPlayerStatsOrderedByScoreDef.items
                   .map(
                     (item, index) =>
@@ -138,7 +143,7 @@ const render = ({
             </div>
             <hr>
             <div style="padding: 10px;">
-                <p><strong>Supporter of the day</strong></p>
+                <p><strong>${translations.sotd}</strong></p>
                 ${dailyPlayerStatsOrderedByScoreSup.items
                   .map(
                     (item, index) =>
@@ -152,7 +157,7 @@ const render = ({
             </div>
             <hr>
             <div style="padding: 10px;">
-                <p><strong>Great power of the day</strong></p>
+                <p><strong>${translations.gpotd}</strong></p>
                 ${dailyPlayerStatsOrderedByVillages.items
                   .map(
                     (item, index) =>
