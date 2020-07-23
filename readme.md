@@ -66,3 +66,11 @@ This script adds a lot of useful actions and pieces of information to the tribe 
 This script adds 'Show ennoblements' action.
 
 ![Screenshot](/screenshots/extendedVillageProfile.png?raw=true)
+
+### 4. Bonus barbarian village finder
+
+[Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js)
+
+Adds to map screen new functionality to search bonus barbarian villages easily.
+
+![Screenshot](/screenshots/bonusBarbarianVillageFinder.png?raw=true)
