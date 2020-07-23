@@ -158,6 +158,33 @@ var _default = function _default() {
 };
 
 exports.default = _default;
+},{}],"MRps":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    actualCoords: 'Aktualne koordynaty',
+    searchBonusBarbarianVillages: 'Wyszukaj koczownicze',
+    village: 'Wioska',
+    distance: 'Dystans',
+    action: 'Akcja'
+  },
+  en_DK: {
+    actualCoords: 'Actual coords',
+    searchBonusBarbarianVillages: 'Search bonus barbarian villages',
+    village: 'Village',
+    distance: 'Distance',
+    action: 'Action'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
 },{}],"DMkL":[function(require,module,exports) {
 "use strict";
 
@@ -348,6 +375,8 @@ exports.loadInADayData = loadInADayData;
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
+var _bonusBarbarianVillageFinder = _interopRequireDefault(require("./i18n/bonusBarbarianVillageFinder"));
+
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
 var _tribalwars = require("./utils/tribalwars");
@@ -365,7 +394,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-// @version      0.3.0
+// @version      0.4.0
 // @description  Bonus barbarian village finder
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -375,6 +404,7 @@ const SERVER = (0, _getCurrentServer.default)();
 const QUERY = "\n  query villages($server: String!, $filter: VillageFilter) {\n    villages(server: $server, filter: $filter) {\n      total\n      items {\n        id\n        name\n        bonus\n        x\n        y\n      }\n    }\n  }\n";
 const TABLE_ID = 'bonusBarbarianVillageFinderTable';
 const ACTUAL_COORDS_ID = 'actualCoords';
+const translations = (0, _bonusBarbarianVillageFinder.default)();
 let container = undefined;
 
 const buildReqOptions = (bonus, offset) => {
@@ -433,15 +463,15 @@ const getBonuses = () => {
 };
 
 const buildTableBodyHTML = villages => {
-  return "\n        <tbody>\n            <tr>\n                <th>\n                    Village\n                </th>\n                <th>\n                    Distance\n                </th>\n                <th>\n                    Action\n                </th>\n            </tr>\n            ".concat(Array.isArray(villages) ? villages.map(village => "<tr>\n                <td>\n                    <a href=\"".concat((0, _tribalwars.formatVillageURL)(village.id), "\">\n                        ").concat((0, _tribalwars.formatVillageName)(village.name, village.x, village.y), "\n                    </a>\n                </td>\n                <td>\n                    ").concat(village.distance.toFixed(1), "\n                </td>\n                <td>\n                    <a href=\"#\" onclick=\"return TWMap.focusUserSpecified(").concat(village.x, ", ").concat(village.y, ")\">Center</a>\n                </td>\n            </tr>")).join('') : '', "\n        </tbody>\n    ");
+  return "\n        <tbody>\n            <tr>\n                <th>\n                    ".concat(translations.village, "\n                </th>\n                <th>\n                    ").concat(translations.distance, "\n                </th>\n                <th>\n                    ").concat(translations.action, "\n                </th>\n            </tr>\n            ").concat(Array.isArray(villages) ? villages.map(village => "<tr>\n                <td>\n                    <a href=\"".concat((0, _tribalwars.formatVillageURL)(village.id), "\">\n                        ").concat((0, _tribalwars.formatVillageName)(village.name, village.x, village.y), "\n                    </a>\n                </td>\n                <td>\n                    ").concat(village.distance.toFixed(1), "\n                </td>\n                <td>\n                    <a href=\"#\" onclick=\"return TWMap.focusUserSpecified(").concat(village.x, ", ").concat(village.y, ")\">Center</a>\n                </td>\n            </tr>")).join('') : '', "\n        </tbody>\n    ");
 };
 
 const updateActualCoords = () => {
-  document.querySelector('#' + ACTUAL_COORDS_ID).innerHTML = "Actual coords: <strong>".concat(TWMap.pos.join('|'), "</strong>");
+  document.querySelector('#' + ACTUAL_COORDS_ID).innerHTML = "".concat(translations.actualCoords, ": <strong>").concat(TWMap.pos.join('|'), "</strong>");
 };
 
 const renderUI = () => {
-  const html = "\n        <p id=\"".concat(ACTUAL_COORDS_ID, "\"></p>\n        <form>\n            <select>\n                ").concat(getBonuses().map(bonus => "<option value=\"".concat(bonus.value, "\">").concat(bonus.text, "</option>")).join(''), "\n            </select>\n            <button type=\"submit\">Search bonus barbarian villages</button>\n        </form>\n        <table class=\"vis\" style=\"width: 100%;\" id=\"").concat(TABLE_ID, "\">\n            ").concat(buildTableBodyHTML(), "\n        </table>\n    ");
+  const html = "\n        <p id=\"".concat(ACTUAL_COORDS_ID, "\"></p>\n        <form>\n            <select>\n                ").concat(getBonuses().map(bonus => "<option value=\"".concat(bonus.value, "\">").concat(bonus.text, "</option>")).join(''), "\n            </select>\n            <button type=\"submit\">").concat(translations.searchBonusBarbarianVillages, "</button>\n        </form>\n        <table class=\"vis\" style=\"width: 100%;\" id=\"").concat(TABLE_ID, "\">\n            ").concat(buildTableBodyHTML(), "\n        </table>\n    ");
 
   if (!container) {
     container = document.createElement('div');
@@ -458,4 +488,4 @@ const renderUI = () => {
 (function () {
   renderUI();
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/getCurrentServer":"DMkL","./utils/tribalwars":"fHHP"}]},{},["fvjy"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/bonusBarbarianVillageFinder":"MRps","./utils/getCurrentServer":"DMkL","./utils/tribalwars":"fHHP"}]},{},["fvjy"], null)

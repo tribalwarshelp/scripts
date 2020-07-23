@@ -1,4 +1,5 @@
 import requestCreator from './libs/requestCreator';
+import getTranslations from './i18n/bonusBarbarianVillageFinder';
 import getCurrentServer from './utils/getCurrentServer';
 import { formatVillageURL, formatVillageName } from './utils/tribalwars';
 
@@ -7,7 +8,7 @@ import { formatVillageURL, formatVillageName } from './utils/tribalwars';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-// @version      0.3.0
+// @version      0.4.0
 // @description  Bonus barbarian village finder
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -31,6 +32,7 @@ const QUERY = `
 `;
 const TABLE_ID = 'bonusBarbarianVillageFinderTable';
 const ACTUAL_COORDS_ID = 'actualCoords';
+const translations = getTranslations();
 let container = undefined;
 
 const buildReqOptions = (bonus, offset) => {
@@ -95,13 +97,13 @@ const buildTableBodyHTML = (villages) => {
         <tbody>
             <tr>
                 <th>
-                    Village
+                    ${translations.village}
                 </th>
                 <th>
-                    Distance
+                    ${translations.distance}
                 </th>
                 <th>
-                    Action
+                    ${translations.action}
                 </th>
             </tr>
             ${
@@ -132,9 +134,9 @@ const buildTableBodyHTML = (villages) => {
 };
 
 const updateActualCoords = () => {
-  document.querySelector(
-    '#' + ACTUAL_COORDS_ID
-  ).innerHTML = `Actual coords: <strong>${TWMap.pos.join('|')}</strong>`;
+  document.querySelector('#' + ACTUAL_COORDS_ID).innerHTML = `${
+    translations.actualCoords
+  }: <strong>${TWMap.pos.join('|')}</strong>`;
 };
 
 const renderUI = () => {
@@ -149,7 +151,9 @@ const renderUI = () => {
                   )
                   .join('')}
             </select>
-            <button type="submit">Search bonus barbarian villages</button>
+            <button type="submit">${
+              translations.searchBonusBarbarianVillages
+            }</button>
         </form>
         <table class="vis" style="width: 100%;" id="${TABLE_ID}">
             ${buildTableBodyHTML()}
