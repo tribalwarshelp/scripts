@@ -80,3 +80,14 @@ Adds to map screen new functionality to search bonus barbarian villages easily.
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js)
 
 ![Screenshot](/screenshots/dailyAchievements.png?raw=true)
+
+### 7. Extended Map Popup
+
+[Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js)
+
+Adds to popup:
+
+- Information about possible loyalty
+- Ennoble date
+
+![Screenshot](/screenshots/extendedMapPopup.png?raw=true)
