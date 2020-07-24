@@ -1,4 +1,5 @@
 import differenceInMinutes from 'date-fns/differenceInMinutes';
+import getTranslations from './i18n/extendedMapPopup';
 import requestCreator from './libs/requestCreator';
 import formatDate from './utils/formatDate';
 import getCurrentServer from './utils/getCurrentServer';
@@ -40,6 +41,7 @@ const LAST_VILLAGE_CONQUER_QUERY = `
 `;
 const SERVER_CONFIG_LOCAL_STORAGE_KEY =
   'kiszkowaty_extended_map_popup_server_cfg';
+const translations = getTranslations();
 
 const loadServerConfigFromLocalStorage = () => {
   return getItem(SERVER_CONFIG_LOCAL_STORAGE_KEY);
@@ -118,10 +120,14 @@ const renderAdditionalInfo = (data, cfg) => {
   }
   lastEnnobledAt.innerHTML = `
           <td>
-              Last ennobled at:
+              ${translations.ennobledAt}:
           </td>
           <td>
-              ${ennoblement ? formatDate(ennoblement.ennobledAt) : 'Never'}
+              ${
+                ennoblement
+                  ? formatDate(ennoblement.ennobledAt)
+                  : translations.never
+              }
           </td>
       `;
 
@@ -133,7 +139,7 @@ const renderAdditionalInfo = (data, cfg) => {
   }
   loyalty.innerHTML = `
           <td>
-              Possible loyalty:
+              ${translations.possibleLoyalty}:
           </td>
           <td>
               ${

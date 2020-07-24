@@ -292,7 +292,30 @@ function differenceInMinutes(dirtyDateLeft, dirtyDateRight) {
   var diff = (0, _index.default)(dirtyDateLeft, dirtyDateRight) / MILLISECONDS_IN_MINUTE;
   return diff > 0 ? Math.floor(diff) : Math.ceil(diff);
 }
-},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"Ph2E":[function(require,module,exports) {
+},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"ddIN":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    ennobledAt: 'Podbita o',
+    never: 'Nigdy',
+    possibleLoyalty: 'Możliwe poparcie'
+  },
+  en_DK: {
+    ennobledAt: 'Ennobled at',
+    never: 'Never',
+    possibleLoyalty: 'Possible loyalty'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
+},{}],"Ph2E":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -395,6 +418,8 @@ exports.setItem = setItem;
 
 var _differenceInMinutes = _interopRequireDefault(require("date-fns/differenceInMinutes"));
 
+var _extendedMapPopup = _interopRequireDefault(require("./i18n/extendedMapPopup"));
+
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
@@ -420,6 +445,7 @@ const SERVER = (0, _getCurrentServer.default)();
 const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n                speed\n            }\n        }\n    }\n";
 const LAST_VILLAGE_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n        ennoblements(server: $server, filter: $filter) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
 const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_map_popup_server_cfg';
+const translations = (0, _extendedMapPopup.default)();
 
 const loadServerConfigFromLocalStorage = () => {
   return (0, _localStorage.getItem)(SERVER_CONFIG_LOCAL_STORAGE_KEY);
@@ -499,7 +525,7 @@ const renderAdditionalInfo = (data, cfg) => {
     parent.appendChild(lastEnnobledAt);
   }
 
-  lastEnnobledAt.innerHTML = "\n          <td>\n              Last ennobled at:\n          </td>\n          <td>\n              ".concat(ennoblement ? (0, _formatDate.default)(ennoblement.ennobledAt) : 'Never', "\n          </td>\n      ");
+  lastEnnobledAt.innerHTML = "\n          <td>\n              ".concat(translations.ennobledAt, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? (0, _formatDate.default)(ennoblement.ennobledAt) : translations.never, "\n          </td>\n      ");
   let loyalty = parent.querySelector('#loyalty');
 
   if (!loyalty) {
@@ -508,7 +534,7 @@ const renderAdditionalInfo = (data, cfg) => {
     parent.appendChild(loyalty);
   }
 
-  loyalty.innerHTML = "\n          <td>\n              Possible loyalty:\n          </td>\n          <td>\n              ".concat(ennoblement ? calcLoyalty(new Date(ennoblement.ennobledAt), cfg.speed) : 100, "\n          </td>\n      ");
+  loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? calcLoyalty(new Date(ennoblement.ennobledAt), cfg.speed) : 100, "\n          </td>\n      ");
 };
 
 const createLoadVillageHandler = cfg => async e => {
@@ -539,4 +565,4 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
     console.log('extended map popup', error);
   }
 })();
-},{"date-fns/differenceInMinutes":"oGJj","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH"}]},{},["HdqX"], null)
+},{"date-fns/differenceInMinutes":"oGJj","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH"}]},{},["HdqX"], null)
