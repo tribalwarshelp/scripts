@@ -11,6 +11,7 @@
   "dependencies": {
     "date-fns": "^2.14.0",
     "date-fns-tz": "^1.0.10",
+    "lodash": "^4.17.19",
     "parcel": "^1.12.4",
     "validator": "^13.1.1"
   },
