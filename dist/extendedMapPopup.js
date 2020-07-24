@@ -304,7 +304,7 @@ const translations = {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
     possibleLoyalty: 'Możliwe poparcie',
-    canSendNobles: 'Można wysłać szlachciców',
+    canSendNoble: 'Można wysłać szlachcica',
     yes: 'Tak',
     no: 'Nie'
   },
@@ -312,7 +312,7 @@ const translations = {
     ennobledAt: 'Ennobled at',
     never: 'Never',
     possibleLoyalty: 'Possible loyalty',
-    canSendNobles: 'Can send nobles',
+    canSendNoble: 'Can send noble',
     yes: 'Yes',
     no: 'No'
   }
@@ -559,16 +559,15 @@ const renderAdditionalInfo = (id, data, cfg) => {
   }
 
   loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? calcLoyalty(new Date(ennoblement.ennobledAt), cfg.speed) : 100, "\n          </td>\n      ");
-  let canSendNobles = parent.querySelector('#canSendNobles');
+  let canSendNoble = parent.querySelector('#canSendNoble');
 
-  if (!canSendNobles) {
-    canSendNobles = document.createElement('tr');
-    canSendNobles.id = 'canSendNobles';
-    parent.appendChild(canSendNobles);
+  if (!canSendNoble) {
+    canSendNoble = document.createElement('tr');
+    canSendNoble.id = 'canSendNoble';
+    parent.appendChild(canSendNoble);
   }
 
-  console.log(coords);
-  canSendNobles.innerHTML = "\n          <td>\n              ".concat(translations.canSendNobles, ":\n          </td>\n          <td>\n              ").concat((0, _math.calcDistanceBetweenTwoPoints)(coords[0], coords[1], window.game_data.village.x, window.game_data.village.y) < cfg.snob.maxDist ? translations.yes : translations.no, "\n          </td>\n      ");
+  canSendNoble.innerHTML = "\n          <td>\n              ".concat(translations.canSendNoble, ":\n          </td>\n          <td>\n              ").concat((0, _math.calcDistanceBetweenTwoPoints)(coords[0], coords[1], window.game_data.village.x, window.game_data.village.y) < cfg.snob.maxDist ? translations.yes : translations.no, "\n          </td>\n      ");
 };
 
 const createLoadVillageHandler = cfg => async e => {
@@ -581,7 +580,6 @@ const createLoadVillageHandler = cfg => async e => {
 const createDisplayForVillageHandler = cfg => async (e, a, t) => {
   TWMap.popup._displayForVillage(e, a, t);
 
-  console.log('_displayForVillage', a, t);
   const data = await loadVillageData(parseInt(e.id), {
     cacheOnly: window.game_data.features.Premium.active
   });

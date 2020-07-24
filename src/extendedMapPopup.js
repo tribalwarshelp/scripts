@@ -163,15 +163,15 @@ const renderAdditionalInfo = (id, data, cfg) => {
           </td>
       `;
 
-  let canSendNobles = parent.querySelector('#canSendNobles');
-  if (!canSendNobles) {
-    canSendNobles = document.createElement('tr');
-    canSendNobles.id = 'canSendNobles';
-    parent.appendChild(canSendNobles);
+  let canSendNoble = parent.querySelector('#canSendNoble');
+  if (!canSendNoble) {
+    canSendNoble = document.createElement('tr');
+    canSendNoble.id = 'canSendNoble';
+    parent.appendChild(canSendNoble);
   }
-  canSendNobles.innerHTML = `
+  canSendNoble.innerHTML = `
           <td>
-              ${translations.canSendNobles}:
+              ${translations.canSendNoble}:
           </td>
           <td>
               ${

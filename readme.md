@@ -89,5 +89,6 @@ Adds to popup:
 
 - Information about possible loyalty
 - Ennoble date
+- Information if you can send noble from the current village
 
 ![Screenshot](/screenshots/extendedMapPopup.png?raw=true)
