@@ -218,7 +218,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
-// @version      0.7.0
+// @version      0.7.1
 // @description  Map Coords Picker
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -272,7 +272,6 @@ const setVillageBgColor = function setVillageBgColor(x, y) {
       village.parentElement.appendChild(overlay);
     }
 
-    console.log("rgba(".concat((0, _hexToRGB.default)(bgColor.replace('#', '')).join(', '), ", 0.7)"));
     overlay.style.backgroundColor = bgColor !== 'transparent' ? "rgba(".concat((0, _hexToRGB.default)(bgColor.replace('#', '')).join(', '), ", 0.7)") : bgColor;
   }
 };

@@ -7,7 +7,7 @@ import { getItem, setItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
-// @version      0.7.0
+// @version      0.7.1
 // @description  Map Coords Picker
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -60,7 +60,6 @@ const setVillageBgColor = (x, y, bgColor = 'transparent') => {
       village.parentElement.appendChild(overlay);
     }
 
-    console.log(`rgba(${hexToRGB(bgColor.replace('#', '')).join(', ')}, 0.7)`);
     overlay.style.backgroundColor =
       bgColor !== 'transparent'
         ? `rgba(${hexToRGB(bgColor.replace('#', '')).join(', ')}, 0.7)`
