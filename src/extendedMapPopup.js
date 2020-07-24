@@ -3,6 +3,7 @@ import getTranslations from './i18n/extendedMapPopup';
 import requestCreator from './libs/requestCreator';
 import formatDate from './utils/formatDate';
 import getCurrentServer from './utils/getCurrentServer';
+import { calcDistanceBetweenTwoPoints } from './utils/math';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -10,7 +11,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.4.0
+// @version      0.5.0
 // @description  Extended Map Popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -23,6 +24,9 @@ const CURR_SERVER_CONFIG = `
         server(key: $key) {
             config {
                 speed
+                snob {
+                  maxDist
+                }
             }
         }
     }
@@ -57,7 +61,15 @@ const isConfigExpired = (date) => {
 
 const loadServerConfig = async () => {
   let data = loadServerConfigFromLocalStorage();
-  if (!data || !data.server || isConfigExpired(new Date(data.loadedAt))) {
+  if (
+    !data ||
+    !data.server ||
+    isConfigExpired(new Date(data.loadedAt)) ||
+    !data.server.config ||
+    !data.server.config.speed ||
+    !data.server.config.snob ||
+    !data.server.config.snob.maxDist
+  ) {
     data = await requestCreator({
       query: CURR_SERVER_CONFIG,
       variables: {
@@ -102,7 +114,8 @@ const calcLoyalty = (ennobledAt, speed) => {
   return Math.floor(loyalty);
 };
 
-const renderAdditionalInfo = (data, cfg) => {
+const renderAdditionalInfo = (id, data, cfg) => {
+  const coords = TWMap.CoordByXY(TWMap.villageKey[id]);
   const ennoblement =
     data &&
     data.ennoblements &&
@@ -149,12 +162,36 @@ const renderAdditionalInfo = (data, cfg) => {
               }
           </td>
       `;
+
+  let canSendNobles = parent.querySelector('#canSendNobles');
+  if (!canSendNobles) {
+    canSendNobles = document.createElement('tr');
+    canSendNobles.id = 'canSendNobles';
+    parent.appendChild(canSendNobles);
+  }
+  canSendNobles.innerHTML = `
+          <td>
+              ${translations.canSendNobles}:
+          </td>
+          <td>
+              ${
+                calcDistanceBetweenTwoPoints(
+                  coords[0],
+                  coords[1],
+                  window.game_data.village.x,
+                  window.game_data.village.y
+                ) < cfg.snob.maxDist
+                  ? translations.yes
+                  : translations.no
+              }
+          </td>
+      `;
 };
 
 const createLoadVillageHandler = (cfg) => async (e) => {
   TWMap.popup._loadVillage(e);
   const data = await loadVillageData(parseInt(e));
-  renderAdditionalInfo(data, cfg);
+  renderAdditionalInfo(parseInt(e), data, cfg);
 };
 
 const createDisplayForVillageHandler = (cfg) => async (e, a, t) => {
@@ -162,7 +199,7 @@ const createDisplayForVillageHandler = (cfg) => async (e, a, t) => {
   const data = await loadVillageData(parseInt(e.id), {
     cacheOnly: window.game_data.features.Premium.active,
   });
-  renderAdditionalInfo(data, cfg);
+  renderAdditionalInfo(parseInt(e.id), data, cfg);
 };
 
 (async function () {

@@ -2,13 +2,14 @@ import requestCreator from './libs/requestCreator';
 import getTranslations from './i18n/bonusBarbarianVillageFinder';
 import getCurrentServer from './utils/getCurrentServer';
 import { formatVillageURL, formatVillageName } from './utils/tribalwars';
+import { calcDistanceBetweenTwoPoints } from './utils/math';
 
 // ==UserScript==
 // @name         Bonus barbarian village finder
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-// @version      0.4.0
+// @version      0.4.1
 // @description  Bonus barbarian village finder
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -67,11 +68,14 @@ const searchBonusBarbarianVillages = async (e) => {
 
   villages.items = villages.items
     .map((item) => {
-      const a = coords[0] - item.x;
-      const b = coords[1] - item.y;
       return {
         ...item,
-        distance: Math.sqrt(a * a + b * b),
+        distance: calcDistanceBetweenTwoPoints(
+          coords[0],
+          coords[1],
+          item.x,
+          item.y
+        ),
       };
     })
     .sort((a, b) => a.distance - b.distance);

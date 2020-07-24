@@ -3,11 +3,17 @@ const translations = {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
     possibleLoyalty: 'Możliwe poparcie',
+    canSendNobles: 'Można wysłać szlachciców',
+    yes: 'Tak',
+    no: 'Nie',
   },
   en_DK: {
     ennobledAt: 'Ennobled at',
     never: 'Never',
     possibleLoyalty: 'Possible loyalty',
+    canSendNobles: 'Can send nobles',
+    yes: 'Yes',
+    no: 'No',
   },
 };
 

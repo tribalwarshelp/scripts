@@ -303,12 +303,18 @@ const translations = {
   pl_PL: {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
-    possibleLoyalty: 'Możliwe poparcie'
+    possibleLoyalty: 'Możliwe poparcie',
+    canSendNobles: 'Można wysłać szlachciców',
+    yes: 'Tak',
+    no: 'Nie'
   },
   en_DK: {
     ennobledAt: 'Ennobled at',
     never: 'Never',
-    possibleLoyalty: 'Possible loyalty'
+    possibleLoyalty: 'Possible loyalty',
+    canSendNobles: 'Can send nobles',
+    yes: 'Yes',
+    no: 'No'
   }
 };
 
@@ -387,6 +393,21 @@ exports.default = void 0;
 var _default = () => window.location.host.split('.')[0];
 
 exports.default = _default;
+},{}],"XOOL":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calcDistanceBetweenTwoPoints = void 0;
+
+const calcDistanceBetweenTwoPoints = (x1, y1, x2, y2) => {
+  const a = x1 - x2;
+  const b = y1 - y2;
+  return Math.sqrt(a * a + b * b);
+};
+
+exports.calcDistanceBetweenTwoPoints = calcDistanceBetweenTwoPoints;
 },{}],"KWxH":[function(require,module,exports) {
 "use strict";
 
@@ -426,6 +447,8 @@ var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
+var _math = require("./utils/math");
+
 var _localStorage = require("./utils/localStorage");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -435,14 +458,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.4.0
+// @version      0.5.0
 // @description  Extended Map Popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
-const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n                speed\n            }\n        }\n    }\n";
+const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n                speed\n                snob {\n                  maxDist\n                }\n            }\n        }\n    }\n";
 const LAST_VILLAGE_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n        ennoblements(server: $server, filter: $filter) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
 const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_map_popup_server_cfg';
 const translations = (0, _extendedMapPopup.default)();
@@ -463,7 +486,7 @@ const isConfigExpired = date => {
 const loadServerConfig = async () => {
   let data = loadServerConfigFromLocalStorage();
 
-  if (!data || !data.server || isConfigExpired(new Date(data.loadedAt))) {
+  if (!data || !data.server || isConfigExpired(new Date(data.loadedAt)) || !data.server.config || !data.server.config.speed || !data.server.config.snob || !data.server.config.snob.maxDist) {
     data = await (0, _requestCreator.default)({
       query: CURR_SERVER_CONFIG,
       variables: {
@@ -514,7 +537,8 @@ const calcLoyalty = (ennobledAt, speed) => {
   return Math.floor(loyalty);
 };
 
-const renderAdditionalInfo = (data, cfg) => {
+const renderAdditionalInfo = (id, data, cfg) => {
+  const coords = TWMap.CoordByXY(TWMap.villageKey[id]);
   const ennoblement = data && data.ennoblements && data.ennoblements.items && data.ennoblements.items.length > 0 ? data.ennoblements.items[0] : undefined;
   const parent = document.querySelector('#map_popup #info_content tbody');
   let lastEnnobledAt = parent.querySelector('#lastEnnobledAt');
@@ -535,22 +559,33 @@ const renderAdditionalInfo = (data, cfg) => {
   }
 
   loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? calcLoyalty(new Date(ennoblement.ennobledAt), cfg.speed) : 100, "\n          </td>\n      ");
+  let canSendNobles = parent.querySelector('#canSendNobles');
+
+  if (!canSendNobles) {
+    canSendNobles = document.createElement('tr');
+    canSendNobles.id = 'canSendNobles';
+    parent.appendChild(canSendNobles);
+  }
+
+  console.log(coords);
+  canSendNobles.innerHTML = "\n          <td>\n              ".concat(translations.canSendNobles, ":\n          </td>\n          <td>\n              ").concat((0, _math.calcDistanceBetweenTwoPoints)(coords[0], coords[1], window.game_data.village.x, window.game_data.village.y) < cfg.snob.maxDist ? translations.yes : translations.no, "\n          </td>\n      ");
 };
 
 const createLoadVillageHandler = cfg => async e => {
   TWMap.popup._loadVillage(e);
 
   const data = await loadVillageData(parseInt(e));
-  renderAdditionalInfo(data, cfg);
+  renderAdditionalInfo(parseInt(e), data, cfg);
 };
 
 const createDisplayForVillageHandler = cfg => async (e, a, t) => {
   TWMap.popup._displayForVillage(e, a, t);
 
+  console.log('_displayForVillage', a, t);
   const data = await loadVillageData(parseInt(e.id), {
     cacheOnly: window.game_data.features.Premium.active
   });
-  renderAdditionalInfo(data, cfg);
+  renderAdditionalInfo(parseInt(e.id), data, cfg);
 };
 
 (async function () {
@@ -565,4 +600,4 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
     console.log('extended map popup', error);
   }
 })();
-},{"date-fns/differenceInMinutes":"oGJj","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH"}]},{},["HdqX"], null)
+},{"date-fns/differenceInMinutes":"oGJj","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/localStorage":"KWxH"}]},{},["HdqX"], null)

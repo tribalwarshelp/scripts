@@ -370,7 +370,22 @@ const loadInADayData = async function loadInADayData(type) {
 };
 
 exports.loadInADayData = loadInADayData;
-},{"../libs/InADayParser":"dSAr"}],"fvjy":[function(require,module,exports) {
+},{"../libs/InADayParser":"dSAr"}],"XOOL":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calcDistanceBetweenTwoPoints = void 0;
+
+const calcDistanceBetweenTwoPoints = (x1, y1, x2, y2) => {
+  const a = x1 - x2;
+  const b = y1 - y2;
+  return Math.sqrt(a * a + b * b);
+};
+
+exports.calcDistanceBetweenTwoPoints = calcDistanceBetweenTwoPoints;
+},{}],"fvjy":[function(require,module,exports) {
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
@@ -380,6 +395,8 @@ var _bonusBarbarianVillageFinder = _interopRequireDefault(require("./i18n/bonusB
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
 var _tribalwars = require("./utils/tribalwars");
+
+var _math = require("./utils/math");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -394,7 +411,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-// @version      0.4.0
+// @version      0.4.1
 // @description  Bonus barbarian village finder
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -440,10 +457,8 @@ const searchBonusBarbarianVillages = async e => {
   const villages = await loadBonusVillages(parseInt(e.target[0].value));
   const coords = TWMap.pos;
   villages.items = villages.items.map(item => {
-    const a = coords[0] - item.x;
-    const b = coords[1] - item.y;
     return _objectSpread(_objectSpread({}, item), {}, {
-      distance: Math.sqrt(a * a + b * b)
+      distance: (0, _math.calcDistanceBetweenTwoPoints)(coords[0], coords[1], item.x, item.y)
     });
   }).sort((a, b) => a.distance - b.distance);
   document.querySelector('#' + TABLE_ID).innerHTML = buildTableBodyHTML(villages.items);
@@ -488,4 +503,4 @@ const renderUI = () => {
 (function () {
   renderUI();
 })();
-},{"./libs/requestCreator":"Ph2E","./i18n/bonusBarbarianVillageFinder":"MRps","./utils/getCurrentServer":"DMkL","./utils/tribalwars":"fHHP"}]},{},["fvjy"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/bonusBarbarianVillageFinder":"MRps","./utils/getCurrentServer":"DMkL","./utils/tribalwars":"fHHP","./utils/math":"XOOL"}]},{},["fvjy"], null)
