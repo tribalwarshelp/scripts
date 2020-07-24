@@ -1,3 +1,4 @@
+import getTranslations from './i18n/mapCoordsPicker';
 import hexToRGB from './utils/hexToRGB';
 import { getItem, setItem } from './utils/localStorage';
 
@@ -6,7 +7,7 @@ import { getItem, setItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
-// @version      0.6.0
+// @version      0.7.0
 // @description  Map Coords Picker
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -29,6 +30,7 @@ let config = getItem(LOCAL_STORAGE_KEY, {
   selectedGroup: 'All',
 });
 let intervalID;
+const translations = getTranslations();
 
 const saveConfig = () => {
   setItem(LOCAL_STORAGE_KEY, config);
@@ -105,14 +107,20 @@ const renderForm = (container, group) => {
   const selected = group && group.name !== config.selectedGroup;
   const html = `
             <input type="color" value="${group ? group.color : ''}" required />
-            <input type="text" required placeholder="Group name" value="${
-              group ? group.name : ''
-            }" />
-            <button type="submit">${group ? 'Save' : 'Add'}</button>
-            ${group ? '<button type="button">Delete</button>' : ''}
+            <input type="text" required placeholder="${
+              translations.groupName
+            }" value="${group ? group.name : ''}" />
+            <button type="submit">${
+              group ? translations.save : translations.add
+            }</button>
+            ${
+              group
+                ? `<button type="button">${translations.delete}</button>`
+                : ''
+            }
             ${
               selected
-                ? '<button class="selectButton" type="button">Select</button>'
+                ? `<button class="selectButton" type="button">${translations.select}</button>`
                 : ''
             }
     `;
@@ -144,7 +152,7 @@ const renderForm = (container, group) => {
       .querySelector('button[type="button"]')
       .addEventListener('click', () => {
         if (config.selectedGroup === group.name) {
-          return UI.ErrorMessage('Cannot delete selected group!');
+          return UI.ErrorMessage(translations.cannotDeleteSelectedGroup);
         }
         colorizeGroupVillages(group.name, 'transparent');
         delete config.groups[group.name];
@@ -188,12 +196,12 @@ const exportVillagesHandler = () => {
     ${groups.join('')}
   `;
 
-  Dialog.show('Exported villages', html);
+  Dialog.show(translations.exportedVillages, html);
 };
 
 const renderActions = () => {
   const exportVillages = document.createElement('button');
-  exportVillages.innerHTML = 'Export';
+  exportVillages.innerHTML = translations.export;
   exportVillages.addEventListener('click', exportVillagesHandler);
   actionsContainer.appendChild(exportVillages);
 };
@@ -208,7 +216,7 @@ const handleStart = () => {
   TWMap.map.handler.onClick = handleMapClick;
   TWMap.mapHandler.__spawnSector = TWMap.map.handler.spawnSector;
   TWMap.mapHandler.spawnSector = handleSpawnSector;
-  button.innerHTML = 'Stop coords picker';
+  button.innerHTML = translations.stopCoordsPicker;
   renderActions();
   colorizeVillages();
   renderGroups();
@@ -222,7 +230,7 @@ const handleStop = () => {
   if (typeof TWMap.map.handler.__spawnSector === 'function') {
     TWMap.mapHandler.spawnSector = TWMap.map.handler.__spawnSector;
   }
-  button.innerHTML = 'Run coords picker';
+  button.innerHTML = translations.startCoordsPicker;
   formsContainer.innerHTML = '';
   actionsContainer.innerHTML = '';
   colorizeVillages('transparent');
@@ -264,8 +272,8 @@ const renderUI = () => {
   button = document.createElement('button');
   button.style.marginLeft = '5px';
   button.innerHTML = config.started
-    ? 'Stop coords picker'
-    : 'Run coords picker';
+    ? translations.stopCoordsPicker
+    : translations.startCoordsPicker;
   button.addEventListener('click', handleButtonClick);
   container.appendChild(button);
 

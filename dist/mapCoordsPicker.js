@@ -117,7 +117,44 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"Mk65":[function(require,module,exports) {
+})({"jH35":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    startCoordsPicker: 'Uruchom zbieracza koordynat',
+    stopCoordsPicker: 'Zatrzymaj zbieracza koordynat',
+    exportedVillages: 'Wyeksportowane wioski',
+    cannotDeleteSelectedGroup: 'Nie można usunąć wybranej grupy!',
+    select: 'Wybierz',
+    delete: 'Usuń',
+    add: 'Dodaj',
+    save: 'Zapisz',
+    groupName: 'Nazwa grupy',
+    export: 'Eksport'
+  },
+  en_DK: {
+    startCoordsPicker: 'Start coords picker',
+    stopCoordsPicker: 'Stop coords picker',
+    exportedVillages: 'Exported villages',
+    cannotDeleteSelectedGroup: 'Cannot delete selected group!',
+    select: 'Select',
+    delete: 'Delete',
+    add: 'Add',
+    save: 'Save',
+    groupName: 'Group name',
+    export: 'Export'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
+},{}],"Mk65":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -162,6 +199,8 @@ exports.setItem = setItem;
 },{}],"FWa8":[function(require,module,exports) {
 "use strict";
 
+var _mapCoordsPicker = _interopRequireDefault(require("./i18n/mapCoordsPicker"));
+
 var _hexToRGB = _interopRequireDefault(require("./utils/hexToRGB"));
 
 var _localStorage = require("./utils/localStorage");
@@ -179,7 +218,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
-// @version      0.6.0
+// @version      0.7.0
 // @description  Map Coords Picker
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -201,6 +240,7 @@ let config = (0, _localStorage.getItem)(LOCAL_STORAGE_KEY, {
   selectedGroup: 'All'
 });
 let intervalID;
+const translations = (0, _mapCoordsPicker.default)();
 
 const saveConfig = () => {
   (0, _localStorage.setItem)(LOCAL_STORAGE_KEY, config);
@@ -265,7 +305,7 @@ const handleMapClick = (x, y, e) => {
 
 const renderForm = (container, group) => {
   const selected = group && group.name !== config.selectedGroup;
-  const html = "\n            <input type=\"color\" value=\"".concat(group ? group.color : '', "\" required />\n            <input type=\"text\" required placeholder=\"Group name\" value=\"").concat(group ? group.name : '', "\" />\n            <button type=\"submit\">").concat(group ? 'Save' : 'Add', "</button>\n            ").concat(group ? '<button type="button">Delete</button>' : '', "\n            ").concat(selected ? '<button class="selectButton" type="button">Select</button>' : '', "\n    ");
+  const html = "\n            <input type=\"color\" value=\"".concat(group ? group.color : '', "\" required />\n            <input type=\"text\" required placeholder=\"").concat(translations.groupName, "\" value=\"").concat(group ? group.name : '', "\" />\n            <button type=\"submit\">").concat(group ? translations.save : translations.add, "</button>\n            ").concat(group ? "<button type=\"button\">".concat(translations.delete, "</button>") : '', "\n            ").concat(selected ? "<button class=\"selectButton\" type=\"button\">".concat(translations.select, "</button>") : '', "\n    ");
   const form = document.createElement('form');
   form.innerHTML = html;
   form.addEventListener('submit', e => {
@@ -291,7 +331,7 @@ const renderForm = (container, group) => {
   if (group) {
     form.querySelector('button[type="button"]').addEventListener('click', () => {
       if (config.selectedGroup === group.name) {
-        return UI.ErrorMessage('Cannot delete selected group!');
+        return UI.ErrorMessage(translations.cannotDeleteSelectedGroup);
       }
 
       colorizeGroupVillages(group.name, 'transparent');
@@ -331,12 +371,12 @@ const exportVillagesHandler = () => {
   }
 
   const html = "\n    ".concat(groups.join(''), "\n  ");
-  Dialog.show('Exported villages', html);
+  Dialog.show(translations.exportedVillages, html);
 };
 
 const renderActions = () => {
   const exportVillages = document.createElement('button');
-  exportVillages.innerHTML = 'Export';
+  exportVillages.innerHTML = translations.export;
   exportVillages.addEventListener('click', exportVillagesHandler);
   actionsContainer.appendChild(exportVillages);
 };
@@ -352,7 +392,7 @@ const handleStart = () => {
   TWMap.map.handler.onClick = handleMapClick;
   TWMap.mapHandler.__spawnSector = TWMap.map.handler.spawnSector;
   TWMap.mapHandler.spawnSector = handleSpawnSector;
-  button.innerHTML = 'Stop coords picker';
+  button.innerHTML = translations.stopCoordsPicker;
   renderActions();
   colorizeVillages();
   renderGroups();
@@ -368,7 +408,7 @@ const handleStop = () => {
     TWMap.mapHandler.spawnSector = TWMap.map.handler.__spawnSector;
   }
 
-  button.innerHTML = 'Run coords picker';
+  button.innerHTML = translations.startCoordsPicker;
   formsContainer.innerHTML = '';
   actionsContainer.innerHTML = '';
   colorizeVillages('transparent');
@@ -411,7 +451,7 @@ const colorizeVillages = function colorizeVillages() {
 const renderUI = () => {
   button = document.createElement('button');
   button.style.marginLeft = '5px';
-  button.innerHTML = config.started ? 'Stop coords picker' : 'Run coords picker';
+  button.innerHTML = config.started ? translations.stopCoordsPicker : translations.startCoordsPicker;
   button.addEventListener('click', handleButtonClick);
   container.appendChild(button);
   formsContainer = document.createElement('div');
@@ -431,4 +471,4 @@ const renderUI = () => {
     console.log('Map Coords Picker', error);
   }
 })();
-},{"./utils/hexToRGB":"Mk65","./utils/localStorage":"KWxH"}]},{},["FWa8"], null)
+},{"./i18n/mapCoordsPicker":"jH35","./utils/hexToRGB":"Mk65","./utils/localStorage":"KWxH"}]},{},["FWa8"], null)
