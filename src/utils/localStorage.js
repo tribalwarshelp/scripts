@@ -1,6 +1,6 @@
-export const getItem = (key) => {
+export const getItem = (key, d = {}) => {
   const json = localStorage.getItem(key);
-  let obj = {};
+  let obj = d;
   if (json) {
     obj = JSON.parse(json);
   }

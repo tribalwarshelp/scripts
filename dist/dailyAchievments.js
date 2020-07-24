@@ -195,9 +195,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.setItem = exports.getItem = void 0;
 
-const getItem = key => {
+const getItem = function getItem(key) {
+  let d = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   const json = localStorage.getItem(key);
-  let obj = {};
+  let obj = d;
 
   if (json) {
     obj = JSON.parse(json);
