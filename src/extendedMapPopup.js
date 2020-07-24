@@ -10,7 +10,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.3.0
+// @version      0.4.0
 // @description  Extended Map Popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -159,7 +159,9 @@ const createLoadVillageHandler = (cfg) => async (e) => {
 
 const createDisplayForVillageHandler = (cfg) => async (e, a, t) => {
   TWMap.popup._displayForVillage(e, a, t);
-  const data = await loadVillageData(parseInt(e.id), { cacheOnly: true });
+  const data = await loadVillageData(parseInt(e.id), {
+    cacheOnly: window.game_data.features.Premium.active,
+  });
   renderAdditionalInfo(data, cfg);
 };
 
