@@ -92,3 +92,9 @@ Adds to popup:
 - Information if you can send noble from the current village
 
 ![Screenshot](/screenshots/extendedMapPopup.png?raw=true)
+
+### 8. Map Coords Picker
+
+[Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js)
+
+![Screenshot](/screenshots/mapCoordsPicker.png?raw=true)
