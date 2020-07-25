@@ -292,7 +292,117 @@ function differenceInMinutes(dirtyDateLeft, dirtyDateRight) {
   var diff = (0, _index.default)(dirtyDateLeft, dirtyDateRight) / MILLISECONDS_IN_MINUTE;
   return diff > 0 ? Math.floor(diff) : Math.ceil(diff);
 }
-},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"ddIN":[function(require,module,exports) {
+},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"VYL5":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toInteger;
+
+function toInteger(dirtyNumber) {
+  if (dirtyNumber === null || dirtyNumber === true || dirtyNumber === false) {
+    return NaN;
+  }
+
+  var number = Number(dirtyNumber);
+
+  if (isNaN(number)) {
+    return number;
+  }
+
+  return number < 0 ? Math.ceil(number) : Math.floor(number);
+}
+},{}],"umce":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = addMilliseconds;
+
+var _index = _interopRequireDefault(require("../_lib/toInteger/index.js"));
+
+var _index2 = _interopRequireDefault(require("../toDate/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name addMilliseconds
+ * @category Millisecond Helpers
+ * @summary Add the specified number of milliseconds to the given date.
+ *
+ * @description
+ * Add the specified number of milliseconds to the given date.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} date - the date to be changed
+ * @param {Number} amount - the amount of milliseconds to be added. Positive decimals will be rounded using `Math.floor`, decimals less than zero will be rounded using `Math.ceil`.
+ * @returns {Date} the new date with the milliseconds added
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // Add 750 milliseconds to 10 July 2014 12:45:30.000:
+ * var result = addMilliseconds(new Date(2014, 6, 10, 12, 45, 30, 0), 750)
+ * //=> Thu Jul 10 2014 12:45:30.750
+ */
+function addMilliseconds(dirtyDate, dirtyAmount) {
+  (0, _index3.default)(2, arguments);
+  var timestamp = (0, _index2.default)(dirtyDate).getTime();
+  var amount = (0, _index.default)(dirtyAmount);
+  return new Date(timestamp + amount);
+}
+},{"../_lib/toInteger/index.js":"VYL5","../toDate/index.js":"KYJg","../_lib/requiredArgs/index.js":"kK6Q"}],"pfh4":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = addMinutes;
+
+var _index = _interopRequireDefault(require("../_lib/toInteger/index.js"));
+
+var _index2 = _interopRequireDefault(require("../addMilliseconds/index.js"));
+
+var _index3 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MILLISECONDS_IN_MINUTE = 60000;
+/**
+ * @name addMinutes
+ * @category Minute Helpers
+ * @summary Add the specified number of minutes to the given date.
+ *
+ * @description
+ * Add the specified number of minutes to the given date.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} date - the date to be changed
+ * @param {Number} amount - the amount of minutes to be added. Positive decimals will be rounded using `Math.floor`, decimals less than zero will be rounded using `Math.ceil`.
+ * @returns {Date} the new date with the minutes added
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // Add 30 minutes to 10 July 2014 12:00:00:
+ * var result = addMinutes(new Date(2014, 6, 10, 12, 0), 30)
+ * //=> Thu Jul 10 2014 12:30:00
+ */
+
+function addMinutes(dirtyDate, dirtyAmount) {
+  (0, _index3.default)(2, arguments);
+  var amount = (0, _index.default)(dirtyAmount);
+  return (0, _index2.default)(dirtyDate, amount * MILLISECONDS_IN_MINUTE);
+}
+},{"../_lib/toInteger/index.js":"VYL5","../addMilliseconds/index.js":"umce","../_lib/requiredArgs/index.js":"kK6Q"}],"ddIN":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -408,7 +518,208 @@ const calcDistanceBetweenTwoPoints = (x1, y1, x2, y2) => {
 };
 
 exports.calcDistanceBetweenTwoPoints = calcDistanceBetweenTwoPoints;
-},{}],"KWxH":[function(require,module,exports) {
+},{}],"tQUs":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = url => parseInt(new URLSearchParams(url).get('id'));
+
+exports.default = _default;
+},{}],"dSAr":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _getIDFromURL = _interopRequireDefault(require("../utils/getIDFromURL"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class InADayParser {
+  constructor(html) {
+    let filters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    this.dom = new DOMParser().parseFromString(html, 'text/html');
+    this.filters = filters;
+  }
+
+  isValidRow(row) {
+    if (!row) {
+      return false;
+    }
+
+    if (this.filters.playerID && row.playerID !== this.filters.playerID) {
+      return false;
+    }
+
+    return true;
+  }
+
+  parseRow(row) {
+    if (!row || !row instanceof HTMLTableRowElement) {
+      return undefined;
+    }
+
+    let obj = {};
+    obj.rank = parseInt(row.children[0].innerText.trim());
+    obj.name = row.children[1].innerText.trim();
+    obj.playerID = (0, _getIDFromURL.default)(row.children[1].querySelector('a').getAttribute('href'));
+    obj.tribe = row.children[2].innerText.trim();
+    obj.tribeID = 0;
+
+    if (obj.tribe) {
+      obj.tribeID = (0, _getIDFromURL.default)(row.children[2].querySelector('a').getAttribute('href'));
+    }
+
+    obj.score = parseInt(row.children[3].innerText.trim().replace(/\./g, ''));
+    obj.date = row.children[4].innerText.trim();
+    return obj;
+  }
+
+  parse() {
+    const trs = this.dom.querySelectorAll('#in_a_day_ranking_table tbody tr');
+    const result = [];
+
+    for (let i = 1; i < trs.length; i++) {
+      const row = trs[i];
+      const parsed = this.parseRow(row);
+
+      if (this.isValidRow(parsed)) {
+        result.push(parsed);
+      }
+    }
+
+    return result;
+  }
+
+}
+
+exports.default = InADayParser;
+},{"../utils/getIDFromURL":"tQUs"}],"fHHP":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildImgURL = exports.calcAttackDuration = exports.loadInADayData = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+
+var _InADayParser = _interopRequireDefault(require("../libs/InADayParser"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+const formatTribeURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_ally',
+    id
+  });
+};
+
+exports.formatTribeURL = formatTribeURL;
+
+const formatPlayerURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_player',
+    id
+  });
+};
+
+exports.formatPlayerURL = formatPlayerURL;
+
+const formatVillageURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_village',
+    id
+  });
+};
+
+exports.formatVillageURL = formatVillageURL;
+
+const formatVillageName = function formatVillageName() {
+  let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+  let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+  const continent = 'K' + String(y)[0] + String(x)[0];
+  return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
+};
+
+exports.formatVillageName = formatVillageName;
+
+const loadInADayData = async function loadInADayData(type) {
+  let _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      {
+    name
+  } = _ref,
+      rest = _objectWithoutProperties(_ref, ["name"]);
+
+  try {
+    const response = await fetch(TribalWars.buildURL('', {
+      screen: 'ranking',
+      mode: 'in_a_day',
+      type,
+      name: name ? name : ''
+    }));
+    const html = await response.text();
+
+    if (!html) {
+      throw new Error();
+    }
+
+    const res = new _InADayParser.default(html, rest).parse();
+
+    if (res.length === 0) {
+      throw new Error();
+    }
+
+    return res[0];
+  } catch (error) {
+    return {
+      rank: 0,
+      playerID: 0,
+      score: 0,
+      tribeID: 0,
+      date: new Date()
+    };
+  }
+};
+
+exports.loadInADayData = loadInADayData;
+
+const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
+  return Math.round(distance * baseSpeed / unitSpeed);
+};
+
+exports.calcAttackDuration = calcAttackDuration;
+
+const buildImgURL = img => {
+  return image_base + img;
+};
+
+exports.buildImgURL = buildImgURL;
+},{"../libs/InADayParser":"dSAr"}],"KX6P":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _tribalwars = require("./tribalwars");
+
+var _default = unit => {
+  return (0, _tribalwars.buildImgURL)("unit/unit_".concat(unit, ".png"));
+};
+
+exports.default = _default;
+},{"./tribalwars":"fHHP"}],"KWxH":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -440,6 +751,8 @@ exports.setItem = setItem;
 
 var _differenceInMinutes = _interopRequireDefault(require("date-fns/differenceInMinutes"));
 
+var _addMinutes = _interopRequireDefault(require("date-fns/addMinutes"));
+
 var _extendedMapPopup = _interopRequireDefault(require("./i18n/extendedMapPopup"));
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
@@ -450,28 +763,38 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _math = require("./utils/math");
 
+var _buildUnitImgURL = _interopRequireDefault(require("./utils/buildUnitImgURL"));
+
 var _localStorage = require("./utils/localStorage");
 
+var _tribalwars = require("./utils/tribalwars");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 // ==UserScript==
 // @name         Extended Map Popup
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.5.0
+// @version      0.6.0
 // @description  Extended Map Popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
-const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n                speed\n                snob {\n                  maxDist\n                }\n            }\n        }\n    }\n";
+const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n                speed\n                unitSpeed\n                snob {\n                  maxDist\n                }\n            }\n            unitConfig {\n              spear {\n                speed\n              }\n              sword {\n                speed\n              }\n              axe {\n                speed\n              }\n              archer {\n                speed\n              }\n              spy {\n                speed\n              }\n              light {\n                speed\n              }\n              marcher {\n                speed\n              }\n              heavy {\n                speed\n              }\n              ram {\n                speed\n              }\n              catapult {\n                speed\n              }\n              knight {\n                speed\n              }\n              snob {\n                speed\n              }\n            }\n        }\n    }\n";
 const LAST_VILLAGE_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n        ennoblements(server: $server, filter: $filter) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
 const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_map_popup_server_cfg';
 const translations = (0, _extendedMapPopup.default)();
 
-const loadServerConfigFromLocalStorage = () => {
+const loadConfigsFromLocalStorage = () => {
   return (0, _localStorage.getItem)(SERVER_CONFIG_LOCAL_STORAGE_KEY);
 };
 
@@ -484,10 +807,10 @@ const isConfigExpired = date => {
   return Math.abs((0, _differenceInMinutes.default)(date, new Date())) >= 60 * 24;
 };
 
-const loadServerConfig = async () => {
-  let data = loadServerConfigFromLocalStorage();
+const loadConfigs = async () => {
+  let data = loadConfigsFromLocalStorage();
 
-  if (!data || !data.server || isConfigExpired(new Date(data.loadedAt)) || !data.server.config || !data.server.config.speed || !data.server.config.snob || !data.server.config.snob.maxDist) {
+  if (!data || !data.server || isConfigExpired(new Date(data.loadedAt)) || !data.server.config || !data.server.config.speed || !data.server.config.snob || !data.server.config.snob.maxDist || !data.server.config.unitSpeed || !data.server.unitConfig) {
     data = await (0, _requestCreator.default)({
       query: CURR_SERVER_CONFIG,
       variables: {
@@ -498,7 +821,10 @@ const loadServerConfig = async () => {
     cacheServerConfig(data);
   }
 
-  return data && data.server && data.server.config ? data.server.config : {};
+  return data && data.server && data.server.config ? {
+    config: data.server.config,
+    unitConfig: data.server.unitConfig
+  } : {};
 };
 
 const loadVillageData = async function loadVillageData(id) {
@@ -538,10 +864,53 @@ const calcLoyalty = (ennobledAt, speed) => {
   return Math.floor(loyalty);
 };
 
-const renderAdditionalInfo = (id, data, cfg) => {
+const getAvailableUnits = function getAvailableUnits() {
+  let unitCfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  const units = [];
+
+  for (let unit in unitCfg) {
+    if (unitCfg[unit].speed !== 0) {
+      units.push(_objectSpread(_objectSpread({}, unitCfg[unit]), {}, {
+        name: unit,
+        img: (0, _buildUnitImgURL.default)(unit)
+      }));
+    }
+  }
+
+  return units;
+};
+
+const getUnitTdBgColor = index => index % 2 === 0 ? '#f8f4e8' : '#ded3b9;';
+
+const buildUnitHeader = (unit, index) => {
+  return "\n    <td style=\"padding: 2px; background-color: ".concat(getUnitTdBgColor(index), ";\">\n      <img\n        src=\"").concat(unit.img, "\"\n        title=\"").concat(unit.name, "\"\n        alt=\"").concat(unit.name, "\"\n      />\n    </td>\n  ");
+};
+
+const buildUnitArrivalInfo = (t, index) => {
+  return "\n    <td style=\"padding: 2px; background-color: ".concat(getUnitTdBgColor(index), ";\">\n      ").concat((0, _formatDate.default)((0, _addMinutes.default)(new Date(Timing.getCurrentServerTime()), t)), "\n    </td>\n  ");
+};
+
+const renderAdditionalInfo = (id, data, _ref) => {
+  let {
+    config,
+    unitConfig
+  } = _ref;
   const coords = TWMap.CoordByXY(TWMap.villageKey[id]);
+  const distance = (0, _math.calcDistanceBetweenTwoPoints)(coords[0], coords[1], window.game_data.village.x, window.game_data.village.y);
   const ennoblement = data && data.ennoblements && data.ennoblements.items && data.ennoblements.items.length > 0 ? data.ennoblements.items[0] : undefined;
   const parent = document.querySelector('#map_popup #info_content tbody');
+  let unitsEl = parent.querySelector('#units');
+
+  if (!unitsEl) {
+    unitsEl = document.createElement('tr');
+    unitsEl.id = 'units';
+    parent.appendChild(unitsEl);
+  }
+
+  const units = getAvailableUnits(unitConfig);
+  unitsEl.innerHTML = "\n          <td colspan=\"2\">\n            <table style=\"border: 1px solid #ded3b9; max-width: 450px;\"\n              width=\"100%\"\n              cellpadding=\"0\"\n              cellspacing=\"0\">\n              <tbody>\n                <tr class=\"center\">\n                  ".concat(units.map(buildUnitHeader).join(''), "\n                </tr>\n                <tr class=\"center\">\n                  ").concat(units.map((unit, index) => {
+    return buildUnitArrivalInfo((0, _tribalwars.calcAttackDuration)(distance, config.unitSpeed, unit.speed), index);
+  }).join(''), "\n                </tr>\n              </tbody>\n            </table>\n          </td>\n      ");
   let lastEnnobledAt = parent.querySelector('#lastEnnobledAt');
 
   if (!lastEnnobledAt) {
@@ -559,7 +928,7 @@ const renderAdditionalInfo = (id, data, cfg) => {
     parent.appendChild(loyalty);
   }
 
-  loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? calcLoyalty(new Date(ennoblement.ennobledAt), cfg.speed) : 100, "\n          </td>\n      ");
+  loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? calcLoyalty(new Date(ennoblement.ennobledAt), config.speed) : 100, "\n          </td>\n      ");
   let canSendNoble = parent.querySelector('#canSendNoble');
 
   if (!canSendNoble) {
@@ -568,7 +937,7 @@ const renderAdditionalInfo = (id, data, cfg) => {
     parent.appendChild(canSendNoble);
   }
 
-  canSendNoble.innerHTML = "\n          <td>\n              ".concat(translations.canSendNoble, ":\n          </td>\n          <td>\n              ").concat((0, _math.calcDistanceBetweenTwoPoints)(coords[0], coords[1], window.game_data.village.x, window.game_data.village.y) < cfg.snob.maxDist ? translations.yes : translations.no, "\n          </td>\n      ");
+  canSendNoble.innerHTML = "\n          <td>\n              ".concat(translations.canSendNoble, ":\n          </td>\n          <td>\n              ").concat(distance < config.snob.maxDist ? translations.yes : translations.no, "\n          </td>\n      ");
 };
 
 const createLoadVillageHandler = cfg => async e => {
@@ -589,14 +958,14 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
 
 (async function () {
   try {
-    const config = await loadServerConfig();
+    const configs = await loadConfigs();
     TWMap.popup.extendedMapPopupCache = {};
     TWMap.popup._loadVillage = TWMap.popup.loadVillage;
-    TWMap.popup.loadVillage = createLoadVillageHandler(config);
+    TWMap.popup.loadVillage = createLoadVillageHandler(configs);
     TWMap.popup._displayForVillage = TWMap.popup.displayForVillage;
-    TWMap.popup.displayForVillage = createDisplayForVillageHandler(config);
+    TWMap.popup.displayForVillage = createDisplayForVillageHandler(configs);
   } catch (error) {
     console.log('extended map popup', error);
   }
 })();
-},{"date-fns/differenceInMinutes":"oGJj","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/localStorage":"KWxH"}]},{},["HdqX"], null)
+},{"date-fns/differenceInMinutes":"oGJj","date-fns/addMinutes":"pfh4","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/buildUnitImgURL":"KX6P","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP"}]},{},["HdqX"], null)

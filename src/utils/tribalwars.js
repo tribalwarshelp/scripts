@@ -64,3 +64,11 @@ export const loadInADayData = async (type, { name, ...rest } = {}) => {
     };
   }
 };
+
+export const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
+  return Math.round((distance * baseSpeed) / unitSpeed);
+};
+
+export const buildImgURL = (img) => {
+  return image_base + img;
+};

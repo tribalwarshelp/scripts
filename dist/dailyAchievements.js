@@ -302,7 +302,7 @@ exports.default = InADayParser;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadInADayData = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.loadInADayData = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
 
 var _InADayParser = _interopRequireDefault(require("../libs/InADayParser"));
 
@@ -388,6 +388,18 @@ const loadInADayData = async function loadInADayData(type) {
 };
 
 exports.loadInADayData = loadInADayData;
+
+const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
+  return Math.round(distance * baseSpeed / unitSpeed);
+};
+
+exports.calcAttackDuration = calcAttackDuration;
+
+const buildImgURL = img => {
+  return image_base + img;
+};
+
+exports.buildImgURL = buildImgURL;
 },{"../libs/InADayParser":"dSAr"}],"DMkL":[function(require,module,exports) {
 "use strict";
 
@@ -399,7 +411,7 @@ exports.default = void 0;
 var _default = () => window.location.host.split('.')[0];
 
 exports.default = _default;
-},{}],"cELE":[function(require,module,exports) {
+},{}],"Jg9g":[function(require,module,exports) {
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
@@ -505,4 +517,4 @@ const render = (_ref) => {
     console.log('dailyAchievements', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./i18n/dailyAchievments":"rX6I","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/getCurrentServer":"DMkL"}]},{},["cELE"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/dailyAchievments":"rX6I","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/getCurrentServer":"DMkL"}]},{},["Jg9g"], null)

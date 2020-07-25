@@ -321,7 +321,7 @@ exports.default = InADayParser;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadInADayData = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.loadInADayData = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
 
 var _InADayParser = _interopRequireDefault(require("../libs/InADayParser"));
 
@@ -407,6 +407,18 @@ const loadInADayData = async function loadInADayData(type) {
 };
 
 exports.loadInADayData = loadInADayData;
+
+const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
+  return Math.round(distance * baseSpeed / unitSpeed);
+};
+
+exports.calcAttackDuration = calcAttackDuration;
+
+const buildImgURL = img => {
+  return image_base + img;
+};
+
+exports.buildImgURL = buildImgURL;
 },{"../libs/InADayParser":"dSAr"}],"KWxH":[function(require,module,exports) {
 "use strict";
 

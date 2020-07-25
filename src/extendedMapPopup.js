@@ -1,17 +1,20 @@
 import differenceInMinutes from 'date-fns/differenceInMinutes';
+import addMinutes from 'date-fns/addMinutes';
 import getTranslations from './i18n/extendedMapPopup';
 import requestCreator from './libs/requestCreator';
 import formatDate from './utils/formatDate';
 import getCurrentServer from './utils/getCurrentServer';
 import { calcDistanceBetweenTwoPoints } from './utils/math';
+import buildUnitImgURL from './utils/buildUnitImgURL';
 import { setItem, getItem } from './utils/localStorage';
+import { calcAttackDuration } from './utils/tribalwars';
 
 // ==UserScript==
 // @name         Extended Map Popup
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.5.0
+// @version      0.6.0
 // @description  Extended Map Popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -24,9 +27,48 @@ const CURR_SERVER_CONFIG = `
         server(key: $key) {
             config {
                 speed
+                unitSpeed
                 snob {
                   maxDist
                 }
+            }
+            unitConfig {
+              spear {
+                speed
+              }
+              sword {
+                speed
+              }
+              axe {
+                speed
+              }
+              archer {
+                speed
+              }
+              spy {
+                speed
+              }
+              light {
+                speed
+              }
+              marcher {
+                speed
+              }
+              heavy {
+                speed
+              }
+              ram {
+                speed
+              }
+              catapult {
+                speed
+              }
+              knight {
+                speed
+              }
+              snob {
+                speed
+              }
             }
         }
     }
@@ -47,7 +89,7 @@ const SERVER_CONFIG_LOCAL_STORAGE_KEY =
   'kiszkowaty_extended_map_popup_server_cfg';
 const translations = getTranslations();
 
-const loadServerConfigFromLocalStorage = () => {
+const loadConfigsFromLocalStorage = () => {
   return getItem(SERVER_CONFIG_LOCAL_STORAGE_KEY);
 };
 
@@ -59,8 +101,8 @@ const isConfigExpired = (date) => {
   return Math.abs(differenceInMinutes(date, new Date())) >= 60 * 24;
 };
 
-const loadServerConfig = async () => {
-  let data = loadServerConfigFromLocalStorage();
+const loadConfigs = async () => {
+  let data = loadConfigsFromLocalStorage();
   if (
     !data ||
     !data.server ||
@@ -68,7 +110,9 @@ const loadServerConfig = async () => {
     !data.server.config ||
     !data.server.config.speed ||
     !data.server.config.snob ||
-    !data.server.config.snob.maxDist
+    !data.server.config.snob.maxDist ||
+    !data.server.config.unitSpeed ||
+    !data.server.unitConfig
   ) {
     data = await requestCreator({
       query: CURR_SERVER_CONFIG,
@@ -79,7 +123,9 @@ const loadServerConfig = async () => {
     data.loadedAt = new Date();
     cacheServerConfig(data);
   }
-  return data && data.server && data.server.config ? data.server.config : {};
+  return data && data.server && data.server.config
+    ? { config: data.server.config, unitConfig: data.server.unitConfig }
+    : {};
 };
 
 const loadVillageData = async (id, { cacheOnly = false } = {}) => {
@@ -114,8 +160,50 @@ const calcLoyalty = (ennobledAt, speed) => {
   return Math.floor(loyalty);
 };
 
-const renderAdditionalInfo = (id, data, cfg) => {
+const getAvailableUnits = (unitCfg = {}) => {
+  const units = [];
+  for (let unit in unitCfg) {
+    if (unitCfg[unit].speed !== 0) {
+      units.push({
+        ...unitCfg[unit],
+        name: unit,
+        img: buildUnitImgURL(unit),
+      });
+    }
+  }
+  return units;
+};
+
+const getUnitTdBgColor = (index) => (index % 2 === 0 ? '#f8f4e8' : '#ded3b9;');
+
+const buildUnitHeader = (unit, index) => {
+  return `
+    <td style="padding: 2px; background-color: ${getUnitTdBgColor(index)};">
+      <img
+        src="${unit.img}"
+        title="${unit.name}"
+        alt="${unit.name}"
+      />
+    </td>
+  `;
+};
+
+const buildUnitArrivalInfo = (t, index) => {
+  return `
+    <td style="padding: 2px; background-color: ${getUnitTdBgColor(index)};">
+      ${formatDate(addMinutes(new Date(Timing.getCurrentServerTime()), t))}
+    </td>
+  `;
+};
+
+const renderAdditionalInfo = (id, data, { config, unitConfig }) => {
   const coords = TWMap.CoordByXY(TWMap.villageKey[id]);
+  const distance = calcDistanceBetweenTwoPoints(
+    coords[0],
+    coords[1],
+    window.game_data.village.x,
+    window.game_data.village.y
+  );
   const ennoblement =
     data &&
     data.ennoblements &&
@@ -124,6 +212,42 @@ const renderAdditionalInfo = (id, data, cfg) => {
       ? data.ennoblements.items[0]
       : undefined;
   const parent = document.querySelector('#map_popup #info_content tbody');
+
+  let unitsEl = parent.querySelector('#units');
+  if (!unitsEl) {
+    unitsEl = document.createElement('tr');
+    unitsEl.id = 'units';
+    parent.appendChild(unitsEl);
+  }
+  const units = getAvailableUnits(unitConfig);
+  unitsEl.innerHTML = `
+          <td colspan="2">
+            <table style="border: 1px solid #ded3b9; max-width: 450px;"
+              width="100%"
+              cellpadding="0"
+              cellspacing="0">
+              <tbody>
+                <tr class="center">
+                  ${units.map(buildUnitHeader).join('')}
+                </tr>
+                <tr class="center">
+                  ${units
+                    .map((unit, index) => {
+                      return buildUnitArrivalInfo(
+                        calcAttackDuration(
+                          distance,
+                          config.unitSpeed,
+                          unit.speed
+                        ),
+                        index
+                      );
+                    })
+                    .join('')}
+                </tr>
+              </tbody>
+            </table>
+          </td>
+      `;
 
   let lastEnnobledAt = parent.querySelector('#lastEnnobledAt');
   if (!lastEnnobledAt) {
@@ -157,7 +281,7 @@ const renderAdditionalInfo = (id, data, cfg) => {
           <td>
               ${
                 ennoblement
-                  ? calcLoyalty(new Date(ennoblement.ennobledAt), cfg.speed)
+                  ? calcLoyalty(new Date(ennoblement.ennobledAt), config.speed)
                   : 100
               }
           </td>
@@ -175,12 +299,7 @@ const renderAdditionalInfo = (id, data, cfg) => {
           </td>
           <td>
               ${
-                calcDistanceBetweenTwoPoints(
-                  coords[0],
-                  coords[1],
-                  window.game_data.village.x,
-                  window.game_data.village.y
-                ) < cfg.snob.maxDist
+                distance < config.snob.maxDist
                   ? translations.yes
                   : translations.no
               }
@@ -204,13 +323,13 @@ const createDisplayForVillageHandler = (cfg) => async (e, a, t) => {
 
 (async function () {
   try {
-    const config = await loadServerConfig();
+    const configs = await loadConfigs();
 
     TWMap.popup.extendedMapPopupCache = {};
     TWMap.popup._loadVillage = TWMap.popup.loadVillage;
-    TWMap.popup.loadVillage = createLoadVillageHandler(config);
+    TWMap.popup.loadVillage = createLoadVillageHandler(configs);
     TWMap.popup._displayForVillage = TWMap.popup.displayForVillage;
-    TWMap.popup.displayForVillage = createDisplayForVillageHandler(config);
+    TWMap.popup.displayForVillage = createDisplayForVillageHandler(configs);
   } catch (error) {
     console.log('extended map popup', error);
   }
