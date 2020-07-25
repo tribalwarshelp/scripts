@@ -22,7 +22,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.1
+// @version      1.1.3
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -279,7 +279,7 @@ const renderPlayerServers = (player) => {
     .sort()
     .map(
       (server) =>
-        `<a style="margin-right: 5px" href="${formatPlayerURL(
+        `<a target="_blank" rel="noopener noreferrer" style="margin-right: 5px" href="${formatPlayerURL(
           server,
           player.id
         )}">${server}</a>`

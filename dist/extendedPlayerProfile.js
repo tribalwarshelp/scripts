@@ -1144,7 +1144,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.1
+// @version      1.1.3
 // @description  Extended Player Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -1265,7 +1265,7 @@ const renderPlayerServers = player => {
     otherElementContainer.prepend(playerServers);
   }
 
-  playerServers.querySelector('td').innerHTML = player.servers.sort().map(server => "<a style=\"margin-right: 5px\" href=\"".concat((0, _twstats.formatPlayerURL)(server, player.id), "\">").concat(server, "</a>")).join('');
+  playerServers.querySelector('td').innerHTML = player.servers.sort().map(server => "<a target=\"_blank\" rel=\"noopener noreferrer\" style=\"margin-right: 5px\" href=\"".concat((0, _twstats.formatPlayerURL)(server, player.id), "\">").concat(server, "</a>")).join('');
 };
 
 const renderPlayerOtherNames = player => {
