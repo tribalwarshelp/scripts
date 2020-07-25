@@ -411,7 +411,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-// @version      0.4.1
+// @version      0.4.2
 // @description  Bonus barbarian village finder
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -491,6 +491,7 @@ const renderUI = () => {
   if (!container) {
     container = document.createElement('div');
     container.classList.add('containerBorder');
+    container.style.clear = 'both';
     document.querySelector('#map_big').appendChild(container);
   }
 
