@@ -6,7 +6,9 @@
   "author": "Kichiyaki <xyztojajestem@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "parcel build ./src/*.js --no-minify --no-source-maps"
+    "build:tamper": "parcel build ./src/*.js --no-minify --no-source-maps",
+    "build:quickbar": "parcel build ./src/*.js --out-dir dist/quickbar --no-source-maps",
+    "build": "npm-run-all build:*"
   },
   "dependencies": {
     "date-fns": "^2.14.0",
@@ -17,5 +19,8 @@
   },
   "browserslist": [
     "since 2017-06"
-  ]
+  ],
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }
