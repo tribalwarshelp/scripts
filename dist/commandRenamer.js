@@ -117,7 +117,28 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"oUdd":[function(require,module,exports) {
+})({"ar93":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    rename: 'Zmień',
+    name: 'Nazwa'
+  },
+  en_DK: {
+    rename: 'Rename',
+    name: 'Name'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
+},{}],"oUdd":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -131,6 +152,8 @@ exports.default = _default;
 },{}],"XXZR":[function(require,module,exports) {
 "use strict";
 
+var _commandRenamer = _interopRequireDefault(require("./i18n/commandRenamer"));
+
 var _wait = _interopRequireDefault(require("./utils/wait"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -140,12 +163,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandRenamer.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandRenamer.js
-// @version      0.4.2
+// @version      0.2.0
 // @description  Command renamer
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*mode=incomings*
 // @grant        none
 // ==/UserScript==
+const translations = (0, _commandRenamer.default)();
+
 const handleSubmit = async e => {
   e.preventDefault();
   const name = e.target[0].value;
@@ -169,7 +194,7 @@ const handleSubmit = async e => {
 };
 
 const renderUI = () => {
-  const html = "\n    <input type=\"text\" placeholder=\"Name\" />\n    <button type=\"submit\">Rename</button>\n  ";
+  const html = "\n    <input type=\"text\" placeholder=\"".concat(translations.name, "\" />\n    <button type=\"submit\">").concat(translations.rename, "</button>\n  ");
   const form = document.createElement('form');
   form.innerHTML = html;
   form.addEventListener('submit', handleSubmit);
@@ -183,4 +208,4 @@ const renderUI = () => {
     console.log('command renamer', error);
   }
 })();
-},{"./utils/wait":"oUdd"}]},{},["XXZR"], null)
+},{"./i18n/commandRenamer":"ar93","./utils/wait":"oUdd"}]},{},["XXZR"], null)
