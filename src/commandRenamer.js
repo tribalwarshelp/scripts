@@ -1,3 +1,4 @@
+import getTranslations from './i18n/commandRenamer';
 import wait from './utils/wait';
 
 // ==UserScript==
@@ -5,12 +6,14 @@ import wait from './utils/wait';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandRenamer.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandRenamer.js
-// @version      0.4.2
+// @version      0.2.0
 // @description  Command renamer
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*mode=incomings*
 // @grant        none
 // ==/UserScript==
+
+const translations = getTranslations();
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -38,8 +41,8 @@ const handleSubmit = async (e) => {
 
 const renderUI = () => {
   const html = `
-    <input type="text" placeholder="Name" />
-    <button type="submit">Rename</button>
+    <input type="text" placeholder="${translations.name}" />
+    <button type="submit">${translations.rename}</button>
   `;
 
   const form = document.createElement('form');
