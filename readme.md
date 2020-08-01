@@ -10,6 +10,15 @@
 
 ## Scripts
 
+- [Latest ennoblements](#1-latest-ennoblements)
+- [Extended player profile](#2-extended-player-profile)
+- [Extended tribe profile](#3-extended-tribe-profile)
+- [Extended village profile](#4-extended-village-profile)
+- [Bonus barbarian village finder](#5-bonus-barbarian-village-finder)
+- [Daily achievements](#6-daily-achievements)
+- [Extended map popup](#extended-map-popup)
+- [Map coords picker](#8-map-coords-picker)
+
 ### 1. Latest ennoblements
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js)
