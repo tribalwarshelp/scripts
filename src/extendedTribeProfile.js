@@ -24,7 +24,7 @@ import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.0.0
+// @version      1.0.3
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -208,7 +208,7 @@ const cacheTribeData = (data = {}) => {
   setItem(LOCAL_STORAGE_KEY, data);
 };
 
-const getMembersIDs = () => {
+const getMemberIDs = () => {
   const ids = [];
   membersContainer.querySelectorAll('a').forEach((a) => {
     const href = a.getAttribute('href');
@@ -219,8 +219,18 @@ const getMembersIDs = () => {
   return ids;
 };
 
+const getMemberNames = () => {
+  const ids = [];
+  membersContainer.querySelectorAll('a').forEach((a) => {
+    if (a.getAttribute('href').includes('info_player')) {
+      ids.push(a.innerText.trim());
+    }
+  });
+  return ids;
+};
+
 const loadData = async () => {
-  const membersIDs = getMembersIDs();
+  const memberIDs = getMemberIDs();
   const data = await requestCreator({
     query: TRIBE_QUERY,
     variables: {
@@ -233,8 +243,8 @@ const loadData = async () => {
       },
       playerFilter: {
         sort: 'rank ASC',
-        limit: membersIDs.length,
-        id: membersIDs,
+        limit: memberIDs.length,
+        id: memberIDs,
       },
     },
   });
@@ -464,7 +474,7 @@ const buildMembersGrowthTBody = (stats) => {
             .join('')}
           <th>${translations.total}</th>
         </tr>
-        ${getMembersIDs()
+        ${getMemberIDs()
           .map((id) => {
             const filtered = stats.items
               .filter((item) => item.player && item.player.id === id)
@@ -559,11 +569,11 @@ const renderMembersGrowthPopup = (e, stats) => {
 };
 
 const loadMembersGrowthData = async ({ createDateLTE, createDateGT } = {}) => {
-  const membersIDs = getMembersIDs();
+  const memberIDs = getMemberIDs();
   const limit =
-    membersIDs.length * differenceInDays(createDateLTE, createDateGT);
+    memberIDs.length * differenceInDays(createDateLTE, createDateGT);
   const filter = {
-    playerID: membersIDs,
+    playerID: memberIDs,
     limit,
     sort: 'createDate DESC',
     createDateLTE,
@@ -674,6 +684,26 @@ const handleShowTribeChangesClick = async (e) => {
   }
 };
 
+const handleGenerateMailingListClick = (e) => {
+  e.preventDefault();
+
+  const members = getMemberNames();
+  const chunks = [];
+  for (let i = 0; i < members.length; i += 50) {
+    chunks.push(members.slice(i, i + 50));
+  }
+
+  let html = '';
+  chunks.forEach((names, index) => {
+    html += `<h3 style="margin-bottom: 5px;">${index + 1}.</h3>
+    <textarea cols=30 rows=8 readonly style="margin-bottom: 15px;">${names.join(
+      ';'
+    )}</textarea>`;
+  });
+
+  Dialog.show('mailinglist', html);
+};
+
 const wrapAction = (action) => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -710,6 +740,12 @@ const renderActions = () => {
   showMembersGrowth.innerHTML = translations.action.showMembersGrowth;
   showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
   actionsContainer.appendChild(wrapAction(showMembersGrowth));
+
+  const generateMailingList = document.createElement('a');
+  generateMailingList.href = '#';
+  generateMailingList.innerHTML = translations.action.generateMailingList;
+  generateMailingList.addEventListener('click', handleGenerateMailingListClick);
+  actionsContainer.appendChild(wrapAction(generateMailingList));
 };
 
 (async function () {

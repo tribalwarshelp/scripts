@@ -931,7 +931,8 @@ const translations = {
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
       showMembersGrowth: 'Pokaż rozwój graczy',
-      showHistory: 'Pokaż historię'
+      showHistory: 'Pokaż historię',
+      generateMailingList: 'Wygeneruj listę mailingową'
     }
   },
   en_DK: {
@@ -965,7 +966,8 @@ const translations = {
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
       showMembersGrowth: 'Show members growth',
-      showHistory: 'Show history'
+      showHistory: 'Show history',
+      generateMailingList: 'Generate mailing list'
     }
   }
 };
@@ -1858,7 +1860,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.0.0
+// @version      1.0.3
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -1893,7 +1895,7 @@ const cacheTribeData = function cacheTribeData() {
   (0, _localStorage.setItem)(LOCAL_STORAGE_KEY, data);
 };
 
-const getMembersIDs = () => {
+const getMemberIDs = () => {
   const ids = [];
   membersContainer.querySelectorAll('a').forEach(a => {
     const href = a.getAttribute('href');
@@ -1905,8 +1907,18 @@ const getMembersIDs = () => {
   return ids;
 };
 
+const getMemberNames = () => {
+  const ids = [];
+  membersContainer.querySelectorAll('a').forEach(a => {
+    if (a.getAttribute('href').includes('info_player')) {
+      ids.push(a.innerText.trim());
+    }
+  });
+  return ids;
+};
+
 const loadData = async () => {
-  const membersIDs = getMembersIDs();
+  const memberIDs = getMemberIDs();
   const data = await (0, _requestCreator.default)({
     query: TRIBE_QUERY,
     variables: {
@@ -1919,8 +1931,8 @@ const loadData = async () => {
       },
       playerFilter: {
         sort: 'rank ASC',
-        limit: membersIDs.length,
-        id: membersIDs
+        limit: memberIDs.length,
+        id: memberIDs
       }
     }
   });
@@ -2137,7 +2149,7 @@ const buildMembersGrowthTBody = stats => {
       month: '2-digit',
       day: '2-digit'
     }), "</th>");
-  }).join(''), "\n          <th>").concat(translations.total, "</th>\n        </tr>\n        ").concat(getMembersIDs().map(id => {
+  }).join(''), "\n          <th>").concat(translations.total, "</th>\n        </tr>\n        ").concat(getMemberIDs().map(id => {
     const filtered = stats.items.filter(item => item.player && item.player.id === id).reverse();
     let player = undefined;
 
@@ -2190,10 +2202,10 @@ const loadMembersGrowthData = async function loadMembersGrowthData() {
     createDateLTE,
     createDateGT
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  const membersIDs = getMembersIDs();
-  const limit = membersIDs.length * (0, _differenceInDays.default)(createDateLTE, createDateGT);
+  const memberIDs = getMemberIDs();
+  const limit = memberIDs.length * (0, _differenceInDays.default)(createDateLTE, createDateGT);
   const filter = {
-    playerID: membersIDs,
+    playerID: memberIDs,
     limit,
     sort: 'createDate DESC',
     createDateLTE,
@@ -2273,6 +2285,22 @@ const handleShowTribeChangesClick = async e => {
   }
 };
 
+const handleGenerateMailingListClick = e => {
+  e.preventDefault();
+  const members = getMemberNames();
+  const chunks = [];
+
+  for (let i = 0; i < members.length; i += 50) {
+    chunks.push(members.slice(i, i + 50));
+  }
+
+  let html = '';
+  chunks.forEach((names, index) => {
+    html += "<h3 style=\"margin-bottom: 5px;\">".concat(index + 1, ".</h3>\n    <textarea cols=30 rows=8 readonly style=\"margin-bottom: 15px;\">").concat(names.join(';'), "</textarea>");
+  });
+  Dialog.show('mailinglist', html);
+};
+
 const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -2306,6 +2334,11 @@ const renderActions = () => {
   showMembersGrowth.innerHTML = translations.action.showMembersGrowth;
   showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
   actionsContainer.appendChild(wrapAction(showMembersGrowth));
+  const generateMailingList = document.createElement('a');
+  generateMailingList.href = '#';
+  generateMailingList.innerHTML = translations.action.generateMailingList;
+  generateMailingList.addEventListener('click', handleGenerateMailingListClick);
+  actionsContainer.appendChild(wrapAction(generateMailingList));
 };
 
 (async function () {

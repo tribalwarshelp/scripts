@@ -31,6 +31,7 @@ const translations = {
       showEnnoblements: 'Pokaż przejęcia',
       showMembersGrowth: 'Pokaż rozwój graczy',
       showHistory: 'Pokaż historię',
+      generateMailingList: 'Wygeneruj listę mailingową',
     },
   },
   en_DK: {
@@ -65,6 +66,7 @@ const translations = {
       showEnnoblements: 'Show ennoblements',
       showMembersGrowth: 'Show members growth',
       showHistory: 'Show history',
+      generateMailingList: 'Generate mailing list',
     },
   },
 };
