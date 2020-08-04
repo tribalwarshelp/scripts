@@ -73,6 +73,7 @@ New actions:
 - Show members growth
 - Show tribe ennoblements
 - Generate mailing list
+- Export tribe villages
 
 ![Screenshot](/screenshots/extendedTribeProfile.png?raw=true)
 
