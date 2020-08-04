@@ -4,7 +4,7 @@
 
 1. Add [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) to your browser.
 2. Select a script that you wish to use, and copy the code.
-3. Open Tampermonkey in your browser and click the Add Script tab (icon with a plus symbol)
+3. Open Tampermonkey in your browser and click the Add Script tab.
 4. Paste the code, hit save (shortcut: CTRL + s).
 5. The script should be visible in the game.
 
@@ -23,7 +23,7 @@
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js)
 
-This script shows you the latest ennoblements from your server. It's working in real-time.
+This script shows you the latest ennoblements from your server. Works in real-time.
 
 ![Screenshot](/screenshots/latestEnnoblements.png?raw=true)
 
@@ -42,9 +42,13 @@ This script adds a lot of useful actions and pieces of information to the player
 - Player's other names
 - Today's stat changes
 - 'In a day' best scores
-- Tribe changes
-- Player history
-- Player ennoblements
+
+New actions:
+
+- Show player changes
+- Show player history
+- Show player ennoblements
+- Export player villages
 
 ![Screenshot](/screenshots/extendedPlayerProfile.png?raw=true)
 
@@ -60,11 +64,15 @@ This script adds a lot of useful actions and pieces of information to the tribe 
 - Most points
 - Most villages
 - Today's stat changes
-- Tribe changes
-- Tribe history
-- Tribe ennoblements
-- Members growth
 - OD, ODA, ODD, ODS ranks and scores to tribe members
+
+New actions:
+
+- Show tribe changes
+- Show tribe history
+- Show members growth
+- Show tribe ennoblements
+- Generate mailing list
 
 ![Screenshot](/screenshots/extendedTribeProfile.png?raw=true)
 
