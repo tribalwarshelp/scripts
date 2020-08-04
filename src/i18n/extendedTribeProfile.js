@@ -32,6 +32,7 @@ const translations = {
       showMembersGrowth: 'Pokaż rozwój graczy',
       showHistory: 'Pokaż historię',
       generateMailingList: 'Wygeneruj listę mailingową',
+      exportVillages: 'Wyeksportuj wioski',
     },
   },
   en_DK: {
@@ -67,6 +68,7 @@ const translations = {
       showMembersGrowth: 'Show members growth',
       showHistory: 'Show history',
       generateMailingList: 'Generate mailing list',
+      exportVillages: 'Export villages',
     },
   },
 };

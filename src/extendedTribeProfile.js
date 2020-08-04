@@ -24,7 +24,7 @@ import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.0.3
+// @version      1.0.8
 // @description  Extended Tribe Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -704,6 +704,130 @@ const handleGenerateMailingListClick = (e) => {
   Dialog.show('mailinglist', html);
 };
 
+const loadVillages = async (variables, total = false) => {
+  try {
+    const data = await requestCreator({
+      variables,
+      query: `
+        query villages($server: String!, $filter: VillageFilter!) {
+          villages(server: $server, filter: $filter) {
+            ${total ? 'total' : ''}
+            items {
+              id
+              x
+              y
+            }
+          }
+        }
+      `,
+    });
+    if (data && data.villages && Array.isArray(data.villages.items)) {
+      return data.villages;
+    }
+  } catch (error) {
+    console.log('load villages', error);
+  }
+  return {
+    total: 0,
+    items: [],
+  };
+};
+
+const showLoadingDialog = (current = 0, total = 0) => {
+  if (!current || !total) {
+    return Dialog.show('loading', '<strong>Loading...</strong>');
+  }
+  return Dialog.show(
+    'loading',
+    `Loaded: <strong>${current}</strong>/<strong>${total}</strong>`
+  );
+};
+
+const handleExportTribeVillagesFormSubmit = async (e) => {
+  e.preventDefault();
+  let limit = parseInt(e.target[4].value);
+  const variables = {
+    filter: {
+      xLTE: parseInt(e.target[0].value),
+      xGTE: parseInt(e.target[1].value),
+      yLTE: parseInt(e.target[2].value),
+      yGTE: parseInt(e.target[3].value),
+      limit: isNaN(limit) || !limit ? 0 : limit,
+      playerID: getMemberIDs(),
+      sort: 'id ASC',
+    },
+    server: SERVER,
+  };
+  showLoadingDialog();
+
+  let { total, items } = await loadVillages(variables, true);
+  const length = items.length;
+  if (limit !== 0 && limit < total) {
+    total = limit;
+  }
+  if (isNaN(limit) || !limit || limit > length) {
+    for (let offset = length; offset < total; offset += length) {
+      showLoadingDialog(offset, total);
+      const more = await loadVillages({
+        ...variables,
+        filter: {
+          ...variables.filter,
+          offset,
+        },
+      });
+      items = [...items, ...more.items];
+    }
+  }
+
+  Dialog.show(
+    'exportTribeVillages',
+    `
+    <textarea cols=60 rows=8 readonly>${items
+      .map((item) => `${item.x}|${item.y}`)
+      .join(' ')}</textarea>
+  `
+  );
+};
+
+const handleExportTribeVillagesClick = (e) => {
+  e.preventDefault();
+  const FORM_ID = 'etvForm';
+
+  const html = `
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <form id="${FORM_ID}">
+        <div>
+          <label>X <= </label>
+          <input type="number" min="0" value="1000" required />
+        </div>
+        <div>
+          <label>X >= </label>
+          <input type="number" min="0" value="0" required />
+        </div>
+        <div>
+          <label>Y <= </label>
+          <input type="number" min="0" value="1000" required />
+        </div>
+        <div>
+          <label>Y >= </label>
+          <input type="number" min="0" value="0" required />
+        </div>
+        <div>
+          <label>Limit: </label>
+          <input type="number" min="0" value="0" required />
+        </div>
+        <button type="submit">Export</button>
+      </form>
+    </div>
+  `;
+
+  Dialog.show('exportTribeVillages', html);
+
+  document
+    .querySelector('#' + FORM_ID)
+    .addEventListener('submit', handleExportTribeVillagesFormSubmit);
+};
+
 const wrapAction = (action) => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -746,6 +870,12 @@ const renderActions = () => {
   generateMailingList.innerHTML = translations.action.generateMailingList;
   generateMailingList.addEventListener('click', handleGenerateMailingListClick);
   actionsContainer.appendChild(wrapAction(generateMailingList));
+
+  const exportVillages = document.createElement('a');
+  exportVillages.href = '#';
+  exportVillages.innerHTML = translations.action.exportVillages;
+  exportVillages.addEventListener('click', handleExportTribeVillagesClick);
+  actionsContainer.appendChild(wrapAction(exportVillages));
 };
 
 (async function () {
