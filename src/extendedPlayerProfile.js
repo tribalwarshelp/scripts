@@ -1,3 +1,4 @@
+import InADayParser from './libs/InADayParser';
 import requestCreator from './libs/requestCreator';
 import getTranslations from './i18n/extendedPlayerProfile';
 import renderTodaysStats from './common/renderTodaysStats';
@@ -14,7 +15,7 @@ import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
 import { formatPlayerURL } from './utils/twstats';
-import { formatTribeURL, loadInADayData } from './utils/tribalwars';
+import { formatTribeURL } from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -189,6 +190,37 @@ const loadDataFromCache = () => {
 
 const cachePlayerData = (data = {}) => {
   setItem(LOCAL_STORAGE_KEY, data);
+};
+
+const loadInADayData = async (type, { name, ...rest } = {}) => {
+  try {
+    const response = await fetch(
+      TribalWars.buildURL('', {
+        screen: 'ranking',
+        mode: 'in_a_day',
+        type,
+        name: name ? name : '',
+      })
+    );
+    const html = await response.text();
+    if (!html) {
+      throw new Error();
+    }
+    const res = new InADayParser(html, rest).parse();
+    if (res.length === 0) {
+      throw new Error();
+    }
+    return res[0];
+  } catch (error) {
+    return {
+      rank: 0,
+      playerID: 0,
+      score: 0,
+      tribeID: 0,
+      tribe: '',
+      date: new Date(),
+    };
+  }
 };
 
 const loadData = async () => {

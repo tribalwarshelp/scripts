@@ -1,8 +1,9 @@
 import getIDFromURL from '../utils/getIDFromURL';
 
 export default class InADayParser {
-  constructor(html, filters = {}) {
+  constructor(html = '', filters = {}) {
     this.dom = new DOMParser().parseFromString(html, 'text/html');
+    this.trs = this.dom.querySelectorAll('#in_a_day_ranking_table tbody tr');
     this.filters = filters;
   }
   isValidRow(row) {
@@ -10,6 +11,13 @@ export default class InADayParser {
       return false;
     }
     if (this.filters.playerID && row.playerID !== this.filters.playerID) {
+      return false;
+    }
+    if (
+      this.filters.tribes &&
+      Array.isArray(this.filters.tribes) &&
+      !this.filters.tribes.some((tribe) => tribe === row.tribe)
+    ) {
       return false;
     }
     return true;
@@ -36,10 +44,9 @@ export default class InADayParser {
     return obj;
   }
   parse() {
-    const trs = this.dom.querySelectorAll('#in_a_day_ranking_table tbody tr');
     const result = [];
-    for (let i = 1; i < trs.length; i++) {
-      const row = trs[i];
+    for (let i = 1; i < this.trs.length; i++) {
+      const row = this.trs[i];
       const parsed = this.parseRow(row);
       if (this.isValidRow(parsed)) {
         result.push(parsed);

@@ -196,103 +196,13 @@ exports.default = void 0;
 var _default = () => window.location.host.split('.')[0];
 
 exports.default = _default;
-},{}],"tQUs":[function(require,module,exports) {
+},{}],"fHHP":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-var _default = url => parseInt(new URLSearchParams(url).get('id'));
-
-exports.default = _default;
-},{}],"dSAr":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _getIDFromURL = _interopRequireDefault(require("../utils/getIDFromURL"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class InADayParser {
-  constructor(html) {
-    let filters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    this.dom = new DOMParser().parseFromString(html, 'text/html');
-    this.filters = filters;
-  }
-
-  isValidRow(row) {
-    if (!row) {
-      return false;
-    }
-
-    if (this.filters.playerID && row.playerID !== this.filters.playerID) {
-      return false;
-    }
-
-    return true;
-  }
-
-  parseRow(row) {
-    if (!row || !row instanceof HTMLTableRowElement) {
-      return undefined;
-    }
-
-    let obj = {};
-    obj.rank = parseInt(row.children[0].innerText.trim());
-    obj.name = row.children[1].innerText.trim();
-    obj.playerID = (0, _getIDFromURL.default)(row.children[1].querySelector('a').getAttribute('href'));
-    obj.tribe = row.children[2].innerText.trim();
-    obj.tribeID = 0;
-
-    if (obj.tribe) {
-      obj.tribeID = (0, _getIDFromURL.default)(row.children[2].querySelector('a').getAttribute('href'));
-    }
-
-    obj.score = parseInt(row.children[3].innerText.trim().replace(/\./g, ''));
-    obj.date = row.children[4].innerText.trim();
-    return obj;
-  }
-
-  parse() {
-    const trs = this.dom.querySelectorAll('#in_a_day_ranking_table tbody tr');
-    const result = [];
-
-    for (let i = 1; i < trs.length; i++) {
-      const row = trs[i];
-      const parsed = this.parseRow(row);
-
-      if (this.isValidRow(parsed)) {
-        result.push(parsed);
-      }
-    }
-
-    return result;
-  }
-
-}
-
-exports.default = InADayParser;
-},{"../utils/getIDFromURL":"tQUs"}],"fHHP":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.buildImgURL = exports.calcAttackDuration = exports.loadInADayData = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
-
-var _InADayParser = _interopRequireDefault(require("../libs/InADayParser"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
 
 const formatTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
@@ -331,46 +241,6 @@ const formatVillageName = function formatVillageName() {
 
 exports.formatVillageName = formatVillageName;
 
-const loadInADayData = async function loadInADayData(type) {
-  let _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-      {
-    name
-  } = _ref,
-      rest = _objectWithoutProperties(_ref, ["name"]);
-
-  try {
-    const response = await fetch(TribalWars.buildURL('', {
-      screen: 'ranking',
-      mode: 'in_a_day',
-      type,
-      name: name ? name : ''
-    }));
-    const html = await response.text();
-
-    if (!html) {
-      throw new Error();
-    }
-
-    const res = new _InADayParser.default(html, rest).parse();
-
-    if (res.length === 0) {
-      throw new Error();
-    }
-
-    return res[0];
-  } catch (error) {
-    return {
-      rank: 0,
-      playerID: 0,
-      score: 0,
-      tribeID: 0,
-      date: new Date()
-    };
-  }
-};
-
-exports.loadInADayData = loadInADayData;
-
 const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
   return Math.round(distance * baseSpeed / unitSpeed);
 };
@@ -382,7 +252,7 @@ const buildImgURL = img => {
 };
 
 exports.buildImgURL = buildImgURL;
-},{"../libs/InADayParser":"dSAr"}],"XOOL":[function(require,module,exports) {
+},{}],"XOOL":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
