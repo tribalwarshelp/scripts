@@ -204,10 +204,23 @@ class InADayParser {
 }
 
 exports.default = InADayParser;
-},{"../utils/getIDFromURL":"tQUs"}],"s4G3":[function(require,module,exports) {
+},{"../utils/getIDFromURL":"tQUs"}],"oUdd":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = t => new Promise(resolve => setTimeout(resolve, t));
+
+exports.default = _default;
+},{}],"s4G3":[function(require,module,exports) {
 "use strict";
 
 var _InADayParser = _interopRequireDefault(require("./libs/InADayParser"));
+
+var _wait = _interopRequireDefault(require("./utils/wait"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -216,10 +229,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
-// @version      0.1.0
+// @version      0.1.1
 // @description  'In A Day' Tribe Ranking Generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
-// @match        *://*/game.php*screen=ranking&mode=in_a_day*
+// @match        *://*/game.php*screen=ranking*mode=in_a_day*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -266,6 +279,7 @@ const handleFormSubmit = async e => {
       if (parser.trs.length !== 26) break;
       players = [...players, ...parser.parse()];
       page++;
+      await (0, _wait.default)(200);
     } catch (error) {
       break;
     }
@@ -273,7 +287,7 @@ const handleFormSubmit = async e => {
 
   players = players.slice(0, limit);
   Dialog.show('iad_result', "\n    <textarea cols=30 rows=8 readonly>[table]\n[**][||]Player[||]Tribe[||]Rank[||]Result[||]Date[/**]\n".concat(players.map((player, index) => {
-    return "[*]".concat(index + 1, "[|][player]").concat(player.name, "[/player][|][ally]").concat(player.tribe, "[/ally][|]").concat(player.rank, "[|]").concat(player.score.toLocaleString(), "[|]").concat(player.date);
+    return "[*]".concat(index + 1, ".[|][player]").concat(player.name, "[/player][|][ally]").concat(player.tribe, "[/ally][|]").concat(player.rank, "[|]").concat(player.score.toLocaleString(), "[|]").concat(player.date);
   }).join('\n'), "\n[/table]</textarea>\n  "));
 };
 
@@ -295,4 +309,4 @@ const renderUI = () => {
     console.log("'In A Day' Tribe Ranking Generator", error);
   }
 })();
-},{"./libs/InADayParser":"dSAr"}]},{},["s4G3"], null)
+},{"./libs/InADayParser":"dSAr","./utils/wait":"oUdd"}]},{},["s4G3"], null)

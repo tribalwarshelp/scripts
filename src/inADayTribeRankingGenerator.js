@@ -1,14 +1,15 @@
 import InADayParser from './libs/InADayParser';
+import wait from './utils/wait';
 
 // ==UserScript==
 // @name         'In A Day' Tribe Ranking Generator
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
-// @version      0.1.0
+// @version      0.1.1
 // @description  'In A Day' Tribe Ranking Generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
-// @match        *://*/game.php*screen=ranking&mode=in_a_day*
+// @match        *://*/game.php*screen=ranking*mode=in_a_day*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -67,6 +68,7 @@ const handleFormSubmit = async (e) => {
       if (parser.trs.length !== 26) break;
       players = [...players, ...parser.parse()];
       page++;
+      await wait(200);
     } catch (error) {
       break;
     }
@@ -80,7 +82,7 @@ const handleFormSubmit = async (e) => {
 [**][||]Player[||]Tribe[||]Rank[||]Result[||]Date[/**]
 ${players
   .map((player, index) => {
-    return `[*]${index + 1}[|][player]${player.name}[/player][|][ally]${
+    return `[*]${index + 1}.[|][player]${player.name}[/player][|][ally]${
       player.tribe
     }[/ally][|]${player.rank}[|]${player.score.toLocaleString()}[|]${
       player.date
