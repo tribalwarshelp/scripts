@@ -18,6 +18,7 @@
 - [Daily achievements](#6-daily-achievements)
 - [Extended map popup](#extended-map-popup)
 - [Map coords picker](#8-map-coords-picker)
+- ['In A Day' Tribe Ranking Generator](#9-in-a-day-tribe-ranking-generator)
 
 ### 1. Latest ennoblements
 
