@@ -1,4 +1,5 @@
 import InADayParser from './libs/InADayParser';
+import getTranslations from './i18n/inADayTribeRankingGenerator';
 import wait from './utils/wait';
 
 // ==UserScript==
@@ -6,7 +7,7 @@ import wait from './utils/wait';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
-// @version      0.1.1
+// @version      0.2.0
 // @description  'In A Day' Tribe Ranking Generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=in_a_day*
@@ -16,14 +17,15 @@ import wait from './utils/wait';
 
 const TRIBE_CONTAINER_ID = 'iad_tribes';
 const LIMIT_INPUT_ID = 'iad_limit';
+const translations = getTranslations();
 
 const addTribe = () => {
   const container = document.querySelector('#' + TRIBE_CONTAINER_ID);
   const div = document.createElement('div');
   div.innerHTML = `
-        <label>Tribe: </label>
+        <label>${translations.tribe}: </label>
         <input type="text" required />
-        <button type="button">Delete</button>
+        <button type="button">${translations.delete}</button>
     `;
   div.querySelector('button').addEventListener('click', () => {
     if (container.children.length > 1) {
@@ -50,7 +52,7 @@ const handleFormSubmit = async (e) => {
   while (players.length < limit) {
     Dialog.show(
       'iad_loading',
-      `Loaded: <strong>${players.length}/${limit}</strong>`
+      `${translations.loaded}: <strong>${players.length}/${limit}</strong>`
     );
     try {
       const response = await fetch(
@@ -74,12 +76,17 @@ const handleFormSubmit = async (e) => {
     }
   }
 
-  players = players.slice(0, limit);
+  if (players.length > limit) {
+    players = players.slice(0, limit);
+  }
+
   Dialog.show(
     'iad_result',
     `
     <textarea cols=30 rows=8 readonly>[table]
-[**][||]Player[||]Tribe[||]Rank[||]Result[||]Date[/**]
+[**][||]${translations.player}[||]${translations.tribe}[||]${
+      translations.rank
+    }[||]${translations.score}[||]${translations.date}[/**]
 ${players
   .map((player, index) => {
     return `[*]${index + 1}.[|][player]${player.name}[/player][|][ally]${
@@ -106,8 +113,8 @@ const renderUI = () => {
             <label>Limit: </label>
             <input id="${LIMIT_INPUT_ID}" type="number" min="1" value="10" required />
         </div>
-        <button type="submit">Generate</button>
-        <button id="${addButtonID}" type="button">Add tribe</button>
+        <button type="submit">${translations.generate}</button>
+        <button id="${addButtonID}" type="button">${translations.addTribe}</button>
     </form>
   `;
   div.innerHTML = html;

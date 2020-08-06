@@ -204,7 +204,42 @@ class InADayParser {
 }
 
 exports.default = InADayParser;
-},{"../utils/getIDFromURL":"tQUs"}],"oUdd":[function(require,module,exports) {
+},{"../utils/getIDFromURL":"tQUs"}],"hPka":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    addTribe: 'Dodaj plemię',
+    generate: 'Wygeneruj',
+    delete: 'Usuń',
+    player: 'Gracz',
+    tribe: 'Plemię',
+    rank: 'Ranking',
+    score: 'Wynik',
+    date: 'Data',
+    loaded: 'Załadowano'
+  },
+  en_DK: {
+    addTribe: 'Add tribe',
+    generate: 'Generate',
+    delete: 'Delete',
+    player: 'Player',
+    tribe: 'Tribe',
+    rank: 'Rank',
+    score: 'Score',
+    date: 'Date',
+    loaded: 'Loaded'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
+},{}],"oUdd":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -220,6 +255,8 @@ exports.default = _default;
 
 var _InADayParser = _interopRequireDefault(require("./libs/InADayParser"));
 
+var _inADayTribeRankingGenerator = _interopRequireDefault(require("./i18n/inADayTribeRankingGenerator"));
+
 var _wait = _interopRequireDefault(require("./utils/wait"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -229,7 +266,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
-// @version      0.1.1
+// @version      0.2.0
 // @description  'In A Day' Tribe Ranking Generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=in_a_day*
@@ -238,11 +275,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // ==/UserScript==
 const TRIBE_CONTAINER_ID = 'iad_tribes';
 const LIMIT_INPUT_ID = 'iad_limit';
+const translations = (0, _inADayTribeRankingGenerator.default)();
 
 const addTribe = () => {
   const container = document.querySelector('#' + TRIBE_CONTAINER_ID);
   const div = document.createElement('div');
-  div.innerHTML = "\n        <label>Tribe: </label>\n        <input type=\"text\" required />\n        <button type=\"button\">Delete</button>\n    ";
+  div.innerHTML = "\n        <label>".concat(translations.tribe, ": </label>\n        <input type=\"text\" required />\n        <button type=\"button\">").concat(translations.delete, "</button>\n    ");
   div.querySelector('button').addEventListener('click', () => {
     if (container.children.length > 1) {
       div.remove();
@@ -263,7 +301,7 @@ const handleFormSubmit = async e => {
   let page = 0;
 
   while (players.length < limit) {
-    Dialog.show('iad_loading', "Loaded: <strong>".concat(players.length, "/").concat(limit, "</strong>"));
+    Dialog.show('iad_loading', "".concat(translations.loaded, ": <strong>").concat(players.length, "/").concat(limit, "</strong>"));
 
     try {
       const response = await fetch(TribalWars.buildURL('', {
@@ -285,8 +323,11 @@ const handleFormSubmit = async e => {
     }
   }
 
-  players = players.slice(0, limit);
-  Dialog.show('iad_result', "\n    <textarea cols=30 rows=8 readonly>[table]\n[**][||]Player[||]Tribe[||]Rank[||]Result[||]Date[/**]\n".concat(players.map((player, index) => {
+  if (players.length > limit) {
+    players = players.slice(0, limit);
+  }
+
+  Dialog.show('iad_result', "\n    <textarea cols=30 rows=8 readonly>[table]\n[**][||]".concat(translations.player, "[||]").concat(translations.tribe, "[||]").concat(translations.rank, "[||]").concat(translations.score, "[||]").concat(translations.date, "[/**]\n").concat(players.map((player, index) => {
     return "[*]".concat(index + 1, ".[|][player]").concat(player.name, "[/player][|][ally]").concat(player.tribe, "[/ally][|]").concat(player.rank, "[|]").concat(player.score.toLocaleString(), "[|]").concat(player.date);
   }).join('\n'), "\n[/table]</textarea>\n  "));
 };
@@ -294,7 +335,7 @@ const handleFormSubmit = async e => {
 const renderUI = () => {
   const addButtonID = 'iad_add';
   const div = document.createElement('div');
-  const html = "\n    <form>\n        <div id=\"".concat(TRIBE_CONTAINER_ID, "\">\n        </div>\n        <div>\n            <label>Limit: </label>\n            <input id=\"").concat(LIMIT_INPUT_ID, "\" type=\"number\" min=\"1\" value=\"10\" required />\n        </div>\n        <button type=\"submit\">Generate</button>\n        <button id=\"").concat(addButtonID, "\" type=\"button\">Add tribe</button>\n    </form>\n  ");
+  const html = "\n    <form>\n        <div id=\"".concat(TRIBE_CONTAINER_ID, "\">\n        </div>\n        <div>\n            <label>Limit: </label>\n            <input id=\"").concat(LIMIT_INPUT_ID, "\" type=\"number\" min=\"1\" value=\"10\" required />\n        </div>\n        <button type=\"submit\">").concat(translations.generate, "</button>\n        <button id=\"").concat(addButtonID, "\" type=\"button\">").concat(translations.addTribe, "</button>\n    </form>\n  ");
   div.innerHTML = html;
   document.querySelector('#content_value > table > tbody > tr > td:nth-child(2)').prepend(div);
   div.querySelector('form').addEventListener('submit', handleFormSubmit);
@@ -309,4 +350,4 @@ const renderUI = () => {
     console.log("'In A Day' Tribe Ranking Generator", error);
   }
 })();
-},{"./libs/InADayParser":"dSAr","./utils/wait":"oUdd"}]},{},["s4G3"], null)
+},{"./libs/InADayParser":"dSAr","./i18n/inADayTribeRankingGenerator":"hPka","./utils/wait":"oUdd"}]},{},["s4G3"], null)
