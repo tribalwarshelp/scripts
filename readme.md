@@ -117,3 +117,10 @@ Adds to popup:
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js)
 
 ![Screenshot](/screenshots/mapCoordsPicker.png?raw=true)
+
+### 9. 'In A Day' Tribe Ranking Generator
+
+[Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js)
+
+![Screenshot](/screenshots/inADayTribeRankingGenerator.png?raw=true)
+![Screenshot](/screenshots/inADayTribeRankingGenerator2.png?raw=true)
