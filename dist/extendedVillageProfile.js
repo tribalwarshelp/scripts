@@ -167,13 +167,25 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 const translations = {
   pl_PL: {
+    loaded: 'Załadowano',
+    pop: 'Populacja',
+    mySupport: 'Moje wsparcie',
+    allySupport: 'Wsparcie plemienia',
+    total: 'Łącznie',
     action: {
-      showEnnoblements: 'Pokaż przejęcia'
+      showEnnoblements: 'Pokaż przejęcia',
+      countIncomingSupport: 'Policz nadchodzące wsparcie'
     }
   },
   en_DK: {
+    loaded: 'Loaded',
+    pop: 'Pop',
+    mySupport: 'My support',
+    allySupport: 'Ally support',
+    total: 'Total',
     action: {
-      showEnnoblements: 'Show ennoblements'
+      showEnnoblements: 'Show ennoblements',
+      countIncomingSupport: 'Count incoming support'
     }
   }
 };
@@ -282,6 +294,115 @@ exports.default = void 0;
 var _default = url => parseInt(new URLSearchParams(url).get('id'));
 
 exports.default = _default;
+},{}],"fHHP":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+
+const formatTribeURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_ally',
+    id
+  });
+};
+
+exports.formatTribeURL = formatTribeURL;
+
+const formatPlayerURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_player',
+    id
+  });
+};
+
+exports.formatPlayerURL = formatPlayerURL;
+
+const formatVillageURL = id => {
+  return window.location.origin + TribalWars.buildURL('', {
+    screen: 'info_village',
+    id
+  });
+};
+
+exports.formatVillageURL = formatVillageURL;
+
+const formatVillageName = function formatVillageName() {
+  let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+  let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+  const continent = 'K' + String(y)[0] + String(x)[0];
+  return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
+};
+
+exports.formatVillageName = formatVillageName;
+
+const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
+  return Math.round(distance * baseSpeed / unitSpeed);
+};
+
+exports.calcAttackDuration = calcAttackDuration;
+
+const buildImgURL = img => {
+  return image_base + img;
+};
+
+exports.buildImgURL = buildImgURL;
+},{}],"KX6P":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _tribalwars = require("./tribalwars");
+
+var _default = unit => {
+  return (0, _tribalwars.buildImgURL)("unit/unit_".concat(unit, ".png"));
+};
+
+exports.default = _default;
+},{"./tribalwars":"fHHP"}],"oUdd":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = t => new Promise(resolve => setTimeout(resolve, t));
+
+exports.default = _default;
+},{}],"KWxH":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setItem = exports.getItem = void 0;
+
+const getItem = function getItem(key) {
+  let d = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  const json = localStorage.getItem(key);
+  let obj = d;
+
+  if (json) {
+    obj = JSON.parse(json);
+  }
+
+  return obj;
+};
+
+exports.getItem = getItem;
+
+const setItem = (key, payload) => {
+  localStorage.setItem(key, JSON.stringify(payload));
+};
+
+exports.setItem = setItem;
 },{}],"tKRp":[function(require,module,exports) {
 "use strict";
 
@@ -373,62 +494,6 @@ var _default = (date, options) => {
 };
 
 exports.default = _default;
-},{}],"fHHP":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
-
-const formatTribeURL = id => {
-  return window.location.origin + TribalWars.buildURL('', {
-    screen: 'info_ally',
-    id
-  });
-};
-
-exports.formatTribeURL = formatTribeURL;
-
-const formatPlayerURL = id => {
-  return window.location.origin + TribalWars.buildURL('', {
-    screen: 'info_player',
-    id
-  });
-};
-
-exports.formatPlayerURL = formatPlayerURL;
-
-const formatVillageURL = id => {
-  return window.location.origin + TribalWars.buildURL('', {
-    screen: 'info_village',
-    id
-  });
-};
-
-exports.formatVillageURL = formatVillageURL;
-
-const formatVillageName = function formatVillageName() {
-  let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-  let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
-  let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
-  const continent = 'K' + String(y)[0] + String(x)[0];
-  return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
-};
-
-exports.formatVillageName = formatVillageName;
-
-const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round(distance * baseSpeed / unitSpeed);
-};
-
-exports.calcAttackDuration = calcAttackDuration;
-
-const buildImgURL = img => {
-  return image_base + img;
-};
-
-exports.buildImgURL = buildImgURL;
 },{}],"vNT1":[function(require,module,exports) {
 "use strict";
 
@@ -509,16 +574,28 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
+var _buildUnitImgURL = _interopRequireDefault(require("./utils/buildUnitImgURL"));
+
+var _wait = _interopRequireDefault(require("./utils/wait"));
+
+var _localStorage = require("./utils/localStorage");
+
 var _showEnnoblementsPopup = _interopRequireDefault(require("./common/showEnnoblementsPopup"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 // ==UserScript==
 // @name         Extended Village Profile
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.5.6
+// @version      0.6.2
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -529,8 +606,41 @@ const SERVER = (0, _getCurrentServer.default)();
 const VILLAGE_ID = (0, _getIDFromURL.default)(window.location.search);
 const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
+const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            unitConfig {\n              spear {\n                pop\n              }\n              sword {\n                pop\n              }\n              axe {\n                pop\n              }\n              archer {\n                pop\n              }\n              spy {\n                pop\n              }\n              light {\n                pop\n              }\n              marcher {\n                pop\n              }\n              heavy {\n                pop\n              }\n              ram {\n                pop\n              }\n              catapult {\n                pop\n              }\n              knight {\n                pop\n              }\n              snob {\n                pop\n              }\n            }\n        }\n    }\n";
+const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_village_profile_server_cfg';
 const actionsContainer = document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
+let serverConfig = {};
 const translations = (0, _extendedVillageProfile.default)();
+
+const loadConfigFromLocalStorage = () => {
+  return (0, _localStorage.getItem)(SERVER_CONFIG_LOCAL_STORAGE_KEY);
+};
+
+const cacheServerConfig = function cacheServerConfig() {
+  let data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  (0, _localStorage.setItem)(SERVER_CONFIG_LOCAL_STORAGE_KEY, data);
+};
+
+const isConfigExpired = date => {
+  return Math.abs(date.getTime() - new Date().getTime()) > 1000 * 60 * 60 * 24;
+};
+
+const loadConfig = async () => {
+  let data = loadConfigFromLocalStorage();
+
+  if (!data.server || isConfigExpired(new Date(data.loadedAt))) {
+    data = await (0, _requestCreator.default)({
+      query: CURR_SERVER_CONFIG,
+      variables: {
+        key: SERVER
+      }
+    });
+    data.loadedAt = new Date();
+    cacheServerConfig(data);
+  }
+
+  return data.server;
+};
 
 const handleShowTribeEnnoblementsClick = async e => {
   e.preventDefault();
@@ -557,6 +667,107 @@ const handleShowTribeEnnoblementsClick = async e => {
   }
 };
 
+const buildCellsForIncSupport = units => {
+  const cells = [];
+  let pop = 0;
+
+  for (let unit in units) {
+    pop += units[unit] * serverConfig.unitConfig[unit].pop;
+    cells.push("<td>".concat(units[unit].toLocaleString(), "</td>"));
+  }
+
+  cells.push("<td><strong>".concat(pop.toLocaleString(), "</strong></td>"));
+  return cells;
+};
+
+const handleCountIncomingSupportClick = async e => {
+  e.preventDefault();
+  const ids = [];
+  const allyCommand = {};
+  document.querySelectorAll('span.command_hover_details[data-command-type="support"]').forEach(el => {
+    const id = parseInt(el.getAttribute('data-command-id'));
+
+    if (el.classList.contains('commandicon-ally')) {
+      allyCommand[id] = true;
+    } else {
+      allyCommand[id] = false;
+    }
+
+    ids.push(id);
+  });
+  const mySupport = {
+    spear: 0,
+    sword: 0,
+    axe: 0,
+    archer: 0,
+    spy: 0,
+    light: 0,
+    marcher: 0,
+    heavy: 0,
+    ram: 0,
+    catapult: 0,
+    knight: 0,
+    snob: 0
+  };
+
+  const allySupport = _objectSpread({}, mySupport);
+
+  const total = _objectSpread({}, mySupport);
+
+  for (let i = 0; i < ids.length; i++) {
+    Dialog.show('incomingSupport', "".concat(translations.loaded, ": <strong>").concat(i, " / ").concat(ids.length, "</strong>"));
+    const id = ids[i];
+    const url = TribalWars.buildURL('', {
+      screen: 'info_command',
+      ajax: 'details',
+      id
+    });
+
+    try {
+      const resp = await fetch(url);
+      const {
+        units
+      } = await resp.json();
+
+      if (units) {
+        for (let unit in mySupport) {
+          const count = parseInt(units[unit].count);
+
+          if (allyCommand[id]) {
+            allySupport[unit] += count;
+          } else {
+            mySupport[unit] += count;
+          }
+
+          total[unit] += count;
+        }
+      }
+
+      await (0, _wait.default)(200);
+    } catch (error) {
+      console.log('count incoming support', error);
+    }
+  }
+
+  const ths = ['<th></th>'];
+
+  for (let unit in mySupport) {
+    ths.push("<th><img src=\"".concat((0, _buildUnitImgURL.default)(unit), "\" /></th>"));
+  }
+
+  ths.push("<th>".concat(translations.pop, "</th>"));
+  const mySupportCells = ["<th>".concat(translations.mySupport, "</th>"), ...buildCellsForIncSupport(mySupport)];
+  const allySupportCells = ["<th>".concat(translations.allySupport, "</th>"), ...buildCellsForIncSupport(allySupport)];
+  const totalCells = ["<th>".concat(translations.total, "</th>"), ...buildCellsForIncSupport(total)];
+  Dialog.show('incomingSupport', "\n    <table class=\"vis\" style=\"width: 100%;\">\n      <tbody>\n          <tr>\n            ".concat(ths.join(''), "\n          </tr>\n          <tr>\n            ").concat(mySupportCells.join(''), "\n          </tr>\n          <tr>\n            ").concat(allySupportCells.join(''), "\n          </tr>\n          <tr>\n            ").concat(totalCells.join(''), "\n          </tr>\n      </tbody>\n    </table>\n  "));
+  const popup = document.querySelector('.popup_box');
+
+  if (popup) {
+    popup.style.width = 'auto';
+    popup.style.maxWidth = '900px';
+  }
+};
+
 const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -573,9 +784,19 @@ const renderActions = () => {
   showEnnoblementsPopup.innerHTML = translations.action.showEnnoblements;
   showEnnoblementsPopup.addEventListener('click', handleShowTribeEnnoblementsClick);
   actionsContainer.appendChild(wrapAction(showEnnoblementsPopup));
+  const countIncomingSupport = document.createElement('a');
+  countIncomingSupport.href = '#';
+  countIncomingSupport.innerHTML = translations.action.countIncomingSupport;
+  countIncomingSupport.addEventListener('click', handleCountIncomingSupportClick);
+  actionsContainer.appendChild(wrapAction(countIncomingSupport));
 };
 
-(function () {
-  renderActions();
+(async function () {
+  try {
+    serverConfig = await loadConfig();
+    renderActions();
+  } catch (error) {
+    console.log('extended village profile', error);
+  }
 })();
-},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/buildUnitImgURL":"KX6P","./utils/wait":"oUdd","./utils/localStorage":"KWxH","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)

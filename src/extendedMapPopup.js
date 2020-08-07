@@ -89,7 +89,7 @@ const SERVER_CONFIG_LOCAL_STORAGE_KEY =
   'kiszkowaty_extended_map_popup_server_cfg';
 const translations = getTranslations();
 
-const loadConfigsFromLocalStorage = () => {
+const loadConfigFromLocalStorage = () => {
   return getItem(SERVER_CONFIG_LOCAL_STORAGE_KEY);
 };
 
@@ -98,11 +98,11 @@ const cacheServerConfig = (data = {}) => {
 };
 
 const isConfigExpired = (date) => {
-  return Math.abs(differenceInMinutes(date, new Date())) >= 60 * 24;
+  return Math.abs(date.getTime() - new Date().getTime()) > 1000 * 60 * 60 * 24;
 };
 
-const loadConfigs = async () => {
-  let data = loadConfigsFromLocalStorage();
+const loadConfig = async () => {
+  let data = loadConfigFromLocalStorage();
   if (
     !data ||
     !data.server ||
@@ -323,7 +323,7 @@ const createDisplayForVillageHandler = (cfg) => async (e, a, t) => {
 
 (async function () {
   try {
-    const configs = await loadConfigs();
+    const configs = await loadConfig();
 
     TWMap.popup.extendedMapPopupCache = {};
     TWMap.popup._loadVillage = TWMap.popup.loadVillage;

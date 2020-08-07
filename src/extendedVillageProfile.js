@@ -3,6 +3,9 @@ import getTranslations from './i18n/extendedVillageProfile';
 import { setPage, getPage } from './utils/pagination';
 import getCurrentServer from './utils/getCurrentServer';
 import getIDFromURL from './utils/getIDFromURL';
+import buildUnitImgURL from './utils/buildUnitImgURL';
+import wait from './utils/wait';
+import { setItem, getItem } from './utils/localStorage';
 import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 
 // ==UserScript==
@@ -10,7 +13,7 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.5.6
+// @version      0.6.2
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -53,10 +56,84 @@ const ENNOBLEMENTS_QUERY = `
     }
 `;
 const ENNOBLEMENTS_PER_PAGE = 15;
+const CURR_SERVER_CONFIG = `
+    query server($key: String!) {
+        server(key: $key) {
+            unitConfig {
+              spear {
+                pop
+              }
+              sword {
+                pop
+              }
+              axe {
+                pop
+              }
+              archer {
+                pop
+              }
+              spy {
+                pop
+              }
+              light {
+                pop
+              }
+              marcher {
+                pop
+              }
+              heavy {
+                pop
+              }
+              ram {
+                pop
+              }
+              catapult {
+                pop
+              }
+              knight {
+                pop
+              }
+              snob {
+                pop
+              }
+            }
+        }
+    }
+`;
+const SERVER_CONFIG_LOCAL_STORAGE_KEY =
+  'kiszkowaty_extended_village_profile_server_cfg';
 const actionsContainer = document.querySelector(
   '#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody'
 );
+let serverConfig = {};
 const translations = getTranslations();
+
+const loadConfigFromLocalStorage = () => {
+  return getItem(SERVER_CONFIG_LOCAL_STORAGE_KEY);
+};
+
+const cacheServerConfig = (data = {}) => {
+  setItem(SERVER_CONFIG_LOCAL_STORAGE_KEY, data);
+};
+
+const isConfigExpired = (date) => {
+  return Math.abs(date.getTime() - new Date().getTime()) > 1000 * 60 * 60 * 24;
+};
+
+const loadConfig = async () => {
+  let data = loadConfigFromLocalStorage();
+  if (!data.server || isConfigExpired(new Date(data.loadedAt))) {
+    data = await requestCreator({
+      query: CURR_SERVER_CONFIG,
+      variables: {
+        key: SERVER,
+      },
+    });
+    data.loadedAt = new Date();
+    cacheServerConfig(data);
+  }
+  return data.server;
+};
 
 const handleShowTribeEnnoblementsClick = async (e) => {
   e.preventDefault();
@@ -82,6 +159,133 @@ const handleShowTribeEnnoblementsClick = async (e) => {
   }
 };
 
+const buildCellsForIncSupport = (units) => {
+  const cells = [];
+  let pop = 0;
+  for (let unit in units) {
+    pop += units[unit] * serverConfig.unitConfig[unit].pop;
+    cells.push(`<td>${units[unit].toLocaleString()}</td>`);
+  }
+  cells.push(`<td><strong>${pop.toLocaleString()}</strong></td>`);
+  return cells;
+};
+
+const handleCountIncomingSupportClick = async (e) => {
+  e.preventDefault();
+
+  const ids = [];
+  const allyCommand = {};
+  document
+    .querySelectorAll('span.command_hover_details[data-command-type="support"]')
+    .forEach((el) => {
+      const id = parseInt(el.getAttribute('data-command-id'));
+      if (el.classList.contains('commandicon-ally')) {
+        allyCommand[id] = true;
+      } else {
+        allyCommand[id] = false;
+      }
+      ids.push(id);
+    });
+
+  const mySupport = {
+    spear: 0,
+    sword: 0,
+    axe: 0,
+    archer: 0,
+    spy: 0,
+    light: 0,
+    marcher: 0,
+    heavy: 0,
+    ram: 0,
+    catapult: 0,
+    knight: 0,
+    snob: 0,
+  };
+  const allySupport = {
+    ...mySupport,
+  };
+  const total = {
+    ...mySupport,
+  };
+
+  for (let i = 0; i < ids.length; i++) {
+    Dialog.show(
+      'incomingSupport',
+      `${translations.loaded}: <strong>${i} / ${ids.length}</strong>`
+    );
+    const id = ids[i];
+    const url = TribalWars.buildURL('', {
+      screen: 'info_command',
+      ajax: 'details',
+      id,
+    });
+    try {
+      const resp = await fetch(url);
+      const { units } = await resp.json();
+      if (units) {
+        for (let unit in mySupport) {
+          const count = parseInt(units[unit].count);
+          if (allyCommand[id]) {
+            allySupport[unit] += count;
+          } else {
+            mySupport[unit] += count;
+          }
+          total[unit] += count;
+        }
+      }
+      await wait(200);
+    } catch (error) {
+      console.log('count incoming support', error);
+    }
+  }
+
+  const ths = ['<th></th>'];
+  for (let unit in mySupport) {
+    ths.push(`<th><img src="${buildUnitImgURL(unit)}" /></th>`);
+  }
+  ths.push(`<th>${translations.pop}</th>`);
+  const mySupportCells = [
+    `<th>${translations.mySupport}</th>`,
+    ...buildCellsForIncSupport(mySupport),
+  ];
+  const allySupportCells = [
+    `<th>${translations.allySupport}</th>`,
+    ...buildCellsForIncSupport(allySupport),
+  ];
+  const totalCells = [
+    `<th>${translations.total}</th>`,
+    ...buildCellsForIncSupport(total),
+  ];
+
+  Dialog.show(
+    'incomingSupport',
+    `
+    <table class="vis" style="width: 100%;">
+      <tbody>
+          <tr>
+            ${ths.join('')}
+          </tr>
+          <tr>
+            ${mySupportCells.join('')}
+          </tr>
+          <tr>
+            ${allySupportCells.join('')}
+          </tr>
+          <tr>
+            ${totalCells.join('')}
+          </tr>
+      </tbody>
+    </table>
+  `
+  );
+
+  const popup = document.querySelector('.popup_box');
+  if (popup) {
+    popup.style.width = 'auto';
+    popup.style.maxWidth = '900px';
+  }
+};
+
 const wrapAction = (action) => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
@@ -101,8 +305,22 @@ const renderActions = () => {
     handleShowTribeEnnoblementsClick
   );
   actionsContainer.appendChild(wrapAction(showEnnoblementsPopup));
+
+  const countIncomingSupport = document.createElement('a');
+  countIncomingSupport.href = '#';
+  countIncomingSupport.innerHTML = translations.action.countIncomingSupport;
+  countIncomingSupport.addEventListener(
+    'click',
+    handleCountIncomingSupportClick
+  );
+  actionsContainer.appendChild(wrapAction(countIncomingSupport));
 };
 
-(function () {
-  renderActions();
+(async function () {
+  try {
+    serverConfig = await loadConfig();
+    renderActions();
+  } catch (error) {
+    console.log('extended village profile', error);
+  }
 })();

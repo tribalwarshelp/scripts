@@ -664,7 +664,7 @@ const LAST_VILLAGE_CONQUER_QUERY = "\n    query ennoblements($server: String!, $
 const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_map_popup_server_cfg';
 const translations = (0, _extendedMapPopup.default)();
 
-const loadConfigsFromLocalStorage = () => {
+const loadConfigFromLocalStorage = () => {
   return (0, _localStorage.getItem)(SERVER_CONFIG_LOCAL_STORAGE_KEY);
 };
 
@@ -674,11 +674,11 @@ const cacheServerConfig = function cacheServerConfig() {
 };
 
 const isConfigExpired = date => {
-  return Math.abs((0, _differenceInMinutes.default)(date, new Date())) >= 60 * 24;
+  return Math.abs(date.getTime() - new Date().getTime()) > 1000 * 60 * 60 * 24;
 };
 
-const loadConfigs = async () => {
-  let data = loadConfigsFromLocalStorage();
+const loadConfig = async () => {
+  let data = loadConfigFromLocalStorage();
 
   if (!data || !data.server || isConfigExpired(new Date(data.loadedAt)) || !data.server.config || !data.server.config.speed || !data.server.config.snob || !data.server.config.snob.maxDist || !data.server.config.unitSpeed || !data.server.unitConfig) {
     data = await (0, _requestCreator.default)({
@@ -828,7 +828,7 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
 
 (async function () {
   try {
-    const configs = await loadConfigs();
+    const configs = await loadConfig();
     TWMap.popup.extendedMapPopupCache = {};
     TWMap.popup._loadVillage = TWMap.popup.loadVillage;
     TWMap.popup.loadVillage = createLoadVillageHandler(configs);
