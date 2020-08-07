@@ -82,7 +82,10 @@ New actions:
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js)
 
-This script adds 'Show ennoblements' action.
+This script adds new actions:
+
+- Show ennoblements
+- Count incoming support
 
 ![Screenshot](/screenshots/extendedVillageProfile.png?raw=true)
 
