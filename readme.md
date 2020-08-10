@@ -16,7 +16,7 @@
 - [Extended village profile](#4-extended-village-profile)
 - [Bonus barbarian village finder](#5-bonus-barbarian-village-finder)
 - [Daily achievements](#6-daily-achievements)
-- [Extended map popup](#extended-map-popup)
+- [Extended map popup](#7-extended-map-popup)
 - [Map coords picker](#8-map-coords-picker)
 - ['In A Day' Tribe Ranking Generator](#9-in-a-day-tribe-ranking-generator)
 
