@@ -174,6 +174,7 @@ const translations = {
     total: 'Łącznie',
     possibleLoyalty: 'Prawdopodobne poparcie',
     ennobledAt: 'Podbita o',
+    never: 'Nigdy',
     action: {
       showEnnoblements: 'Pokaż przejęcia',
       countIncomingSupport: 'Policz nadchodzące wsparcie'
@@ -186,6 +187,7 @@ const translations = {
     allySupport: 'Ally support',
     total: 'Total',
     possibleLoyalty: 'Possible loyalty',
+    never: 'Never',
     ennobledAt: 'Ennobled at',
     action: {
       showEnnoblements: 'Show ennoblements',
@@ -801,7 +803,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.6.8
+// @version      0.6.9
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -1048,7 +1050,7 @@ const renderAdditionalInfo = function renderAdditionalInfo() {
   renderTr({
     id: 'ennobledAt',
     title: "".concat(translations.ennobledAt, ":"),
-    data: firstEnnoblement ? (0, _formatDate.default)(firstEnnoblement.ennobledAt) : 'Never'
+    data: firstEnnoblement ? (0, _formatDate.default)(firstEnnoblement.ennobledAt) : translations.never
   });
 };
 

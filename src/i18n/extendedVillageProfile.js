@@ -7,6 +7,7 @@ const translations = {
     total: 'Łącznie',
     possibleLoyalty: 'Prawdopodobne poparcie',
     ennobledAt: 'Podbita o',
+    never: 'Nigdy',
     action: {
       showEnnoblements: 'Pokaż przejęcia',
       countIncomingSupport: 'Policz nadchodzące wsparcie',
@@ -19,6 +20,7 @@ const translations = {
     allySupport: 'Ally support',
     total: 'Total',
     possibleLoyalty: 'Possible loyalty',
+    never: 'Never',
     ennobledAt: 'Ennobled at',
     action: {
       showEnnoblements: 'Show ennoblements',

@@ -328,7 +328,9 @@ const translations = {
     showLatestEnnoblements: 'Pokaż najnowsze przejęcia',
     village: 'Wioska',
     newOwner: 'Nowy właściciel',
+    newOwnerTribe: 'Plemię nowego właściciela',
     oldOwner: 'Poprzedni właściciel',
+    oldOwnerTribe: 'Plemię poprzedniego właściciela',
     date: 'Data',
     filters: 'Filtry',
     apply: 'Zastosuj',
@@ -381,7 +383,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.0.3
+// @version      1.0.4
 // @description  Show the latest ennoblements
 // @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
 // @match        *://*/game.php*

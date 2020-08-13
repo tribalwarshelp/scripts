@@ -15,7 +15,7 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.6.8
+// @version      0.6.9
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -384,7 +384,9 @@ const renderAdditionalInfo = ({ config, ennoblements } = {}) => {
   renderTr({
     id: 'ennobledAt',
     title: `${translations.ennobledAt}:`,
-    data: firstEnnoblement ? formatDate(firstEnnoblement.ennobledAt) : 'Never',
+    data: firstEnnoblement
+      ? formatDate(firstEnnoblement.ennobledAt)
+      : translations.never,
   });
 };
 
