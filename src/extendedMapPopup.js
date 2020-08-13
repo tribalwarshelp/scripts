@@ -1,4 +1,3 @@
-import differenceInMinutes from 'date-fns/differenceInMinutes';
 import addMinutes from 'date-fns/addMinutes';
 import getTranslations from './i18n/extendedMapPopup';
 import requestCreator from './libs/requestCreator';
@@ -8,6 +7,7 @@ import { calcDistanceBetweenTwoPoints } from './utils/math';
 import buildUnitImgURL from './utils/buildUnitImgURL';
 import { setItem, getItem } from './utils/localStorage';
 import { calcAttackDuration } from './utils/tribalwars';
+import countLoyalty from './utils/countLoyalty';
 
 // ==UserScript==
 // @name         Extended Map Popup
@@ -151,15 +151,6 @@ const loadVillageData = async (id, { cacheOnly = false } = {}) => {
   }
 };
 
-const calcLoyalty = (ennobledAt, speed) => {
-  let loyalty =
-    25 + Math.abs(differenceInMinutes(ennobledAt, new Date())) * (speed / 60);
-  if (loyalty > 100) {
-    loyalty = 100;
-  }
-  return Math.floor(loyalty);
-};
-
 const getAvailableUnits = (unitCfg = {}) => {
   const units = [];
   for (let unit in unitCfg) {
@@ -281,7 +272,7 @@ const renderAdditionalInfo = (id, data, { config, unitConfig }) => {
           <td>
               ${
                 ennoblement
-                  ? calcLoyalty(new Date(ennoblement.ennobledAt), config.speed)
+                  ? countLoyalty(new Date(ennoblement.ennobledAt), config.speed)
                   : 100
               }
           </td>

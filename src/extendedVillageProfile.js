@@ -4,8 +4,10 @@ import { setPage, getPage } from './utils/pagination';
 import getCurrentServer from './utils/getCurrentServer';
 import getIDFromURL from './utils/getIDFromURL';
 import buildUnitImgURL from './utils/buildUnitImgURL';
+import formatDate from './utils/formatDate';
 import wait from './utils/wait';
 import { setItem, getItem } from './utils/localStorage';
+import countLoyalty from './utils/countLoyalty';
 import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 
 // ==UserScript==
@@ -13,7 +15,7 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.6.2
+// @version      0.6.7
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -23,6 +25,18 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 
 const SERVER = getCurrentServer();
 const VILLAGE_ID = getIDFromURL(window.location.search);
+const LAST_CONQUER_QUERY = `
+    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
+        ennoblements(server: $server, filter: $filter) {
+            items {
+                ennobledAt
+                village {
+                    id
+                }
+            }
+        }
+    }
+`;
 const ENNOBLEMENTS_QUERY = `
     query ennoblements($server: String!, $filter: EnnoblementFilter!) {
       ennoblements(server: $server, filter: $filter) {
@@ -59,6 +73,9 @@ const ENNOBLEMENTS_PER_PAGE = 15;
 const CURR_SERVER_CONFIG = `
     query server($key: String!) {
         server(key: $key) {
+            config {
+              speed
+            }
             unitConfig {
               spear {
                 pop
@@ -102,8 +119,11 @@ const CURR_SERVER_CONFIG = `
 `;
 const SERVER_CONFIG_LOCAL_STORAGE_KEY =
   'kiszkowaty_extended_village_profile_server_cfg';
-const actionsContainer = document.querySelector(
+const actionContainer = document.querySelector(
   '#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody'
+);
+const additionalInfoContainer = document.querySelector(
+  '#content_value table.vis tbody'
 );
 let serverConfig = {};
 const translations = getTranslations();
@@ -122,7 +142,12 @@ const isConfigExpired = (date) => {
 
 const loadConfig = async () => {
   let data = loadConfigFromLocalStorage();
-  if (!data.server || isConfigExpired(new Date(data.loadedAt))) {
+  if (
+    !data.server ||
+    isConfigExpired(new Date(data.loadedAt)) ||
+    !data.server.unitConfig ||
+    !data.server.config
+  ) {
     data = await requestCreator({
       query: CURR_SERVER_CONFIG,
       variables: {
@@ -133,6 +158,20 @@ const loadConfig = async () => {
     cacheServerConfig(data);
   }
   return data.server;
+};
+
+const loadPageData = async () => {
+  let data = await requestCreator({
+    query: LAST_CONQUER_QUERY,
+    variables: {
+      server: SERVER,
+      filter: {
+        villageID: [VILLAGE_ID],
+        sort: 'ennobledAt DESC',
+      },
+    },
+  });
+  return data;
 };
 
 const handleShowTribeEnnoblementsClick = async (e) => {
@@ -304,7 +343,7 @@ const renderActions = () => {
     'click',
     handleShowTribeEnnoblementsClick
   );
-  actionsContainer.appendChild(wrapAction(showEnnoblementsPopup));
+  actionContainer.appendChild(wrapAction(showEnnoblementsPopup));
 
   const countIncomingSupport = document.createElement('a');
   countIncomingSupport.href = '#';
@@ -313,12 +352,49 @@ const renderActions = () => {
     'click',
     handleCountIncomingSupportClick
   );
-  actionsContainer.appendChild(wrapAction(countIncomingSupport));
+  actionContainer.appendChild(wrapAction(countIncomingSupport));
+};
+
+const renderTr = ({ title, data, id }) => {
+  let tr = document.querySelector('#' + id);
+  if (!tr) {
+    tr = document.createElement('tr');
+    tr.id = id;
+    tr.appendChild(document.createElement('td'));
+    tr.appendChild(document.createElement('td'));
+    additionalInfoContainer.append(tr);
+  }
+  tr.children[0].innerHTML = title;
+  tr.children[1].innerHTML = data;
+};
+
+const renderAdditionalInfo = ({ config, ennoblements } = {}) => {
+  const firstEnnoblement =
+    ennoblements && Array.isArray(ennoblements.items) && ennoblements.items[0]
+      ? ennoblements.items[0]
+      : undefined;
+  renderTr({
+    id: 'loyalty',
+    title: 'Possible loyalty:',
+    data: firstEnnoblement
+      ? countLoyalty(new Date(firstEnnoblement.ennobledAt), config.speed)
+      : 100,
+  });
+  renderTr({
+    id: 'ennobledAt',
+    title: 'Ennobled at:',
+    data: firstEnnoblement ? formatDate(firstEnnoblement.ennobledAt) : 'Never',
+  });
 };
 
 (async function () {
   try {
+    const pageData = await loadPageData();
     serverConfig = await loadConfig();
+    renderAdditionalInfo({
+      config: serverConfig.config,
+      ennoblements: pageData.ennoblements,
+    });
     renderActions();
   } catch (error) {
     console.log('extended village profile', error);

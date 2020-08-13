@@ -365,7 +365,27 @@ var _default = unit => {
 };
 
 exports.default = _default;
-},{"./tribalwars":"fHHP"}],"oUdd":[function(require,module,exports) {
+},{"./tribalwars":"fHHP"}],"V6Mf":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = (date, options) => {
+  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+};
+
+exports.default = _default;
+},{}],"oUdd":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -403,7 +423,205 @@ const setItem = (key, payload) => {
 };
 
 exports.setItem = setItem;
-},{}],"tKRp":[function(require,module,exports) {
+},{}],"kK6Q":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = requiredArgs;
+
+function requiredArgs(required, args) {
+  if (args.length < required) {
+    throw new TypeError(required + ' argument' + (required > 1 ? 's' : '') + ' required, but only ' + args.length + ' present');
+  }
+}
+},{}],"KYJg":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toDate;
+
+var _index = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name toDate
+ * @category Common Helpers
+ * @summary Convert the given argument to an instance of Date.
+ *
+ * @description
+ * Convert the given argument to an instance of Date.
+ *
+ * If the argument is an instance of Date, the function returns its clone.
+ *
+ * If the argument is a number, it is treated as a timestamp.
+ *
+ * If the argument is none of the above, the function returns Invalid Date.
+ *
+ * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
+ *
+ * @param {Date|Number} argument - the value to convert
+ * @returns {Date} the parsed date in the local time zone
+ * @throws {TypeError} 1 argument required
+ *
+ * @example
+ * // Clone the date:
+ * const result = toDate(new Date(2014, 1, 11, 11, 30, 30))
+ * //=> Tue Feb 11 2014 11:30:30
+ *
+ * @example
+ * // Convert the timestamp to date:
+ * const result = toDate(1392098430000)
+ * //=> Tue Feb 11 2014 11:30:30
+ */
+function toDate(argument) {
+  (0, _index.default)(1, arguments);
+  var argStr = Object.prototype.toString.call(argument); // Clone the date
+
+  if (argument instanceof Date || typeof argument === 'object' && argStr === '[object Date]') {
+    // Prevent the date to lose the milliseconds when passed to new Date() in IE10
+    return new Date(argument.getTime());
+  } else if (typeof argument === 'number' || argStr === '[object Number]') {
+    return new Date(argument);
+  } else {
+    if ((typeof argument === 'string' || argStr === '[object String]') && typeof console !== 'undefined') {
+      // eslint-disable-next-line no-console
+      console.warn("Starting with v2.0.0-beta.1 date-fns doesn't accept strings as arguments. Please use `parseISO` to parse strings. See: https://git.io/fjule"); // eslint-disable-next-line no-console
+
+      console.warn(new Error().stack);
+    }
+
+    return new Date(NaN);
+  }
+}
+},{"../_lib/requiredArgs/index.js":"kK6Q"}],"H70G":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = differenceInMilliseconds;
+
+var _index = _interopRequireDefault(require("../toDate/index.js"));
+
+var _index2 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name differenceInMilliseconds
+ * @category Millisecond Helpers
+ * @summary Get the number of milliseconds between the given dates.
+ *
+ * @description
+ * Get the number of milliseconds between the given dates.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} dateLeft - the later date
+ * @param {Date|Number} dateRight - the earlier date
+ * @returns {Number} the number of milliseconds
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // How many milliseconds are between
+ * // 2 July 2014 12:30:20.600 and 2 July 2014 12:30:21.700?
+ * var result = differenceInMilliseconds(
+ *   new Date(2014, 6, 2, 12, 30, 21, 700),
+ *   new Date(2014, 6, 2, 12, 30, 20, 600)
+ * )
+ * //=> 1100
+ */
+function differenceInMilliseconds(dirtyDateLeft, dirtyDateRight) {
+  (0, _index2.default)(2, arguments);
+  var dateLeft = (0, _index.default)(dirtyDateLeft);
+  var dateRight = (0, _index.default)(dirtyDateRight);
+  return dateLeft.getTime() - dateRight.getTime();
+}
+},{"../toDate/index.js":"KYJg","../_lib/requiredArgs/index.js":"kK6Q"}],"oGJj":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = differenceInMinutes;
+
+var _index = _interopRequireDefault(require("../differenceInMilliseconds/index.js"));
+
+var _index2 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MILLISECONDS_IN_MINUTE = 60000;
+/**
+ * @name differenceInMinutes
+ * @category Minute Helpers
+ * @summary Get the number of minutes between the given dates.
+ *
+ * @description
+ * Get the signed number of full (rounded towards 0) minutes between the given dates.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} dateLeft - the later date
+ * @param {Date|Number} dateRight - the earlier date
+ * @returns {Number} the number of minutes
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // How many minutes are between 2 July 2014 12:07:59 and 2 July 2014 12:20:00?
+ * var result = differenceInMinutes(
+ *   new Date(2014, 6, 2, 12, 20, 0),
+ *   new Date(2014, 6, 2, 12, 7, 59)
+ * )
+ * //=> 12
+ *
+ * @example
+ * // How many minutes are from 10:01:59 to 10:00:00
+ * var result = differenceInMinutes(
+ *   new Date(2000, 0, 1, 10, 0, 0),
+ *   new Date(2000, 0, 1, 10, 1, 59)
+ * )
+ * //=> -1
+ */
+
+function differenceInMinutes(dirtyDateLeft, dirtyDateRight) {
+  (0, _index2.default)(2, arguments);
+  var diff = (0, _index.default)(dirtyDateLeft, dirtyDateRight) / MILLISECONDS_IN_MINUTE;
+  return diff > 0 ? Math.floor(diff) : Math.ceil(diff);
+}
+},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"ATOB":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _differenceInMinutes = _interopRequireDefault(require("date-fns/differenceInMinutes"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = (ennobledAt, speed) => {
+  let loyalty = 25 + Math.abs((0, _differenceInMinutes.default)(ennobledAt, new Date())) * (speed / 60);
+
+  if (loyalty > 100) {
+    loyalty = 100;
+  }
+
+  return Math.floor(loyalty);
+};
+
+exports.default = _default;
+},{"date-fns/differenceInMinutes":"oGJj"}],"tKRp":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -471,26 +689,6 @@ var _default = function _default() {
     popupWrapper.style.position = 'fixed';
     popupWrapper.style.zIndex = '50001';
   }
-};
-
-exports.default = _default;
-},{}],"V6Mf":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _default = (date, options) => {
-  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
 };
 
 exports.default = _default;
@@ -576,9 +774,13 @@ var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
 var _buildUnitImgURL = _interopRequireDefault(require("./utils/buildUnitImgURL"));
 
+var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
+
 var _wait = _interopRequireDefault(require("./utils/wait"));
 
 var _localStorage = require("./utils/localStorage");
+
+var _countLoyalty = _interopRequireDefault(require("./utils/countLoyalty"));
 
 var _showEnnoblementsPopup = _interopRequireDefault(require("./common/showEnnoblementsPopup"));
 
@@ -595,7 +797,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.6.2
+// @version      0.6.7
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -604,11 +806,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
 const VILLAGE_ID = (0, _getIDFromURL.default)(window.location.search);
+const LAST_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n        ennoblements(server: $server, filter: $filter) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
 const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
-const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            unitConfig {\n              spear {\n                pop\n              }\n              sword {\n                pop\n              }\n              axe {\n                pop\n              }\n              archer {\n                pop\n              }\n              spy {\n                pop\n              }\n              light {\n                pop\n              }\n              marcher {\n                pop\n              }\n              heavy {\n                pop\n              }\n              ram {\n                pop\n              }\n              catapult {\n                pop\n              }\n              knight {\n                pop\n              }\n              snob {\n                pop\n              }\n            }\n        }\n    }\n";
+const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n              speed\n            }\n            unitConfig {\n              spear {\n                pop\n              }\n              sword {\n                pop\n              }\n              axe {\n                pop\n              }\n              archer {\n                pop\n              }\n              spy {\n                pop\n              }\n              light {\n                pop\n              }\n              marcher {\n                pop\n              }\n              heavy {\n                pop\n              }\n              ram {\n                pop\n              }\n              catapult {\n                pop\n              }\n              knight {\n                pop\n              }\n              snob {\n                pop\n              }\n            }\n        }\n    }\n";
 const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_village_profile_server_cfg';
-const actionsContainer = document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
+const actionContainer = document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
+const additionalInfoContainer = document.querySelector('#content_value table.vis tbody');
 let serverConfig = {};
 const translations = (0, _extendedVillageProfile.default)();
 
@@ -628,7 +832,7 @@ const isConfigExpired = date => {
 const loadConfig = async () => {
   let data = loadConfigFromLocalStorage();
 
-  if (!data.server || isConfigExpired(new Date(data.loadedAt))) {
+  if (!data.server || isConfigExpired(new Date(data.loadedAt)) || !data.server.unitConfig || !data.server.config) {
     data = await (0, _requestCreator.default)({
       query: CURR_SERVER_CONFIG,
       variables: {
@@ -640,6 +844,20 @@ const loadConfig = async () => {
   }
 
   return data.server;
+};
+
+const loadPageData = async () => {
+  let data = await (0, _requestCreator.default)({
+    query: LAST_CONQUER_QUERY,
+    variables: {
+      server: SERVER,
+      filter: {
+        villageID: [VILLAGE_ID],
+        sort: 'ennobledAt DESC'
+      }
+    }
+  });
+  return data;
 };
 
 const handleShowTribeEnnoblementsClick = async e => {
@@ -783,20 +1001,63 @@ const renderActions = () => {
   (0, _pagination.setPage)(showEnnoblementsPopup, '1');
   showEnnoblementsPopup.innerHTML = translations.action.showEnnoblements;
   showEnnoblementsPopup.addEventListener('click', handleShowTribeEnnoblementsClick);
-  actionsContainer.appendChild(wrapAction(showEnnoblementsPopup));
+  actionContainer.appendChild(wrapAction(showEnnoblementsPopup));
   const countIncomingSupport = document.createElement('a');
   countIncomingSupport.href = '#';
   countIncomingSupport.innerHTML = translations.action.countIncomingSupport;
   countIncomingSupport.addEventListener('click', handleCountIncomingSupportClick);
-  actionsContainer.appendChild(wrapAction(countIncomingSupport));
+  actionContainer.appendChild(wrapAction(countIncomingSupport));
+};
+
+const renderTr = (_ref) => {
+  let {
+    title,
+    data,
+    id
+  } = _ref;
+  let tr = document.querySelector('#' + id);
+
+  if (!tr) {
+    tr = document.createElement('tr');
+    tr.id = id;
+    tr.appendChild(document.createElement('td'));
+    tr.appendChild(document.createElement('td'));
+    additionalInfoContainer.append(tr);
+  }
+
+  tr.children[0].innerHTML = title;
+  tr.children[1].innerHTML = data;
+};
+
+const renderAdditionalInfo = function renderAdditionalInfo() {
+  let {
+    config,
+    ennoblements
+  } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  const firstEnnoblement = ennoblements && Array.isArray(ennoblements.items) && ennoblements.items[0] ? ennoblements.items[0] : undefined;
+  renderTr({
+    id: 'loyalty',
+    title: 'Possible loyalty:',
+    data: firstEnnoblement ? (0, _countLoyalty.default)(new Date(firstEnnoblement.ennobledAt), config.speed) : 100
+  });
+  renderTr({
+    id: 'ennobledAt',
+    title: 'Ennobled at:',
+    data: firstEnnoblement ? (0, _formatDate.default)(firstEnnoblement.ennobledAt) : 'Never'
+  });
 };
 
 (async function () {
   try {
+    const pageData = await loadPageData();
     serverConfig = await loadConfig();
+    renderAdditionalInfo({
+      config: serverConfig.config,
+      ennoblements: pageData.ennoblements
+    });
     renderActions();
   } catch (error) {
     console.log('extended village profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/buildUnitImgURL":"KX6P","./utils/wait":"oUdd","./utils/localStorage":"KWxH","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/buildUnitImgURL":"KX6P","./utils/formatDate":"V6Mf","./utils/wait":"oUdd","./utils/localStorage":"KWxH","./utils/countLoyalty":"ATOB","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)

@@ -117,7 +117,28 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"kK6Q":[function(require,module,exports) {
+})({"VYL5":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toInteger;
+
+function toInteger(dirtyNumber) {
+  if (dirtyNumber === null || dirtyNumber === true || dirtyNumber === false) {
+    return NaN;
+  }
+
+  var number = Number(dirtyNumber);
+
+  if (isNaN(number)) {
+    return number;
+  }
+
+  return number < 0 ? Math.ceil(number) : Math.floor(number);
+}
+},{}],"kK6Q":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -192,128 +213,7 @@ function toDate(argument) {
     return new Date(NaN);
   }
 }
-},{"../_lib/requiredArgs/index.js":"kK6Q"}],"H70G":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = differenceInMilliseconds;
-
-var _index = _interopRequireDefault(require("../toDate/index.js"));
-
-var _index2 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @name differenceInMilliseconds
- * @category Millisecond Helpers
- * @summary Get the number of milliseconds between the given dates.
- *
- * @description
- * Get the number of milliseconds between the given dates.
- *
- * ### v2.0.0 breaking changes:
- *
- * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
- *
- * @param {Date|Number} dateLeft - the later date
- * @param {Date|Number} dateRight - the earlier date
- * @returns {Number} the number of milliseconds
- * @throws {TypeError} 2 arguments required
- *
- * @example
- * // How many milliseconds are between
- * // 2 July 2014 12:30:20.600 and 2 July 2014 12:30:21.700?
- * var result = differenceInMilliseconds(
- *   new Date(2014, 6, 2, 12, 30, 21, 700),
- *   new Date(2014, 6, 2, 12, 30, 20, 600)
- * )
- * //=> 1100
- */
-function differenceInMilliseconds(dirtyDateLeft, dirtyDateRight) {
-  (0, _index2.default)(2, arguments);
-  var dateLeft = (0, _index.default)(dirtyDateLeft);
-  var dateRight = (0, _index.default)(dirtyDateRight);
-  return dateLeft.getTime() - dateRight.getTime();
-}
-},{"../toDate/index.js":"KYJg","../_lib/requiredArgs/index.js":"kK6Q"}],"oGJj":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = differenceInMinutes;
-
-var _index = _interopRequireDefault(require("../differenceInMilliseconds/index.js"));
-
-var _index2 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var MILLISECONDS_IN_MINUTE = 60000;
-/**
- * @name differenceInMinutes
- * @category Minute Helpers
- * @summary Get the number of minutes between the given dates.
- *
- * @description
- * Get the signed number of full (rounded towards 0) minutes between the given dates.
- *
- * ### v2.0.0 breaking changes:
- *
- * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
- *
- * @param {Date|Number} dateLeft - the later date
- * @param {Date|Number} dateRight - the earlier date
- * @returns {Number} the number of minutes
- * @throws {TypeError} 2 arguments required
- *
- * @example
- * // How many minutes are between 2 July 2014 12:07:59 and 2 July 2014 12:20:00?
- * var result = differenceInMinutes(
- *   new Date(2014, 6, 2, 12, 20, 0),
- *   new Date(2014, 6, 2, 12, 7, 59)
- * )
- * //=> 12
- *
- * @example
- * // How many minutes are from 10:01:59 to 10:00:00
- * var result = differenceInMinutes(
- *   new Date(2000, 0, 1, 10, 0, 0),
- *   new Date(2000, 0, 1, 10, 1, 59)
- * )
- * //=> -1
- */
-
-function differenceInMinutes(dirtyDateLeft, dirtyDateRight) {
-  (0, _index2.default)(2, arguments);
-  var diff = (0, _index.default)(dirtyDateLeft, dirtyDateRight) / MILLISECONDS_IN_MINUTE;
-  return diff > 0 ? Math.floor(diff) : Math.ceil(diff);
-}
-},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"VYL5":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = toInteger;
-
-function toInteger(dirtyNumber) {
-  if (dirtyNumber === null || dirtyNumber === true || dirtyNumber === false) {
-    return NaN;
-  }
-
-  var number = Number(dirtyNumber);
-
-  if (isNaN(number)) {
-    return number;
-  }
-
-  return number < 0 ? Math.ceil(number) : Math.floor(number);
-}
-},{}],"umce":[function(require,module,exports) {
+},{"../_lib/requiredArgs/index.js":"kK6Q"}],"umce":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -616,10 +516,131 @@ const setItem = (key, payload) => {
 };
 
 exports.setItem = setItem;
-},{}],"HdqX":[function(require,module,exports) {
+},{}],"H70G":[function(require,module,exports) {
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = differenceInMilliseconds;
+
+var _index = _interopRequireDefault(require("../toDate/index.js"));
+
+var _index2 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @name differenceInMilliseconds
+ * @category Millisecond Helpers
+ * @summary Get the number of milliseconds between the given dates.
+ *
+ * @description
+ * Get the number of milliseconds between the given dates.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} dateLeft - the later date
+ * @param {Date|Number} dateRight - the earlier date
+ * @returns {Number} the number of milliseconds
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // How many milliseconds are between
+ * // 2 July 2014 12:30:20.600 and 2 July 2014 12:30:21.700?
+ * var result = differenceInMilliseconds(
+ *   new Date(2014, 6, 2, 12, 30, 21, 700),
+ *   new Date(2014, 6, 2, 12, 30, 20, 600)
+ * )
+ * //=> 1100
+ */
+function differenceInMilliseconds(dirtyDateLeft, dirtyDateRight) {
+  (0, _index2.default)(2, arguments);
+  var dateLeft = (0, _index.default)(dirtyDateLeft);
+  var dateRight = (0, _index.default)(dirtyDateRight);
+  return dateLeft.getTime() - dateRight.getTime();
+}
+},{"../toDate/index.js":"KYJg","../_lib/requiredArgs/index.js":"kK6Q"}],"oGJj":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = differenceInMinutes;
+
+var _index = _interopRequireDefault(require("../differenceInMilliseconds/index.js"));
+
+var _index2 = _interopRequireDefault(require("../_lib/requiredArgs/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MILLISECONDS_IN_MINUTE = 60000;
+/**
+ * @name differenceInMinutes
+ * @category Minute Helpers
+ * @summary Get the number of minutes between the given dates.
+ *
+ * @description
+ * Get the signed number of full (rounded towards 0) minutes between the given dates.
+ *
+ * ### v2.0.0 breaking changes:
+ *
+ * - [Changes that are common for the whole library](https://github.com/date-fns/date-fns/blob/master/docs/upgradeGuide.md#Common-Changes).
+ *
+ * @param {Date|Number} dateLeft - the later date
+ * @param {Date|Number} dateRight - the earlier date
+ * @returns {Number} the number of minutes
+ * @throws {TypeError} 2 arguments required
+ *
+ * @example
+ * // How many minutes are between 2 July 2014 12:07:59 and 2 July 2014 12:20:00?
+ * var result = differenceInMinutes(
+ *   new Date(2014, 6, 2, 12, 20, 0),
+ *   new Date(2014, 6, 2, 12, 7, 59)
+ * )
+ * //=> 12
+ *
+ * @example
+ * // How many minutes are from 10:01:59 to 10:00:00
+ * var result = differenceInMinutes(
+ *   new Date(2000, 0, 1, 10, 0, 0),
+ *   new Date(2000, 0, 1, 10, 1, 59)
+ * )
+ * //=> -1
+ */
+
+function differenceInMinutes(dirtyDateLeft, dirtyDateRight) {
+  (0, _index2.default)(2, arguments);
+  var diff = (0, _index.default)(dirtyDateLeft, dirtyDateRight) / MILLISECONDS_IN_MINUTE;
+  return diff > 0 ? Math.floor(diff) : Math.ceil(diff);
+}
+},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"ATOB":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _differenceInMinutes = _interopRequireDefault(require("date-fns/differenceInMinutes"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = (ennobledAt, speed) => {
+  let loyalty = 25 + Math.abs((0, _differenceInMinutes.default)(ennobledAt, new Date())) * (speed / 60);
+
+  if (loyalty > 100) {
+    loyalty = 100;
+  }
+
+  return Math.floor(loyalty);
+};
+
+exports.default = _default;
+},{"date-fns/differenceInMinutes":"oGJj"}],"HdqX":[function(require,module,exports) {
+"use strict";
 
 var _addMinutes = _interopRequireDefault(require("date-fns/addMinutes"));
 
@@ -638,6 +659,8 @@ var _buildUnitImgURL = _interopRequireDefault(require("./utils/buildUnitImgURL")
 var _localStorage = require("./utils/localStorage");
 
 var _tribalwars = require("./utils/tribalwars");
+
+var _countLoyalty = _interopRequireDefault(require("./utils/countLoyalty"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -724,16 +747,6 @@ const loadVillageData = async function loadVillageData(id) {
   }
 };
 
-const calcLoyalty = (ennobledAt, speed) => {
-  let loyalty = 25 + Math.abs((0, _differenceInMinutes.default)(ennobledAt, new Date())) * (speed / 60);
-
-  if (loyalty > 100) {
-    loyalty = 100;
-  }
-
-  return Math.floor(loyalty);
-};
-
 const getAvailableUnits = function getAvailableUnits() {
   let unitCfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   const units = [];
@@ -798,7 +811,7 @@ const renderAdditionalInfo = (id, data, _ref) => {
     parent.appendChild(loyalty);
   }
 
-  loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? calcLoyalty(new Date(ennoblement.ennobledAt), config.speed) : 100, "\n          </td>\n      ");
+  loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? (0, _countLoyalty.default)(new Date(ennoblement.ennobledAt), config.speed) : 100, "\n          </td>\n      ");
   let canSendNoble = parent.querySelector('#canSendNoble');
 
   if (!canSendNoble) {
@@ -838,4 +851,4 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
     console.log('extended map popup', error);
   }
 })();
-},{"date-fns/differenceInMinutes":"oGJj","date-fns/addMinutes":"pfh4","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/buildUnitImgURL":"KX6P","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP"}]},{},["HdqX"], null)
+},{"date-fns/addMinutes":"pfh4","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/buildUnitImgURL":"KX6P","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/countLoyalty":"ATOB"}]},{},["HdqX"], null)
