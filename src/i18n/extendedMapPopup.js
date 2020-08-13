@@ -2,7 +2,7 @@ const translations = {
   pl_PL: {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
-    possibleLoyalty: 'Możliwe poparcie',
+    possibleLoyalty: 'Prawdopodobne poparcie',
     canSendNoble: 'Można wysłać szlachcica',
     yes: 'Tak',
     no: 'Nie',

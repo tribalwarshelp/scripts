@@ -5,6 +5,8 @@ const translations = {
     mySupport: 'Moje wsparcie',
     allySupport: 'Wsparcie plemienia',
     total: 'Łącznie',
+    possibleLoyalty: 'Prawdopodobne poparcie',
+    ennobledAt: 'Podbita o',
     action: {
       showEnnoblements: 'Pokaż przejęcia',
       countIncomingSupport: 'Policz nadchodzące wsparcie',
@@ -16,6 +18,8 @@ const translations = {
     mySupport: 'My support',
     allySupport: 'Ally support',
     total: 'Total',
+    possibleLoyalty: 'Possible loyalty',
+    ennobledAt: 'Ennobled at',
     action: {
       showEnnoblements: 'Show ennoblements',
       countIncomingSupport: 'Count incoming support',

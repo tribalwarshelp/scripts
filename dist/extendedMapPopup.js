@@ -313,7 +313,7 @@ const translations = {
   pl_PL: {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
-    possibleLoyalty: 'Możliwe poparcie',
+    possibleLoyalty: 'Prawdopodobne poparcie',
     canSendNoble: 'Można wysłać szlachcica',
     yes: 'Tak',
     no: 'Nie'
@@ -675,7 +675,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.0
+// @version      0.6.1
 // @description  Extended Map Popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -736,7 +736,8 @@ const loadVillageData = async function loadVillageData(id) {
         server: SERVER,
         filter: {
           villageID: [id],
-          sort: 'ennobledAt DESC'
+          sort: 'ennobledAt DESC',
+          limit: 1
         }
       }
     });

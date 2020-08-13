@@ -172,6 +172,8 @@ const translations = {
     mySupport: 'Moje wsparcie',
     allySupport: 'Wsparcie plemienia',
     total: 'Łącznie',
+    possibleLoyalty: 'Prawdopodobne poparcie',
+    ennobledAt: 'Podbita o',
     action: {
       showEnnoblements: 'Pokaż przejęcia',
       countIncomingSupport: 'Policz nadchodzące wsparcie'
@@ -183,6 +185,8 @@ const translations = {
     mySupport: 'My support',
     allySupport: 'Ally support',
     total: 'Total',
+    possibleLoyalty: 'Possible loyalty',
+    ennobledAt: 'Ennobled at',
     action: {
       showEnnoblements: 'Show ennoblements',
       countIncomingSupport: 'Count incoming support'
@@ -797,7 +801,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.6.7
+// @version      0.6.8
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -853,7 +857,8 @@ const loadPageData = async () => {
       server: SERVER,
       filter: {
         villageID: [VILLAGE_ID],
-        sort: 'ennobledAt DESC'
+        sort: 'ennobledAt DESC',
+        limit: 1
       }
     }
   });
@@ -1037,12 +1042,12 @@ const renderAdditionalInfo = function renderAdditionalInfo() {
   const firstEnnoblement = ennoblements && Array.isArray(ennoblements.items) && ennoblements.items[0] ? ennoblements.items[0] : undefined;
   renderTr({
     id: 'loyalty',
-    title: 'Possible loyalty:',
+    title: "".concat(translations.possibleLoyalty, ":"),
     data: firstEnnoblement ? (0, _countLoyalty.default)(new Date(firstEnnoblement.ennobledAt), config.speed) : 100
   });
   renderTr({
     id: 'ennobledAt',
-    title: 'Ennobled at:',
+    title: "".concat(translations.ennobledAt, ":"),
     data: firstEnnoblement ? (0, _formatDate.default)(firstEnnoblement.ennobledAt) : 'Never'
   });
 };

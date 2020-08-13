@@ -15,7 +15,7 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.6.7
+// @version      0.6.8
 // @description  Extended Village Profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -168,6 +168,7 @@ const loadPageData = async () => {
       filter: {
         villageID: [VILLAGE_ID],
         sort: 'ennobledAt DESC',
+        limit: 1,
       },
     },
   });
@@ -375,14 +376,14 @@ const renderAdditionalInfo = ({ config, ennoblements } = {}) => {
       : undefined;
   renderTr({
     id: 'loyalty',
-    title: 'Possible loyalty:',
+    title: `${translations.possibleLoyalty}:`,
     data: firstEnnoblement
       ? countLoyalty(new Date(firstEnnoblement.ennobledAt), config.speed)
       : 100,
   });
   renderTr({
     id: 'ennobledAt',
-    title: 'Ennobled at:',
+    title: `${translations.ennobledAt}:`,
     data: firstEnnoblement ? formatDate(firstEnnoblement.ennobledAt) : 'Never',
   });
 };

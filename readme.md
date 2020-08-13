@@ -32,7 +32,7 @@ This script shows you the latest ennoblements from your server. Works in real-ti
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js)
 
-This script adds a lot of useful actions and pieces of information to the player profile.
+This script adds many useful actions and pieces of information to the player profile.
 
 - Daily growth
 - Best rank
@@ -57,7 +57,7 @@ New actions:
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js)
 
-This script adds a lot of useful actions and pieces of information to the tribe profile.
+This script adds many useful actions and pieces of information to the tribe profile.
 
 - Dominance
 - Best rank
@@ -82,7 +82,12 @@ New actions:
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js)
 
-This script adds new actions:
+This script adds new actions and pieces of information to the village profile.
+
+- Possible loyalty
+- Last ennoble date
+
+New actions:
 
 - Show ennoblements
 - Count incoming support
@@ -110,7 +115,7 @@ Adds to map screen new functionality to search bonus barbarian villages easily.
 Adds to popup:
 
 - Information about possible loyalty
-- Ennoble date
+- Last ennoble date
 - Information if you can send noble from the current village
 - Unit arrival time
 
