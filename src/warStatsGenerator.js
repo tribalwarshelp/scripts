@@ -4,12 +4,12 @@ import getServer from './utils/getCurrentServer';
 import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 
 // ==UserScript==
-// @name         War Stats Generator
+// @name         War stats generator
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @version      0.2.6
-// @description  War Stats Generator
+// @description  War stats generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
 // @grant        none

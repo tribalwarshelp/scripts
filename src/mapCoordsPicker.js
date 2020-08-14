@@ -3,12 +3,12 @@ import hexToRGB from './utils/hexToRGB';
 import { getItem, setItem } from './utils/localStorage';
 
 // ==UserScript==
-// @name         Map Coords Picker
+// @name         Map coords picker
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @version      0.7.1
-// @description  Map Coords Picker
+// @description  Map coords picker
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none

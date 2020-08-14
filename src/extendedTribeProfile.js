@@ -20,12 +20,12 @@ import { formatPlayerURL } from './utils/twstats';
 import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars';
 
 // ==UserScript==
-// @name         Extended Tribe Profile
+// @name         Extended tribe profile
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @version      1.0.8
-// @description  Extended Tribe Profile
+// @description  Extended tribe profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
 // @grant        none

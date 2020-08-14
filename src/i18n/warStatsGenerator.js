@@ -10,7 +10,7 @@ const translations = {
     notEnoughTribesSideTwo: 'Musisz dodać jakiekolwiek plemię do strony 2.',
     from: 'Od',
     to: 'Do',
-    warStatsGenerator: 'Generator Statystyk Wojennych',
+    warStatsGenerator: 'Generator statystyk wojennych',
     generateWarStats: 'Wygeneruj statystyki wojenne',
   },
   en_DK: {
@@ -24,7 +24,7 @@ const translations = {
     notEnoughTribesSideTwo: 'Not enough tribes added to the side two.',
     from: 'From',
     to: 'To',
-    warStatsGenerator: 'War Stats Generator',
+    warStatsGenerator: 'War stats generator',
     generateWarStats: 'Generate war stats',
   },
 };

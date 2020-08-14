@@ -18,7 +18,8 @@
 - [Daily achievements](#6-daily-achievements)
 - [Extended map popup](#7-extended-map-popup)
 - [Map coords picker](#8-map-coords-picker)
-- ['In A Day' Tribe Ranking Generator](#9-in-a-day-tribe-ranking-generator)
+- ['In A Day' tribe ranking generator](#9-in-a-day-tribe-ranking-generator)
+- [War stats generator](#10-war-stats-generator)
 
 ### 1. Latest ennoblements
 
@@ -108,7 +109,7 @@ Adds to map screen new functionality to search bonus barbarian villages easily.
 
 ![Screenshot](/screenshots/dailyAchievements.png?raw=true)
 
-### 7. Extended Map Popup
+### 7. Extended map popup
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js)
 
@@ -121,15 +122,21 @@ Adds to popup:
 
 ![Screenshot](/screenshots/extendedMapPopup.png?raw=true)
 
-### 8. Map Coords Picker
+### 8. Map coords picker
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js)
 
 ![Screenshot](/screenshots/mapCoordsPicker.png?raw=true)
 
-### 9. 'In A Day' Tribe Ranking Generator
+### 9. 'In A Day' tribe ranking generator
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js)
 
 ![Screenshot](/screenshots/inADayTribeRankingGenerator.png?raw=true)
 ![Screenshot](/screenshots/inADayTribeRankingGenerator2.png?raw=true)
+
+### 10. War stats generator
+
+[Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js)
+
+![Screenshot](/screenshots/warStatsGenerator.png?raw=true)

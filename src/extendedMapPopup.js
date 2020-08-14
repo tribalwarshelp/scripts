@@ -10,12 +10,12 @@ import { calcAttackDuration } from './utils/tribalwars';
 import countLoyalty from './utils/countLoyalty';
 
 // ==UserScript==
-// @name         Extended Map Popup
+// @name         Extended map popup
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @version      0.6.1
-// @description  Extended Map Popup
+// @description  Extended map popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none
