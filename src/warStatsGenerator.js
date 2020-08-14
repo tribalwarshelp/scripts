@@ -1,4 +1,5 @@
 import requestCreator from './libs/requestCreator';
+import getTranslations from './i18n/warStatsGenerator';
 import getServer from './utils/getCurrentServer';
 import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 
@@ -7,7 +8,7 @@ import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.2.0
+// @version      0.2.6
 // @description  War Stats Generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
@@ -40,16 +41,21 @@ const ENNOBLEMENTS_QUERY = `
     }
   }
 `;
+const translations = getTranslations();
 
 const showResult = (sideOne = 0, sideTwo = 0) => {
   const html = `
     <div>
-      <h3>Conquers:</h3>
-      <p style="margin: 0;"><strong>Side one: ${sideOne}</strong></p>
-      <p style="margin: 0;"><strong>Side two: ${sideTwo}</strong></p>
-      <p style="margin: 0;"><strong>Difference: ${Math.abs(
-        sideOne - sideTwo
-      )}</strong></p>
+      <h3>${translations.conquers}:</h3>
+      <p style="margin: 0;"><strong>${
+        translations.sideOne
+      }: ${sideOne}</strong></p>
+      <p style="margin: 0;"><strong>${
+        translations.sideTwo
+      }: ${sideTwo}</strong></p>
+      <p style="margin: 0;"><strong>${translations.difference}: ${Math.abs(
+    sideOne - sideTwo
+  )}</strong></p>
       <hr style="margin: 10px 0;" />
     </div>
   `;
@@ -60,9 +66,9 @@ const createAddTribeHandler = (container) => {
   return () => {
     const div = document.createElement('div');
     div.innerHTML = `
-        <label>Tribe tag: </label>
+        <label>${translations.tribeTag}: </label>
         <input type="text" required />
-        <button type="button" class="btn">Delete</button>
+        <button type="button" class="btn">${translations.delete}</button>
     `;
     div.querySelector('button').addEventListener('click', () => {
       div.remove();
@@ -93,9 +99,9 @@ const handleFormSubmit = async (e) => {
   console.log('sideOneTags', sideOneTags, 'sideTwoTags', sideTwoTags);
 
   if (sideOneTags.length === 0)
-    return UI.ErrorMessage('Not enough tribes added to the side one.');
+    return UI.ErrorMessage(translations.notEnoughTribesSideOne);
   if (sideTwoTags.length === 0)
-    return UI.ErrorMessage('Not enough tribes added to the side two.');
+    return UI.ErrorMessage(translations.notEnoughTribesSideTwo);
 
   const fromInputs = document.querySelectorAll(
     `${POPUP_SELECTOR} form #${FROM_INPUT_ID} input`
@@ -182,38 +188,38 @@ const showWarStatsForm = (e) => {
             </div>
             <div style="margin-bottom: 10px;">
               <div id="${FROM_INPUT_ID}">
-                <label>From: </label>
+                <label>${translations.from}: </label>
                 <input type="date" required />
                 <input type="time" required />
               </div>
               <div id="${TO_INPUT_ID}">
-                <label>To: </label>
+                <label>${translations.to}: </label>
                 <input type="date" required />
                 <input type="time" required />
               </div>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                 <div>
-                    <h3>Side one</h3>
+                    <h3>${translations.sideOne}</h3>
                     <div id="${SIDE_ONE_INPUT_CONTAINER_ID}">
                     </div>
                     <button id="${SIDE_ONE_BUTTON_ID}" class="btn" type="button">Add Tribe</button>
                 </div>
                 <div style="margin: 0 5px;"></div>
                 <div>
-                    <h3>Side two</h3>
+                    <h3>${translations.sideTwo}</h3>
                     <div id="${SIDE_TWO_INPUT_CONTAINER_ID}">
                     </div>
                     <button id="${SIDE_TWO_BUTTON_ID}" class="btn" type="button">Add tribe</button>
                 </div>
             </div>
             <div style="text-align: center;">
-              <button class="btn" type="submit">Generate war stats</button>
+              <button class="btn" type="submit">${translations.generateWarStats}</button>
             </div>
         </form>
     `;
 
-  showPopup({ title: 'War Stats Generator', id: 'warStats', html, e });
+  showPopup({ title: translations.warStatsGenerator, id: 'warStats', html, e });
 
   document
     .querySelector(`${POPUP_SELECTOR} form #${SIDE_ONE_BUTTON_ID}`)
@@ -239,7 +245,7 @@ const showWarStatsForm = (e) => {
 const renderUI = () => {
   const div = document.createElement('div');
   const button = document.createElement('button');
-  button.innerHTML = 'Generate war stats';
+  button.innerHTML = translations.generateWarStats;
   button.addEventListener('click', showWarStatsForm);
   div.appendChild(button);
 

@@ -158,6 +158,47 @@ var _default = function _default() {
 };
 
 exports.default = _default;
+},{}],"vPH5":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const translations = {
+  pl_PL: {
+    conquers: 'Przejęcia',
+    sideOne: 'Strona 1',
+    sideTwo: 'Strona 2',
+    difference: 'Różnica',
+    tribeTag: 'Skrót plemienia',
+    delete: 'Usuń',
+    notEnoughTribesSideOne: 'Musisz dodać jakiekolwiek plemię do strony 1.',
+    notEnoughTribesSideTwo: 'Musisz dodać jakiekolwiek plemię do strony 2.',
+    from: 'Od',
+    to: 'Do',
+    warStatsGenerator: 'Generator Statystyk Wojennych',
+    generateWarStats: 'Wygeneruj statystyki wojenne'
+  },
+  en_DK: {
+    conquers: 'Conquers',
+    sideOne: 'Side one',
+    sideTwo: 'Side two',
+    difference: 'Difference',
+    tribeTag: 'Tribe tag',
+    delete: 'Delete',
+    notEnoughTribesSideOne: 'Not enough tribes added to the side one.',
+    notEnoughTribesSideTwo: 'Not enough tribes added to the side two.',
+    from: 'From',
+    to: 'To',
+    warStatsGenerator: 'War Stats Generator',
+    generateWarStats: 'Generate war stats'
+  }
+};
+
+var _default = () => translations[window.game_data.locale] || translations.en_DK;
+
+exports.default = _default;
 },{}],"DMkL":[function(require,module,exports) {
 "use strict";
 
@@ -219,6 +260,8 @@ exports.default = _default;
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
+var _warStatsGenerator = _interopRequireDefault(require("./i18n/warStatsGenerator"));
+
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
 var _showPopup = _interopRequireWildcard(require("./utils/showPopup"));
@@ -234,7 +277,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.2.0
+// @version      0.2.6
 // @description  War Stats Generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
@@ -251,18 +294,19 @@ const FROM_INPUT_ID = 'from';
 const RESULT_CONTAINER_ID = 'warStatsResult';
 const TRIBES_QUERY = "\n  query tribes($server: String!, $filter: TribeFilter) {\n    tribes(server: $server, filter: $filter) {\n      items {\n        id\n        tag\n      }\n    }\n  }\n";
 const ENNOBLEMENTS_QUERY = "\n  query ennoblements($server: String!, $filter: EnnoblementFilter) {\n    ennoblements(server: $server, filter: $filter) {\n      total\n    }\n  }\n";
+const translations = (0, _warStatsGenerator.default)();
 
 const showResult = function showResult() {
   let sideOne = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   let sideTwo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  const html = "\n    <div>\n      <h3>Conquers:</h3>\n      <p style=\"margin: 0;\"><strong>Side one: ".concat(sideOne, "</strong></p>\n      <p style=\"margin: 0;\"><strong>Side two: ").concat(sideTwo, "</strong></p>\n      <p style=\"margin: 0;\"><strong>Difference: ").concat(Math.abs(sideOne - sideTwo), "</strong></p>\n      <hr style=\"margin: 10px 0;\" />\n    </div>\n  ");
+  const html = "\n    <div>\n      <h3>".concat(translations.conquers, ":</h3>\n      <p style=\"margin: 0;\"><strong>").concat(translations.sideOne, ": ").concat(sideOne, "</strong></p>\n      <p style=\"margin: 0;\"><strong>").concat(translations.sideTwo, ": ").concat(sideTwo, "</strong></p>\n      <p style=\"margin: 0;\"><strong>").concat(translations.difference, ": ").concat(Math.abs(sideOne - sideTwo), "</strong></p>\n      <hr style=\"margin: 10px 0;\" />\n    </div>\n  ");
   document.querySelector('#' + RESULT_CONTAINER_ID).innerHTML = html;
 };
 
 const createAddTribeHandler = container => {
   return () => {
     const div = document.createElement('div');
-    div.innerHTML = "\n        <label>Tribe tag: </label>\n        <input type=\"text\" required />\n        <button type=\"button\" class=\"btn\">Delete</button>\n    ";
+    div.innerHTML = "\n        <label>".concat(translations.tribeTag, ": </label>\n        <input type=\"text\" required />\n        <button type=\"button\" class=\"btn\">").concat(translations.delete, "</button>\n    ");
     div.querySelector('button').addEventListener('click', () => {
       div.remove();
     });
@@ -285,8 +329,8 @@ const handleFormSubmit = async e => {
     }
   });
   console.log('sideOneTags', sideOneTags, 'sideTwoTags', sideTwoTags);
-  if (sideOneTags.length === 0) return UI.ErrorMessage('Not enough tribes added to the side one.');
-  if (sideTwoTags.length === 0) return UI.ErrorMessage('Not enough tribes added to the side two.');
+  if (sideOneTags.length === 0) return UI.ErrorMessage(translations.notEnoughTribesSideOne);
+  if (sideTwoTags.length === 0) return UI.ErrorMessage(translations.notEnoughTribesSideTwo);
   const fromInputs = document.querySelectorAll("".concat(_showPopup.POPUP_SELECTOR, " form #").concat(FROM_INPUT_ID, " input"));
   let ennobledAtGTE;
 
@@ -360,9 +404,9 @@ const handleFormSubmit = async e => {
 };
 
 const showWarStatsForm = e => {
-  const html = "\n        <form>\n            <div id=\"".concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>From: </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>To: </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px;\">\n                <div>\n                    <h3>Side one</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">Add Tribe</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>Side two</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">Add tribe</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">Generate war stats</button>\n            </div>\n        </form>\n    ");
+  const html = "\n        <form>\n            <div id=\"".concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>").concat(translations.from, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>").concat(translations.to, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px;\">\n                <div>\n                    <h3>").concat(translations.sideOne, "</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">Add Tribe</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>").concat(translations.sideTwo, "</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">Add tribe</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">").concat(translations.generateWarStats, "</button>\n            </div>\n        </form>\n    ");
   (0, _showPopup.default)({
-    title: 'War Stats Generator',
+    title: translations.warStatsGenerator,
     id: 'warStats',
     html,
     e
@@ -375,7 +419,7 @@ const showWarStatsForm = e => {
 const renderUI = () => {
   const div = document.createElement('div');
   const button = document.createElement('button');
-  button.innerHTML = 'Generate war stats';
+  button.innerHTML = translations.generateWarStats;
   button.addEventListener('click', showWarStatsForm);
   div.appendChild(button);
   document.querySelector('#wars_ranking_table').parentElement.prepend(div);
@@ -388,4 +432,4 @@ const renderUI = () => {
     console.log('war stats', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/getCurrentServer":"DMkL","./utils/showPopup":"chDM"}]},{},["H9GS"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/warStatsGenerator":"vPH5","./utils/getCurrentServer":"DMkL","./utils/showPopup":"chDM"}]},{},["H9GS"], null)
