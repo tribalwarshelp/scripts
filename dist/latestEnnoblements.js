@@ -164,9 +164,10 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.POPUP_SELECTOR = void 0;
 const POPUP_WRAPPER_SELECTOR = '.popup_helper';
 const POPUP_SELECTOR = '#inline_popup';
+exports.POPUP_SELECTOR = POPUP_SELECTOR;
 
 var _default = function _default() {
   let {

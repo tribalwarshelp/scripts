@@ -1,5 +1,5 @@
 const POPUP_WRAPPER_SELECTOR = '.popup_helper';
-const POPUP_SELECTOR = '#inline_popup';
+export const POPUP_SELECTOR = '#inline_popup';
 
 export default ({ e, title, html, id } = {}) => {
   const popup = document.querySelector(POPUP_SELECTOR);
