@@ -177,8 +177,9 @@ const translations = {
     notEnoughTribesSideTwo: 'Musisz dodać jakiekolwiek plemię do strony 2.',
     from: 'Od',
     to: 'Do',
-    warStatsGenerator: 'Generator Statystyk Wojennych',
-    generateWarStats: 'Wygeneruj statystyki wojenne'
+    warStatsGenerator: 'Generator statystyk wojennych',
+    generateWarStats: 'Wygeneruj statystyki wojenne',
+    addTribe: 'Dodaj plemię'
   },
   en_DK: {
     conquers: 'Conquers',
@@ -191,8 +192,9 @@ const translations = {
     notEnoughTribesSideTwo: 'Not enough tribes added to the side two.',
     from: 'From',
     to: 'To',
-    warStatsGenerator: 'War Stats Generator',
-    generateWarStats: 'Generate war stats'
+    warStatsGenerator: 'War stats generator',
+    generateWarStats: 'Generate war stats',
+    addTribe: 'Add tribe'
   }
 };
 
@@ -273,12 +275,12 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // ==UserScript==
-// @name         War Stats Generator
+// @name         War stats generator
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.2.6
-// @description  War Stats Generator
+// @version      0.2.7
+// @description  War stats generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
 // @grant        none
@@ -404,7 +406,7 @@ const handleFormSubmit = async e => {
 };
 
 const showWarStatsForm = e => {
-  const html = "\n        <form>\n            <div id=\"".concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>").concat(translations.from, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>").concat(translations.to, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px;\">\n                <div>\n                    <h3>").concat(translations.sideOne, "</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">Add Tribe</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>").concat(translations.sideTwo, "</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">Add tribe</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">").concat(translations.generateWarStats, "</button>\n            </div>\n        </form>\n    ");
+  const html = "\n        <form>\n            <div id=\"".concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>").concat(translations.from, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>").concat(translations.to, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px;\">\n                <div>\n                    <h3>").concat(translations.sideOne, "</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>").concat(translations.sideTwo, "</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">").concat(translations.generateWarStats, "</button>\n            </div>\n        </form>\n    ");
   (0, _showPopup.default)({
     title: translations.warStatsGenerator,
     id: 'warStats',

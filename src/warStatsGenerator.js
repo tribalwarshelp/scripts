@@ -8,7 +8,7 @@ import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.2.6
+// @version      0.2.7
 // @description  War stats generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
@@ -203,14 +203,14 @@ const showWarStatsForm = (e) => {
                     <h3>${translations.sideOne}</h3>
                     <div id="${SIDE_ONE_INPUT_CONTAINER_ID}">
                     </div>
-                    <button id="${SIDE_ONE_BUTTON_ID}" class="btn" type="button">Add Tribe</button>
+                    <button id="${SIDE_ONE_BUTTON_ID}" class="btn" type="button">${translations.addTribe}</button>
                 </div>
                 <div style="margin: 0 5px;"></div>
                 <div>
                     <h3>${translations.sideTwo}</h3>
                     <div id="${SIDE_TWO_INPUT_CONTAINER_ID}">
                     </div>
-                    <button id="${SIDE_TWO_BUTTON_ID}" class="btn" type="button">Add tribe</button>
+                    <button id="${SIDE_TWO_BUTTON_ID}" class="btn" type="button">${translations.addTribe}</button>
                 </div>
             </div>
             <div style="text-align: center;">

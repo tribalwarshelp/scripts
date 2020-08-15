@@ -262,12 +262,12 @@ var _wait = _interopRequireDefault(require("./utils/wait"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // ==UserScript==
-// @name         'In A Day' Tribe Ranking Generator
+// @name         'In A Day' tribe ranking generator
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @version      0.2.0
-// @description  'In A Day' Tribe Ranking Generator
+// @description  'In A Day' tribe ranking generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=in_a_day*
 // @grant        none

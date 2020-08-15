@@ -12,6 +12,7 @@ const translations = {
     to: 'Do',
     warStatsGenerator: 'Generator statystyk wojennych',
     generateWarStats: 'Wygeneruj statystyki wojenne',
+    addTribe: 'Dodaj plemię',
   },
   en_DK: {
     conquers: 'Conquers',
@@ -26,6 +27,7 @@ const translations = {
     to: 'To',
     warStatsGenerator: 'War stats generator',
     generateWarStats: 'Generate war stats',
+    addTribe: 'Add tribe',
   },
 };
 
