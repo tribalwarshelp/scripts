@@ -279,7 +279,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.2.7
+// @version      0.3.0
 // @description  War stats generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
@@ -295,7 +295,7 @@ const TO_INPUT_ID = 'to';
 const FROM_INPUT_ID = 'from';
 const RESULT_CONTAINER_ID = 'warStatsResult';
 const TRIBES_QUERY = "\n  query tribes($server: String!, $filter: TribeFilter) {\n    tribes(server: $server, filter: $filter) {\n      items {\n        id\n        tag\n      }\n    }\n  }\n";
-const ENNOBLEMENTS_QUERY = "\n  query ennoblements($server: String!, $filter: EnnoblementFilter) {\n    ennoblements(server: $server, filter: $filter) {\n      total\n    }\n  }\n";
+const ENNOBLEMENTS_QUERY = "\n  query ennoblements($server: String!, $sideOneFilter: EnnoblementFilter, $sideTwoFilter: EnnoblementFilter) {\n    sideOneEnnoblements: ennoblements(server: $server, filter: $sideOneFilter) {\n      total\n    }\n    sideTwoEnnoblements: ennoblements(server: $server, filter: $sideTwoFilter) {\n      total\n    }\n  }\n";
 const translations = (0, _warStatsGenerator.default)();
 
 const showResult = function showResult() {
@@ -365,28 +365,20 @@ const handleFormSubmit = async e => {
     });
     const sideOneTribes = tribes.items.filter(item => sideOneTags.some(tag => item.tag === tag)).map(tribe => tribe.id);
     const sideTwoTribes = tribes.items.filter(item => sideTwoTags.some(tag => item.tag === tag)).map(tribe => tribe.id);
-    console.log(sideOneTribes, sideTwoTribes);
     const {
-      ennoblements: sideOneEnnoblements
+      sideOneEnnoblements,
+      sideTwoEnnoblements
     } = await (0, _requestCreator.default)({
       query: ENNOBLEMENTS_QUERY,
       variables: {
         server: SERVER,
-        filter: {
+        sideOneFilter: {
           newOwnerTribeID: sideOneTribes,
           oldOwnerTribeID: sideTwoTribes,
           ennobledAtGTE,
           ennobledAtLTE
-        }
-      }
-    });
-    const {
-      ennoblements: sideTwoEnnoblements
-    } = await (0, _requestCreator.default)({
-      query: ENNOBLEMENTS_QUERY,
-      variables: {
-        server: SERVER,
-        filter: {
+        },
+        sideTwoFilter: {
           newOwnerTribeID: sideTwoTribes,
           oldOwnerTribeID: sideOneTribes,
           ennobledAtGTE,
@@ -406,7 +398,7 @@ const handleFormSubmit = async e => {
 };
 
 const showWarStatsForm = e => {
-  const html = "\n        <form>\n            <div id=\"".concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>").concat(translations.from, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>").concat(translations.to, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px;\">\n                <div>\n                    <h3>").concat(translations.sideOne, "</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>").concat(translations.sideTwo, "</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">").concat(translations.generateWarStats, "</button>\n            </div>\n        </form>\n    ");
+  const html = "\n        <form>\n            <div id=\"".concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>").concat(translations.from, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>").concat(translations.to, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px; min-width: 800px;\">\n                <div>\n                    <h3>").concat(translations.sideOne, "</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>").concat(translations.sideTwo, "</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">").concat(translations.generateWarStats, "</button>\n            </div>\n        </form>\n    ");
   (0, _showPopup.default)({
     title: translations.warStatsGenerator,
     id: 'warStats',

@@ -8,7 +8,7 @@ import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.2.7
+// @version      0.3.0
 // @description  War stats generator
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
@@ -35,8 +35,11 @@ const TRIBES_QUERY = `
   }
 `;
 const ENNOBLEMENTS_QUERY = `
-  query ennoblements($server: String!, $filter: EnnoblementFilter) {
-    ennoblements(server: $server, filter: $filter) {
+  query ennoblements($server: String!, $sideOneFilter: EnnoblementFilter, $sideTwoFilter: EnnoblementFilter) {
+    sideOneEnnoblements: ennoblements(server: $server, filter: $sideOneFilter) {
+      total
+    }
+    sideTwoEnnoblements: ennoblements(server: $server, filter: $sideTwoFilter) {
       total
     }
   }
@@ -139,25 +142,18 @@ const handleFormSubmit = async (e) => {
     const sideTwoTribes = tribes.items
       .filter((item) => sideTwoTags.some((tag) => item.tag === tag))
       .map((tribe) => tribe.id);
-    console.log(sideOneTribes, sideTwoTribes);
 
-    const { ennoblements: sideOneEnnoblements } = await requestCreator({
+    const { sideOneEnnoblements, sideTwoEnnoblements } = await requestCreator({
       query: ENNOBLEMENTS_QUERY,
       variables: {
         server: SERVER,
-        filter: {
+        sideOneFilter: {
           newOwnerTribeID: sideOneTribes,
           oldOwnerTribeID: sideTwoTribes,
           ennobledAtGTE,
           ennobledAtLTE,
         },
-      },
-    });
-    const { ennoblements: sideTwoEnnoblements } = await requestCreator({
-      query: ENNOBLEMENTS_QUERY,
-      variables: {
-        server: SERVER,
-        filter: {
+        sideTwoFilter: {
           newOwnerTribeID: sideTwoTribes,
           oldOwnerTribeID: sideOneTribes,
           ennobledAtGTE,
@@ -198,7 +194,7 @@ const showWarStatsForm = (e) => {
                 <input type="time" required />
               </div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; min-width: 800px;">
                 <div>
                     <h3>${translations.sideOne}</h3>
                     <div id="${SIDE_ONE_INPUT_CONTAINER_ID}">
