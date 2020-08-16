@@ -804,7 +804,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.6.9
+// @version      0.7.1
 // @description  Extended village profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -1037,6 +1037,24 @@ const renderTr = (_ref) => {
   tr.children[1].innerHTML = data;
 };
 
+const countTroopsInVillage = () => {
+  const trs = document.querySelectorAll('#content_value > div tbody tr');
+  const units = [];
+  if (trs.length === 0) throw new Error();
+  trs[0].querySelectorAll('.unit_link').forEach(() => {
+    units.push(0);
+  });
+
+  for (let i = 1; i < trs.length; i++) {
+    const tr = trs[i];
+    tr.querySelectorAll('.unit-item').forEach((td, index) => {
+      units[index] += parseInt(td.innerHTML);
+    });
+  }
+
+  return units;
+};
+
 const renderAdditionalInfo = function renderAdditionalInfo() {
   let {
     config,
@@ -1053,6 +1071,20 @@ const renderAdditionalInfo = function renderAdditionalInfo() {
     title: "".concat(translations.ennobledAt, ":"),
     data: firstEnnoblement ? (0, _formatDate.default)(firstEnnoblement.ennobledAt) : translations.never
   });
+
+  try {
+    const troops = countTroopsInVillage();
+    const tr = document.createElement('tr');
+    tr.style.textAlign = 'center';
+    tr.style.fontWeight = 'bold';
+    tr.appendChild(document.createElement('td'));
+    troops.forEach(troop => {
+      const td = document.createElement('td');
+      td.innerHTML = troop;
+      tr.appendChild(td);
+    });
+    document.querySelector('#content_value > div tbody').appendChild(tr);
+  } catch (error) {}
 };
 
 (async function () {
