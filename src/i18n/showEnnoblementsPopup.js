@@ -2,7 +2,7 @@ const translations = {
   pl_PL: {
     date: 'Data',
     newOwner: 'Nowy właściciel',
-    oldOwner: 'Stary właściciel',
+    oldOwner: 'Poprzedni właściciel',
     village: 'Wioska',
     title: 'Przejęcia',
   },
