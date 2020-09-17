@@ -183,7 +183,7 @@ const buildUnitHeader = (unit, index) => {
 const buildUnitArrivalInfo = (t, index) => {
   return `
     <td style="padding: 2px; background-color: ${getUnitTdBgColor(index)};">
-      ${formatDate(addMinutes(new Date(Timing.getCurrentServerTime()), t))}
+      ${formatDate(addMinutes(Timing.getCurrentServerTime(), t))}
     </td>
   `;
 };

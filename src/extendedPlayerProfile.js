@@ -5,6 +5,7 @@ import renderTodaysStats from './common/renderTodaysStats';
 import showPopup from './utils/showPopup';
 import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 import showHistoryPopup from './common/showHistoryPopup';
+import hyphensToCamelCase from './utils/hyphensToCamelCase';
 import {
   generatePaginationItems,
   getContainerStyles,
@@ -21,9 +22,9 @@ import { setItem, getItem } from './utils/localStorage';
 // ==UserScript==
 // @name         Extended player profile
 // @namespace    https://github.com/tribalwarshelp/scripts
-// @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.3
+// @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
+// @version      1.1.4
 // @description  Extended player profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -238,34 +239,23 @@ const loadData = async () => {
   });
   if (data.player) {
     const inADay = {};
-    inADay.att = await loadInADayData('kill_att', {
+    const filter = {
       name: data.player.name,
       playerID: data.player.id,
-    });
-    inADay.def = await loadInADayData('kill_def', {
-      name: data.player.name,
-      playerID: data.player.id,
-    });
-    inADay.sup = await loadInADayData('kill_sup', {
-      name: data.player.name,
-      playerID: data.player.id,
-    });
-    inADay.lootRes = await loadInADayData('loot_res', {
-      name: data.player.name,
-      playerID: data.player.id,
-    });
-    inADay.lootVil = await loadInADayData('loot_vil', {
-      name: data.player.name,
-      playerID: data.player.id,
-    });
-    inADay.scavenge = await loadInADayData('scavenge', {
-      name: data.player.name,
-      playerID: data.player.id,
-    });
-    inADay.conquer = await loadInADayData('conquer', {
-      name: data.player.name,
-      playerID: data.player.id,
-    });
+    };
+    for (let type of [
+      'kill_att',
+      'kill_def',
+      'kill_sup',
+      'loot_res',
+      'loot_vil',
+      'scavenge',
+      'conquer',
+    ]) {
+      inADay[
+        hyphensToCamelCase(type.replace('kill_', ''))
+      ] = await loadInADayData(type, filter);
+    }
     data.player.inADay = inADay;
   }
   cachePlayerData(data);

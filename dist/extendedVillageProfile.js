@@ -638,7 +638,7 @@ const translations = {
   pl_PL: {
     date: 'Data',
     newOwner: 'Nowy właściciel',
-    oldOwner: 'Stary właściciel',
+    oldOwner: 'Poprzedni właściciel',
     village: 'Wioska',
     title: 'Przejęcia'
   },
@@ -1037,7 +1037,7 @@ const renderTr = (_ref) => {
   tr.children[1].innerHTML = data;
 };
 
-const countTroopsInVillage = () => {
+const countUnitsInVillage = () => {
   const trs = document.querySelectorAll('#content_value > div tbody tr');
   const units = [];
   if (trs.length === 0) throw new Error();
@@ -1073,14 +1073,14 @@ const renderAdditionalInfo = function renderAdditionalInfo() {
   });
 
   try {
-    const troops = countTroopsInVillage();
+    const units = countUnitsInVillage();
     const tr = document.createElement('tr');
     tr.style.textAlign = 'center';
     tr.style.fontWeight = 'bold';
     tr.appendChild(document.createElement('td'));
-    troops.forEach(troop => {
+    units.forEach(count => {
       const td = document.createElement('td');
-      td.innerHTML = troop;
+      td.innerHTML = count;
       tr.appendChild(td);
     });
     document.querySelector('#content_value > div tbody').appendChild(tr);

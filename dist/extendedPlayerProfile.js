@@ -464,7 +464,7 @@ const translations = {
   pl_PL: {
     date: 'Data',
     newOwner: 'Nowy właściciel',
-    oldOwner: 'Stary właściciel',
+    oldOwner: 'Poprzedni właściciel',
     village: 'Wioska',
     title: 'Przejęcia'
   },
@@ -1007,7 +1007,27 @@ var _default = function _default(e, history, daily) {
 };
 
 exports.default = _default;
-},{"date-fns/subDays":"mRRL","../i18n/showHistoryPopup":"hNDe","../utils/showPopup":"chDM","../utils/pagination":"fCHX","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"DMkL":[function(require,module,exports) {
+},{"date-fns/subDays":"mRRL","../i18n/showHistoryPopup":"hNDe","../utils/showPopup":"chDM","../utils/pagination":"fCHX","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"GxsT":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = str => {
+  const arr = str.split(/[_-]/);
+  let newStr = '';
+
+  for (let i = 1; i < arr.length; i++) {
+    newStr += arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+  }
+
+  return arr[0] + newStr;
+};
+
+exports.default = _default;
+},{}],"DMkL":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1077,6 +1097,8 @@ var _showEnnoblementsPopup = _interopRequireDefault(require("./common/showEnnobl
 
 var _showHistoryPopup = _interopRequireDefault(require("./common/showHistoryPopup"));
 
+var _hyphensToCamelCase = _interopRequireDefault(require("./utils/hyphensToCamelCase"));
+
 var _pagination = require("./utils/pagination");
 
 var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
@@ -1106,9 +1128,9 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // ==UserScript==
 // @name         Extended player profile
 // @namespace    https://github.com/tribalwarshelp/scripts
-// @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.3
+// @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
+// @version      1.1.4
 // @description  Extended player profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -1201,34 +1223,15 @@ const loadData = async () => {
 
   if (data.player) {
     const inADay = {};
-    inADay.att = await loadInADayData('kill_att', {
+    const filter = {
       name: data.player.name,
       playerID: data.player.id
-    });
-    inADay.def = await loadInADayData('kill_def', {
-      name: data.player.name,
-      playerID: data.player.id
-    });
-    inADay.sup = await loadInADayData('kill_sup', {
-      name: data.player.name,
-      playerID: data.player.id
-    });
-    inADay.lootRes = await loadInADayData('loot_res', {
-      name: data.player.name,
-      playerID: data.player.id
-    });
-    inADay.lootVil = await loadInADayData('loot_vil', {
-      name: data.player.name,
-      playerID: data.player.id
-    });
-    inADay.scavenge = await loadInADayData('scavenge', {
-      name: data.player.name,
-      playerID: data.player.id
-    });
-    inADay.conquer = await loadInADayData('conquer', {
-      name: data.player.name,
-      playerID: data.player.id
-    });
+    };
+
+    for (let type of ['kill_att', 'kill_def', 'kill_sup', 'loot_res', 'loot_vil', 'scavenge', 'conquer']) {
+      inADay[(0, _hyphensToCamelCase.default)(type.replace('kill_', ''))] = await loadInADayData(type, filter);
+    }
+
     data.player.inADay = inADay;
   }
 
@@ -1524,4 +1527,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/hyphensToCamelCase":"GxsT","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)

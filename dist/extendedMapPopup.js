@@ -771,7 +771,7 @@ const buildUnitHeader = (unit, index) => {
 };
 
 const buildUnitArrivalInfo = (t, index) => {
-  return "\n    <td style=\"padding: 2px; background-color: ".concat(getUnitTdBgColor(index), ";\">\n      ").concat((0, _formatDate.default)((0, _addMinutes.default)(new Date(Timing.getCurrentServerTime()), t)), "\n    </td>\n  ");
+  return "\n    <td style=\"padding: 2px; background-color: ".concat(getUnitTdBgColor(index), ";\">\n      ").concat((0, _formatDate.default)((0, _addMinutes.default)(Timing.getCurrentServerTime(), t)), "\n    </td>\n  ");
 };
 
 const renderAdditionalInfo = (id, data, _ref) => {
