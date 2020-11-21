@@ -9,7 +9,7 @@ import { calcDistanceBetweenTwoPoints } from './utils/math';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-// @version      0.4.2
+// @version      0.4.3
 // @description  Bonus barbarian village finder
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -18,8 +18,8 @@ import { calcDistanceBetweenTwoPoints } from './utils/math';
 
 const SERVER = getCurrentServer();
 const QUERY = `
-  query villages($server: String!, $filter: VillageFilter) {
-    villages(server: $server, filter: $filter) {
+  query villages($server: String!, $filter: VillageFilter, $sort: [String!], $offset: Int) {
+    villages(server: $server, filter: $filter, offset: $offset, sort: $sort) {
       total
       items {
         id
@@ -41,12 +41,12 @@ const buildReqOptions = (bonus, offset) => {
     query: QUERY,
     variables: {
       server: SERVER,
+      sort: ['id DESC'],
       filter: {
         bonus,
-        sort: 'id DESC',
         playerID: [0],
-        offset,
       },
+      offset,
     },
   };
 };

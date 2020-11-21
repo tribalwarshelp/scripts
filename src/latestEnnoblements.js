@@ -16,9 +16,9 @@ import loadTranslations from './i18n/latestEnnoblements';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.0.4
+// @version      1.0.5
 // @description  Show the latest ennoblements
-// @author       Kichiyaki http://dawid-wysokinski.pl/ | Icon author *GD*
+// @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*
 // @grant        none
 // @run-at       document-end

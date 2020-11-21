@@ -24,7 +24,7 @@ import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.0.8
+// @version      1.0.9
 // @description  Extended tribe profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -36,7 +36,7 @@ const SERVER = getCurrentServer();
 const TRIBE_ID = getIDFromURL(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
 const TRIBE_QUERY = `
-    query tribe($server: String!, $id: Int!, $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {
+    query tribe($server: String!, $id: Int!, $dailyTribeStatsSort: [String!], $dailyTribeStatsLimit: Int, $playerSort: [String!], $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {
         tribe(server: $server, id: $id) {
             id
             bestRank
@@ -48,7 +48,7 @@ const TRIBE_QUERY = `
             createdAt
             dominance
         }
-        dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {
+        dailyTribeStats(server: $server, limit: $dailyTribeStatsLimit, sort: $dailyTribeStatsSort, filter: $dailyTribeStatsFilter) {
           items {
             rank
             rankAtt
@@ -63,7 +63,7 @@ const TRIBE_QUERY = `
             members
           }
         }
-        players(server: $server, filter: $playerFilter) {
+        players(server: $server, sort: $playerSort, filter: $playerFilter) {
           items {
             id
             rankAtt
@@ -81,8 +81,8 @@ const TRIBE_QUERY = `
     }
 `;
 const ENNOBLEMENTS_QUERY = `
-    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
-      ennoblements(server: $server, filter: $filter) {
+    query ennoblements($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: EnnoblementFilter!) {
+      ennoblements(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $filter) {
         total
         items {
           village {
@@ -116,8 +116,11 @@ const ENNOBLEMENTS_PER_PAGE = 15;
 const TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY = `
 query tribeHistoryAndTribeDailyStats($server: String!,
      $tribeHistoryFilter: TribeHistoryFilter!,
-     $dailyTribeStatsFilter: DailyTribeStatsFilter!) {
-  tribeHistory(server: $server, filter: $tribeHistoryFilter) {
+     $dailyTribeStatsFilter: DailyTribeStatsFilter!,
+     $sort: [String!],
+     $offset: Int,
+     $limit: Int) {
+  tribeHistory(server: $server, sort: $sort, limit: $limit, offset: $offset, filter: $tribeHistoryFilter) {
     total
     items {
       totalVillages
@@ -133,7 +136,7 @@ query tribeHistoryAndTribeDailyStats($server: String!,
       totalMembers
     }
   }
-  dailyTribeStats(server: $server, filter: $dailyTribeStatsFilter) {
+  dailyTribeStats(server: $server, sort: $sort, limit: $limit, offset: $offset, filter: $dailyTribeStatsFilter) {
     items {
         points
         scoreAtt
@@ -149,8 +152,10 @@ query tribeHistoryAndTribeDailyStats($server: String!,
 const TRIBE_HISTORY_PER_PAGE = 15;
 const TRIBE_MEMBERS_DAILY_STATS_QUERY = `
 query tribeMembersDailyStats($server: String!,
-     $filter: DailyPlayerStatsFilter!) {
-  dailyPlayerStats(server: $server, filter: $filter) {
+     $filter: DailyPlayerStatsFilter!,
+     $limit: Int,
+     $sort: [String!]) {
+  dailyPlayerStats(server: $server, limit: $limit, sort: $sort, filter: $filter) {
     items {
         player {
           id
@@ -169,8 +174,8 @@ query tribeMembersDailyStats($server: String!,
 `;
 let MEMBERS_GROWTH_MODE = 'points';
 const TRIBE_CHANGES_QUERY = `
-    query tribeChanges($server: String!, $filter: TribeChangeFilter!) {
-      tribeChanges(server: $server, filter: $filter) {
+    query tribeChanges($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: TribeChangeFilter!) {
+      tribeChanges(server: $server, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
         total
         items {
           player {
@@ -236,14 +241,13 @@ const loadData = async () => {
     variables: {
       server: SERVER,
       id: TRIBE_ID,
+      dailyTribeStatsSort: ['createDate DESC'],
+      dailyTibeStatsLimit: 1,
       dailyTribeStatsFilter: {
-        sort: 'createDate DESC',
-        limit: 1,
         tribeID: [TRIBE_ID],
       },
+      playerSort: ['rank ASC'],
       playerFilter: {
-        sort: 'rank ASC',
-        limit: memberIDs.length,
         id: memberIDs,
       },
     },
@@ -374,10 +378,10 @@ const handleShowTribeEnnoblementsClick = async (e) => {
             oldOwnerTribeID: [TRIBE_ID],
             newOwnerTribeID: [TRIBE_ID],
           },
-          offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
-          limit: ENNOBLEMENTS_PER_PAGE,
-          sort: 'ennobledAt DESC',
         },
+        offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
+        limit: ENNOBLEMENTS_PER_PAGE,
+        sort: ['ennobledAt DESC'],
         server: SERVER,
       },
     });
@@ -396,19 +400,16 @@ const handleShowTribeHistoryClick = async (e) => {
     try {
       const filter = {
         tribeID: [TRIBE_ID],
-        offset: TRIBE_HISTORY_PER_PAGE * (page - 1),
-        limit: TRIBE_HISTORY_PER_PAGE,
-        sort: 'createDate DESC',
       };
       const { tribeHistory, dailyTribeStats } = await requestCreator({
         query: TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY,
         variables: {
           server: SERVER,
+          offset: TRIBE_HISTORY_PER_PAGE * (page - 1),
+          limit: TRIBE_HISTORY_PER_PAGE,
+          sort: ['createDate DESC'],
           tribeHistoryFilter: filter,
-          dailyTribeStatsFilter: {
-            ...filter,
-            offset: filter.offset + 1,
-          },
+          dailyTribeStatsFilter: filter,
         },
       });
       showHistoryPopup(e, tribeHistory, dailyTribeStats, {
@@ -574,8 +575,6 @@ const loadMembersGrowthData = async ({ createDateLTE, createDateGT } = {}) => {
     memberIDs.length * differenceInDays(createDateLTE, createDateGT);
   const filter = {
     playerID: memberIDs,
-    limit,
-    sort: 'createDate DESC',
     createDateLTE,
     createDateGT,
   };
@@ -583,6 +582,8 @@ const loadMembersGrowthData = async ({ createDateLTE, createDateGT } = {}) => {
     query: TRIBE_MEMBERS_DAILY_STATS_QUERY,
     variables: {
       filter,
+      limit,
+      sort: ['createDate DESC'],
       server: SERVER,
     },
   });
@@ -673,10 +674,10 @@ const handleShowTribeChangesClick = async (e) => {
             oldTribeID: [TRIBE_ID],
             newTribeID: [TRIBE_ID],
           },
-          offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
-          limit: TRIBE_CHANGES_PER_PAGE,
-          sort: 'createdAt DESC',
         },
+        offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
+        limit: TRIBE_CHANGES_PER_PAGE,
+        sort: ['createdAt DESC'],
         server: SERVER,
       },
     });
@@ -709,8 +710,8 @@ const loadVillages = async (variables, total = false) => {
     const data = await requestCreator({
       variables,
       query: `
-        query villages($server: String!, $filter: VillageFilter!) {
-          villages(server: $server, filter: $filter) {
+        query villages($server: String!, $sort: [String!], $limit: Int, $offset: Int, $filter: VillageFilter!) {
+          villages(server: $server, sort: $sort, limit: $limit, offset: $offset, filter: $filter) {
             ${total ? 'total' : ''}
             items {
               id
@@ -752,10 +753,10 @@ const handleExportTribeVillagesFormSubmit = async (e) => {
       xGTE: parseInt(e.target[1].value),
       yLTE: parseInt(e.target[2].value),
       yGTE: parseInt(e.target[3].value),
-      limit: isNaN(limit) || !limit ? 0 : limit,
       playerID: getMemberIDs(),
-      sort: 'id ASC',
     },
+    limit: isNaN(limit) || !limit ? 0 : limit,
+    sort: ['id ASC'],
     server: SERVER,
   };
   showLoadingDialog();
@@ -772,8 +773,8 @@ const handleExportTribeVillagesFormSubmit = async (e) => {
         ...variables,
         filter: {
           ...variables.filter,
-          offset,
         },
+        offset,
       });
       items = [...items, ...more.items];
     }

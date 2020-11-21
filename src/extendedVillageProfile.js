@@ -15,7 +15,7 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.1
+// @version      0.7.2
 // @description  Extended village profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -26,8 +26,8 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 const SERVER = getCurrentServer();
 const VILLAGE_ID = getIDFromURL(window.location.search);
 const LAST_CONQUER_QUERY = `
-    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
-        ennoblements(server: $server, filter: $filter) {
+    query ennoblements($server: String!, $limit: Int, $sort: [String!], $filter: EnnoblementFilter!) {
+        ennoblements(server: $server, limit: $limit, sort: $sort, filter: $filter) {
             items {
                 ennobledAt
                 village {
@@ -38,8 +38,8 @@ const LAST_CONQUER_QUERY = `
     }
 `;
 const ENNOBLEMENTS_QUERY = `
-    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
-      ennoblements(server: $server, filter: $filter) {
+    query ennoblements($server: String!, $offset: Int, $limit: Int, $sort: [String!], $filter: EnnoblementFilter!) {
+      ennoblements(server: $server, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
         total
         items {
           village {
@@ -167,9 +167,9 @@ const loadPageData = async () => {
       server: SERVER,
       filter: {
         villageID: [VILLAGE_ID],
-        sort: 'ennobledAt DESC',
-        limit: 1,
       },
+      sort: ['ennobledAt DESC'],
+      limit: 1,
     },
   });
   return data;
@@ -184,10 +184,10 @@ const handleShowTribeEnnoblementsClick = async (e) => {
       variables: {
         filter: {
           villageID: [VILLAGE_ID],
-          offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
-          limit: ENNOBLEMENTS_PER_PAGE,
-          sort: 'ennobledAt DESC',
         },
+        offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
+        limit: ENNOBLEMENTS_PER_PAGE,
+        sort: ['ennobledAt DESC'],
         server: SERVER,
       },
     });

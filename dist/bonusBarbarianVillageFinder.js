@@ -293,14 +293,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-// @version      0.4.2
+// @version      0.4.3
 // @description  Bonus barbarian village finder
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
-const QUERY = "\n  query villages($server: String!, $filter: VillageFilter) {\n    villages(server: $server, filter: $filter) {\n      total\n      items {\n        id\n        name\n        bonus\n        x\n        y\n      }\n    }\n  }\n";
+const QUERY = "\n  query villages($server: String!, $filter: VillageFilter, $sort: [String!], $offset: Int) {\n    villages(server: $server, filter: $filter, offset: $offset, sort: $sort) {\n      total\n      items {\n        id\n        name\n        bonus\n        x\n        y\n      }\n    }\n  }\n";
 const TABLE_ID = 'bonusBarbarianVillageFinderTable';
 const ACTUAL_COORDS_ID = 'actualCoords';
 const translations = (0, _bonusBarbarianVillageFinder.default)();
@@ -311,12 +311,12 @@ const buildReqOptions = (bonus, offset) => {
     query: QUERY,
     variables: {
       server: SERVER,
+      sort: ['id DESC'],
       filter: {
         bonus,
-        sort: 'id DESC',
-        playerID: [0],
-        offset
-      }
+        playerID: [0]
+      },
+      offset
     }
   };
 };

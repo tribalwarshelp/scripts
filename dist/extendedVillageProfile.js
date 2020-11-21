@@ -804,7 +804,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.1
+// @version      0.7.2
 // @description  Extended village profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
@@ -813,8 +813,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
 const VILLAGE_ID = (0, _getIDFromURL.default)(window.location.search);
-const LAST_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n        ennoblements(server: $server, filter: $filter) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
-const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
+const LAST_CONQUER_QUERY = "\n    query ennoblements($server: String!, $limit: Int, $sort: [String!], $filter: EnnoblementFilter!) {\n        ennoblements(server: $server, limit: $limit, sort: $sort, filter: $filter) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
+const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $offset: Int, $limit: Int, $sort: [String!], $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
 const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n              speed\n            }\n            unitConfig {\n              spear {\n                pop\n              }\n              sword {\n                pop\n              }\n              axe {\n                pop\n              }\n              archer {\n                pop\n              }\n              spy {\n                pop\n              }\n              light {\n                pop\n              }\n              marcher {\n                pop\n              }\n              heavy {\n                pop\n              }\n              ram {\n                pop\n              }\n              catapult {\n                pop\n              }\n              knight {\n                pop\n              }\n              snob {\n                pop\n              }\n            }\n        }\n    }\n";
 const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_village_profile_server_cfg';
@@ -859,10 +859,10 @@ const loadPageData = async () => {
     variables: {
       server: SERVER,
       filter: {
-        villageID: [VILLAGE_ID],
-        sort: 'ennobledAt DESC',
-        limit: 1
-      }
+        villageID: [VILLAGE_ID]
+      },
+      sort: ['ennobledAt DESC'],
+      limit: 1
     }
   });
   return data;
@@ -877,11 +877,11 @@ const handleShowTribeEnnoblementsClick = async e => {
       query: ENNOBLEMENTS_QUERY,
       variables: {
         filter: {
-          villageID: [VILLAGE_ID],
-          offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
-          limit: ENNOBLEMENTS_PER_PAGE,
-          sort: 'ennobledAt DESC'
+          villageID: [VILLAGE_ID]
         },
+        offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
+        limit: ENNOBLEMENTS_PER_PAGE,
+        sort: ['ennobledAt DESC'],
         server: SERVER
       }
     });

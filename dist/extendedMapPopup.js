@@ -675,7 +675,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.1
+// @version      0.6.2
 // @description  Extended map popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -683,7 +683,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
 const CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n                speed\n                unitSpeed\n                snob {\n                  maxDist\n                }\n            }\n            unitConfig {\n              spear {\n                speed\n              }\n              sword {\n                speed\n              }\n              axe {\n                speed\n              }\n              archer {\n                speed\n              }\n              spy {\n                speed\n              }\n              light {\n                speed\n              }\n              marcher {\n                speed\n              }\n              heavy {\n                speed\n              }\n              ram {\n                speed\n              }\n              catapult {\n                speed\n              }\n              knight {\n                speed\n              }\n              snob {\n                speed\n              }\n            }\n        }\n    }\n";
-const LAST_VILLAGE_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n        ennoblements(server: $server, filter: $filter) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
+const LAST_VILLAGE_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!, $sort: [String!], $limit: Int) {\n        ennoblements(server: $server, filter: $filter, sort: $sort, limit: $limit) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
 const SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_map_popup_server_cfg';
 const translations = (0, _extendedMapPopup.default)();
 
@@ -734,11 +734,11 @@ const loadVillageData = async function loadVillageData(id) {
       query: LAST_VILLAGE_CONQUER_QUERY,
       variables: {
         server: SERVER,
+        sort: ['ennobledAt DESC'],
         filter: {
-          villageID: [id],
-          sort: 'ennobledAt DESC',
-          limit: 1
-        }
+          villageID: [id]
+        },
+        limit: 1
       }
     });
     TWMap.popup.extendedMapPopupCache[id] = data;

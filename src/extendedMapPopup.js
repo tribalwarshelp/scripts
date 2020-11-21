@@ -14,7 +14,7 @@ import countLoyalty from './utils/countLoyalty';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.1
+// @version      0.6.2
 // @description  Extended map popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -74,8 +74,8 @@ const CURR_SERVER_CONFIG = `
     }
 `;
 const LAST_VILLAGE_CONQUER_QUERY = `
-    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
-        ennoblements(server: $server, filter: $filter) {
+    query ennoblements($server: String!, $filter: EnnoblementFilter!, $sort: [String!], $limit: Int) {
+        ennoblements(server: $server, filter: $filter, sort: $sort, limit: $limit) {
             items {
                 ennobledAt
                 village {
@@ -138,11 +138,11 @@ const loadVillageData = async (id, { cacheOnly = false } = {}) => {
       query: LAST_VILLAGE_CONQUER_QUERY,
       variables: {
         server: SERVER,
+        sort: ['ennobledAt DESC'],
         filter: {
           villageID: [id],
-          sort: 'ennobledAt DESC',
-          limit: 1,
         },
+        limit: 1,
       },
     });
     TWMap.popup.extendedMapPopupCache[id] = data;

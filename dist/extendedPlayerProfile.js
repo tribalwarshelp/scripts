@@ -1115,12 +1115,6 @@ var _localStorage = require("./utils/localStorage");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
@@ -1130,7 +1124,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.4
+// @version      1.1.5
 // @description  Extended player profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -1146,13 +1140,13 @@ if (isNaN(PLAYER_ID) || !PLAYER_ID) {
 }
 
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
-const PLAYER_QUERY = "\n    query player($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {\n        player(server: $server, id: $id) {\n            id\n            name\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n        dailyPlayerStats(server: $server, filter: $filter) {\n            items {\n              rank\n              rankAtt\n              rankDef\n              rankSup\n              rankTotal\n              points\n              scoreAtt\n              scoreAtt\n              scoreDef\n              scoreSup\n              scoreTotal\n              villages\n            }\n        }\n    }\n";
-const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $filter: TribeChangeFilter!) {\n      tribeChanges(server: $server, filter: $filter) {\n        total\n        items {\n          oldTribe {\n            id\n            tag\n          }\n          newTribe {\n            id\n            tag\n          }\n          createdAt\n        }\n      }\n    }\n";
+const PLAYER_QUERY = "\n    query player($server: String!, $id: Int!, $limit: Int, $sort: [String!], $filter: DailyPlayerStatsFilter) {\n        player(server: $server, id: $id) {\n            id\n            name\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            servers\n            joinedAt\n            nameChanges {\n                oldName\n                newName\n                changeDate\n            }\n            dailyGrowth\n        }\n        dailyPlayerStats(server: $server, limit: $limit, sort: $sort, filter: $filter) {\n            items {\n              rank\n              rankAtt\n              rankDef\n              rankSup\n              rankTotal\n              points\n              scoreAtt\n              scoreAtt\n              scoreDef\n              scoreSup\n              scoreTotal\n              villages\n            }\n        }\n    }\n";
+const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: TribeChangeFilter!) {\n      tribeChanges(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $filter) {\n        total\n        items {\n          oldTribe {\n            id\n            tag\n          }\n          newTribe {\n            id\n            tag\n          }\n          createdAt\n        }\n      }\n    }\n";
 const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
 const TRIBE_CHANGES_PER_PAGE = 15;
-const PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY = "\nquery playerHistoryAndPlayerDailyStats($server: String!,\n     $playerHistoryFilter: PlayerHistoryFilter!,\n     $dailyPlayerStatsFilter: DailyPlayerStatsFilter!) {\n  playerHistory(server: $server, filter: $playerHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreSup\n      rankSup\n      scoreTotal\n      rankTotal\n      tribe {\n        id\n        tag\n      }\n      createDate\n    }\n  }\n  dailyPlayerStats(server: $server, filter: $dailyPlayerStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreSup\n        scoreTotal\n        villages\n        createDate\n      }\n    }\n}\n";
+const PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY = "\nquery playerHistoryAndPlayerDailyStats($server: String!,\n     $playerHistoryFilter: PlayerHistoryFilter!,\n     $dailyPlayerStatsFilter: DailyPlayerStatsFilter!,\n     $limit: Int,\n     $offset: Int,\n     $sort: [String!]) {\n  playerHistory(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $playerHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreSup\n      rankSup\n      scoreTotal\n      rankTotal\n      tribe {\n        id\n        tag\n      }\n      createDate\n    }\n  }\n  dailyPlayerStats(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $dailyPlayerStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreSup\n        scoreTotal\n        villages\n        createDate\n      }\n    }\n}\n";
 const PLAYER_HISTORY_PER_PAGE = 15;
-const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
+const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector('#player_info > tbody');
 const actionContainer = PLAYER_ID === CURRENT_PLAYER_ID ? profileInfoTBody : document.querySelector('#content_value > table > tbody > tr > td:nth-child(1) > table:nth-child(2) > tbody');
@@ -1213,9 +1207,9 @@ const loadData = async () => {
     variables: {
       server: SERVER,
       id: PLAYER_ID,
+      limit: 1,
+      sort: ['createDate DESC'],
       filter: {
-        sort: 'createDate DESC',
-        limit: 1,
         playerID: [PLAYER_ID]
       }
     }
@@ -1392,11 +1386,11 @@ const handleShowTribeChangesButtonClick = async e => {
       query: TRIBE_CHANGES_QUERY,
       variables: {
         filter: {
-          playerID: [PLAYER_ID],
-          offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
-          limit: TRIBE_CHANGES_PER_PAGE,
-          sort: 'createdAt DESC'
+          playerID: [PLAYER_ID]
         },
+        sort: ['createdAt DESC'],
+        offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
+        limit: TRIBE_CHANGES_PER_PAGE,
         server: SERVER
       }
     });
@@ -1411,10 +1405,7 @@ const handleShowPlayerHistoryClick = async e => {
   if (!isNaN(page)) {
     try {
       const filter = {
-        playerID: [PLAYER_ID],
-        offset: PLAYER_HISTORY_PER_PAGE * (page - 1),
-        limit: PLAYER_HISTORY_PER_PAGE,
-        sort: 'createDate DESC'
+        playerID: [PLAYER_ID]
       };
       const {
         playerHistory,
@@ -1424,9 +1415,10 @@ const handleShowPlayerHistoryClick = async e => {
         variables: {
           server: SERVER,
           playerHistoryFilter: filter,
-          dailyPlayerStatsFilter: _objectSpread(_objectSpread({}, filter), {}, {
-            offset: filter.offset + 1
-          })
+          offset: PLAYER_HISTORY_PER_PAGE * (page - 1),
+          limit: PLAYER_HISTORY_PER_PAGE,
+          sort: ['createDate DESC'],
+          dailyPlayerStatsFilter: filter
         }
       });
       (0, _showHistoryPopup.default)(e, playerHistory, dailyPlayerStats, {
@@ -1453,11 +1445,11 @@ const handleShowPlayerEnnoblementsClick = async e => {
           or: {
             oldOwnerID: [PLAYER_ID],
             newOwnerID: [PLAYER_ID]
-          },
-          offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
-          limit: ENNOBLEMENTS_PER_PAGE,
-          sort: 'ennobledAt DESC'
+          }
         },
+        offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
+        limit: ENNOBLEMENTS_PER_PAGE,
+        sort: ['ennobledAt DESC'],
         server: SERVER
       }
     });

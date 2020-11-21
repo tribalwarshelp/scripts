@@ -9,7 +9,7 @@ import getCurrentServer from './utils/getCurrentServer';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
-// @version      0.4.0
+// @version      0.4.1
 // @description  Daily achievements
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player&mode=awards*
@@ -28,7 +28,7 @@ const SERVER_QUERY = `
 `;
 const DAILY_STATS_QUERY = `
     query data($server: String!, $createDateGTE: Time!) {
-        dailyPlayerStatsOrderedByScoreAtt: dailyPlayerStats(server: $server, filter: { sort: "scoreAtt DESC", createDateGTE: $createDateGTE, playerFilter: { sort: "id DESC" }, limit: 5 }) {
+        dailyPlayerStatsOrderedByScoreAtt: dailyPlayerStats(server: $server, sort: ["scoreAtt DESC", "playerID desc"], filter: { createDateGTE: $createDateGTE }, limit: 5) {
             items {
                 scoreAtt
                 player {
@@ -37,7 +37,7 @@ const DAILY_STATS_QUERY = `
                 }
             }
         }
-        dailyPlayerStatsOrderedByScoreDef: dailyPlayerStats(server: $server, filter: { sort: "scoreDef DESC", createDateGTE: $createDateGTE, playerFilter: { sort: "id DESC" }, limit: 5 }) {
+        dailyPlayerStatsOrderedByScoreDef: dailyPlayerStats(server: $server, sort: ["scoreDef DESC", "playerID desc"], filter: { createDateGTE: $createDateGTE }, limit: 5) {
             items {
                 scoreDef
                 player {
@@ -46,7 +46,7 @@ const DAILY_STATS_QUERY = `
                 }
             }
         }
-        dailyPlayerStatsOrderedByScoreSup: dailyPlayerStats(server: $server, filter: { sort: "scoreSup DESC", createDateGTE: $createDateGTE, playerFilter: { sort: "id DESC" }, limit: 5 }) {
+        dailyPlayerStatsOrderedByScoreSup: dailyPlayerStats(server: $server, sort: ["scoreSup DESC", "playerID desc"], filter: { createDateGTE: $createDateGTE }, limit: 5) {
             items {
                 scoreSup
                 player {
@@ -55,7 +55,7 @@ const DAILY_STATS_QUERY = `
                 }
             }
         }
-        dailyPlayerStatsOrderedByVillages: dailyPlayerStats(server: $server, filter: { sort: "villages DESC", createDateGTE: $createDateGTE, playerFilter: { sort: "id DESC" }, limit: 5 }) {
+        dailyPlayerStatsOrderedByVillages: dailyPlayerStats(server: $server, sort: ["villages DESC", "playerID desc"], filter: { createDateGTE: $createDateGTE }, limit: 5) {
             items {
                 villages
                 player {

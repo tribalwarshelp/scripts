@@ -24,7 +24,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.4
+// @version      1.1.5
 // @description  Extended player profile
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -40,7 +40,7 @@ if (isNaN(PLAYER_ID) || !PLAYER_ID) {
 }
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_player_profile' + PLAYER_ID;
 const PLAYER_QUERY = `
-    query player($server: String!, $id: Int!, $filter: DailyPlayerStatsFilter) {
+    query player($server: String!, $id: Int!, $limit: Int, $sort: [String!], $filter: DailyPlayerStatsFilter) {
         player(server: $server, id: $id) {
             id
             name
@@ -59,7 +59,7 @@ const PLAYER_QUERY = `
             }
             dailyGrowth
         }
-        dailyPlayerStats(server: $server, filter: $filter) {
+        dailyPlayerStats(server: $server, limit: $limit, sort: $sort, filter: $filter) {
             items {
               rank
               rankAtt
@@ -78,8 +78,8 @@ const PLAYER_QUERY = `
     }
 `;
 const TRIBE_CHANGES_QUERY = `
-    query tribeChanges($server: String!, $filter: TribeChangeFilter!) {
-      tribeChanges(server: $server, filter: $filter) {
+    query tribeChanges($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: TribeChangeFilter!) {
+      tribeChanges(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $filter) {
         total
         items {
           oldTribe {
@@ -100,8 +100,11 @@ const TRIBE_CHANGES_PER_PAGE = 15;
 const PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY = `
 query playerHistoryAndPlayerDailyStats($server: String!,
      $playerHistoryFilter: PlayerHistoryFilter!,
-     $dailyPlayerStatsFilter: DailyPlayerStatsFilter!) {
-  playerHistory(server: $server, filter: $playerHistoryFilter) {
+     $dailyPlayerStatsFilter: DailyPlayerStatsFilter!,
+     $limit: Int,
+     $offset: Int,
+     $sort: [String!]) {
+  playerHistory(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $playerHistoryFilter) {
     total
     items {
       totalVillages
@@ -122,7 +125,7 @@ query playerHistoryAndPlayerDailyStats($server: String!,
       createDate
     }
   }
-  dailyPlayerStats(server: $server, filter: $dailyPlayerStatsFilter) {
+  dailyPlayerStats(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $dailyPlayerStatsFilter) {
     items {
         points
         scoreAtt
@@ -138,8 +141,8 @@ query playerHistoryAndPlayerDailyStats($server: String!,
 `;
 const PLAYER_HISTORY_PER_PAGE = 15;
 const ENNOBLEMENTS_QUERY = `
-    query ennoblements($server: String!, $filter: EnnoblementFilter!) {
-      ennoblements(server: $server, filter: $filter) {
+    query ennoblements($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: EnnoblementFilter!) {
+      ennoblements(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $filter) {
         total
         items {
           village {
@@ -230,9 +233,9 @@ const loadData = async () => {
     variables: {
       server: SERVER,
       id: PLAYER_ID,
+      limit: 1,
+      sort: ['createDate DESC'],
       filter: {
-        sort: 'createDate DESC',
-        limit: 1,
         playerID: [PLAYER_ID],
       },
     },
@@ -567,10 +570,10 @@ const handleShowTribeChangesButtonClick = async (e) => {
       variables: {
         filter: {
           playerID: [PLAYER_ID],
-          offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
-          limit: TRIBE_CHANGES_PER_PAGE,
-          sort: 'createdAt DESC',
         },
+        sort: ['createdAt DESC'],
+        offset: TRIBE_CHANGES_PER_PAGE * (page - 1),
+        limit: TRIBE_CHANGES_PER_PAGE,
         server: SERVER,
       },
     });
@@ -585,19 +588,16 @@ const handleShowPlayerHistoryClick = async (e) => {
     try {
       const filter = {
         playerID: [PLAYER_ID],
-        offset: PLAYER_HISTORY_PER_PAGE * (page - 1),
-        limit: PLAYER_HISTORY_PER_PAGE,
-        sort: 'createDate DESC',
       };
       const { playerHistory, dailyPlayerStats } = await requestCreator({
         query: PLAYER_HISTORY_AND_PLAYER_DAILY_STATS_QUERY,
         variables: {
           server: SERVER,
           playerHistoryFilter: filter,
-          dailyPlayerStatsFilter: {
-            ...filter,
-            offset: filter.offset + 1,
-          },
+          offset: PLAYER_HISTORY_PER_PAGE * (page - 1),
+          limit: PLAYER_HISTORY_PER_PAGE,
+          sort: ['createDate DESC'],
+          dailyPlayerStatsFilter: filter,
         },
       });
       showHistoryPopup(e, playerHistory, dailyPlayerStats, {
@@ -624,10 +624,10 @@ const handleShowPlayerEnnoblementsClick = async (e) => {
             oldOwnerID: [PLAYER_ID],
             newOwnerID: [PLAYER_ID],
           },
-          offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
-          limit: ENNOBLEMENTS_PER_PAGE,
-          sort: 'ennobledAt DESC',
         },
+        offset: ENNOBLEMENTS_PER_PAGE * (page - 1),
+        limit: ENNOBLEMENTS_PER_PAGE,
+        sort: ['ennobledAt DESC'],
         server: SERVER,
       },
     });
