@@ -4,16 +4,18 @@ import getTranslations from './i18n/dailyAchievments';
 import { setItem, getItem } from './utils/localStorage';
 import { formatPlayerURL } from './utils/tribalwars';
 import getCurrentServer from './utils/getCurrentServer';
+import getServerVersionCode from './utils/getServerVersionCode';
 import { inTZ } from './utils/date';
+import { buildURLToServerPage } from './utils/twhelp';
 
 // ==UserScript==
 // @name         Daily achievements
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
-// @version      0.4.2
+// @version      0.4.3
 // @description  Daily achievements
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player&mode=awards*
 // @grant        none
 // ==/UserScript==
@@ -118,6 +120,13 @@ const render = ({
         <div class="award-group-head">${translations.title}</div>
         <div class="award-group-content" style="text-align: center;">
             <div style="padding: 10px;">
+            <h1 style="margin-bottom: 0px;"><a href="${buildURLToServerPage(
+              getServerVersionCode(SERVER),
+              SERVER
+            )}">TWHelp</a></h1>
+                <h3 style="margin-bottom: 10px; margin-top: 0;">${
+                  translations.devNote
+                }</h3>
                 <h3 style="color: red;"><strong>${
                   translations.warning
                 }</strong></h3>

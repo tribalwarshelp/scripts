@@ -14,9 +14,9 @@ import countLoyalty from './utils/countLoyalty';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.3
+// @version      0.6.4
 // @description  Extended map popup
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none
 // ==/UserScript==

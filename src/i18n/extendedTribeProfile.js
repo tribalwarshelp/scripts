@@ -27,6 +27,8 @@ const translations = {
     dailyGrowth: 'Dzienny przyrost',
     playerLinks: 'Linki',
     action: {
+      linkToTWHelp:
+        'Akta plemienia - TWHelp - nowa strona ze statystykami i narzędziami',
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
       showMembersGrowth: 'Pokaż rozwój graczy',
@@ -63,6 +65,8 @@ const translations = {
     dailyGrowth: 'Daily growth',
     playerLinks: 'Player links',
     action: {
+      linkToTWHelp:
+        'Tribal file (external link) - TWHelp - A new stat tracking website.',
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
       showMembersGrowth: 'Show members growth',

@@ -14,9 +14,11 @@ import {
 } from './utils/pagination';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
+import getServerVersionCode from './utils/getServerVersionCode';
 import formatDate from './utils/formatDate';
 import { formatPlayerURL } from './utils/twstats';
 import { formatTribeURL } from './utils/tribalwars';
+import { buildPlayerURL } from './utils/twhelp';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -24,9 +26,9 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.5
+// @version      1.1.6
 // @description  Extended player profile
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
 // @grant        none
 // @run-at       document-end
@@ -661,6 +663,15 @@ const wrapAction = (action) => {
 };
 
 const renderActions = () => {
+  const linkToTWHelp = document.createElement('a');
+  linkToTWHelp.href = buildPlayerURL(
+    getServerVersionCode(SERVER),
+    SERVER,
+    PLAYER_ID
+  );
+  linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
+  actionContainer.appendChild(wrapAction(linkToTWHelp));
+
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   setPage(showTribeChanges, '1');

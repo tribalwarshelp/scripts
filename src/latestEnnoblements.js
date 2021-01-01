@@ -9,6 +9,8 @@ import {
   formatVillageName,
 } from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
+import { buildURLToServerPage } from './utils/twhelp';
+import getServerVersionCode from './utils/getServerVersionCode';
 import loadTranslations from './i18n/latestEnnoblements';
 
 // ==UserScript==
@@ -16,9 +18,9 @@ import loadTranslations from './i18n/latestEnnoblements';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.0.5
+// @version      1.0.6
 // @description  Show the latest ennoblements
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*
 // @grant        none
 // @run-at       document-end
@@ -200,6 +202,13 @@ const renderLatestEnnoblements = (ennoblements = [], filters = {}) => {
   };
   const html = `
         <form style="margin-bottom: 15px" id="${FILTER_FORM_ID}">
+        <h1 style="margin-bottom: 0px; text-align: center;"><a href="${buildURLToServerPage(
+          getServerVersionCode(SERVER),
+          SERVER
+        )}">TWHelp</a></h1>
+            <h3 style="margin-bottom: 10px; margin-top: 0;">${
+              translations.devNote
+            }</h3>
           <h3 style="margin-bottom: 5px">${translations.filters}</h3>
           <input type="text" placeholder="${translations.newOwner}" value="${
     prepared.newOwner

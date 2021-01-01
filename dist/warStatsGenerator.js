@@ -179,7 +179,8 @@ const translations = {
     to: 'Do',
     warStatsGenerator: 'Generator statystyk wojennych',
     generateWarStats: 'Wygeneruj statystyki wojenne',
-    addTribe: 'Dodaj plemię'
+    addTribe: 'Dodaj plemię',
+    devNote: 'Informacja od autora - Właśnie uruchomiłem nową stronę ze statystykami, nie zapomnij jej sprawdzić :).'
   },
   en_DK: {
     conquers: 'Conquers',
@@ -194,7 +195,8 @@ const translations = {
     to: 'To',
     warStatsGenerator: 'War stats generator',
     generateWarStats: 'Generate war stats',
-    addTribe: 'Add tribe'
+    addTribe: 'Add tribe',
+    devNote: "Information from the author - I've just launched a new stat tracking website, don't forget to check it out :)."
   }
 };
 
@@ -212,6 +214,74 @@ exports.default = void 0;
 var _default = () => window.location.host.split('.')[0];
 
 exports.default = _default;
+},{}],"J1Ly":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default() {
+  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return server.substr(0, 2);
+};
+
+exports.default = _default;
+},{}],"gvXE":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildVillageURL = exports.buildTribeURL = exports.buildPlayerURL = exports.buildURLToProfile = exports.buildURLToServerPage = exports.BASE_URL = void 0;
+const BASE_URL = 'tribalwarshelp.com';
+exports.BASE_URL = BASE_URL;
+
+const buildURLToServerPage = function buildURLToServerPage() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return "https://".concat(version, ".").concat(BASE_URL, "/server/").concat(server);
+};
+
+exports.buildURLToServerPage = buildURLToServerPage;
+
+const buildURLToProfile = function buildURLToProfile() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let entity = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+  return "".concat(buildURLToServerPage(version, server), "/").concat(entity, "/").concat(id);
+};
+
+exports.buildURLToProfile = buildURLToProfile;
+
+const buildPlayerURL = function buildPlayerURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'player');
+};
+
+exports.buildPlayerURL = buildPlayerURL;
+
+const buildTribeURL = function buildTribeURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'tribe');
+};
+
+exports.buildTribeURL = buildTribeURL;
+
+const buildVillageURL = function buildVillageURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'village');
+};
+
+exports.buildVillageURL = buildVillageURL;
 },{}],"chDM":[function(require,module,exports) {
 "use strict";
 
@@ -266,6 +336,10 @@ var _warStatsGenerator = _interopRequireDefault(require("./i18n/warStatsGenerato
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
+var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
+
+var _twhelp = require("./utils/twhelp");
+
 var _showPopup = _interopRequireWildcard(require("./utils/showPopup"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -279,9 +353,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.3.0
+// @version      0.3.1
 // @description  War stats generator
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
 // @grant        none
 // @run-at       document-end
@@ -398,7 +472,7 @@ const handleFormSubmit = async e => {
 };
 
 const showWarStatsForm = e => {
-  const html = "\n        <form>\n            <div id=\"".concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>").concat(translations.from, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>").concat(translations.to, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px; min-width: 800px;\">\n                <div>\n                    <h3>").concat(translations.sideOne, "</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>").concat(translations.sideTwo, "</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">").concat(translations.generateWarStats, "</button>\n            </div>\n        </form>\n    ");
+  const html = "\n        <form>\n        <h1 style=\"margin-bottom: 0px; text-align: center;\"><a href=\"".concat((0, _twhelp.buildURLToServerPage)((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n            <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n            <div id=\"").concat(RESULT_CONTAINER_ID, "\">\n            </div>\n            <div style=\"margin-bottom: 10px;\">\n              <div id=\"").concat(FROM_INPUT_ID, "\">\n                <label>").concat(translations.from, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n              <div id=\"").concat(TO_INPUT_ID, "\">\n                <label>").concat(translations.to, ": </label>\n                <input type=\"date\" required />\n                <input type=\"time\" required />\n              </div>\n            </div>\n            <div style=\"display: flex; justify-content: space-between; margin-bottom: 10px; min-width: 800px;\">\n                <div>\n                    <h3>").concat(translations.sideOne, "</h3>\n                    <div id=\"").concat(SIDE_ONE_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_ONE_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n                <div style=\"margin: 0 5px;\"></div>\n                <div>\n                    <h3>").concat(translations.sideTwo, "</h3>\n                    <div id=\"").concat(SIDE_TWO_INPUT_CONTAINER_ID, "\">\n                    </div>\n                    <button id=\"").concat(SIDE_TWO_BUTTON_ID, "\" class=\"btn\" type=\"button\">").concat(translations.addTribe, "</button>\n                </div>\n            </div>\n            <div style=\"text-align: center;\">\n              <button class=\"btn\" type=\"submit\">").concat(translations.generateWarStats, "</button>\n            </div>\n        </form>\n    ");
   (0, _showPopup.default)({
     title: translations.warStatsGenerator,
     id: 'warStats',
@@ -426,4 +500,4 @@ const renderUI = () => {
     console.log('war stats', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./i18n/warStatsGenerator":"vPH5","./utils/getCurrentServer":"DMkL","./utils/showPopup":"chDM"}]},{},["H9GS"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/warStatsGenerator":"vPH5","./utils/getCurrentServer":"DMkL","./utils/getServerVersionCode":"J1Ly","./utils/twhelp":"gvXE","./utils/showPopup":"chDM"}]},{},["H9GS"], null)

@@ -7,9 +7,9 @@ import wait from './utils/wait';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
-// @version      0.2.0
+// @version      0.2.1
 // @description  'In A Day' tribe ranking generator
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=in_a_day*
 // @grant        none
 // @run-at       document-end

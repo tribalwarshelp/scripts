@@ -176,6 +176,7 @@ const translations = {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
     action: {
+      linkToTWHelp: 'Akta wioski - TWHelp - nowa strona ze statystykami i narzędziami',
       showEnnoblements: 'Pokaż przejęcia',
       countIncomingSupport: 'Policz nadchodzące wsparcie'
     }
@@ -190,6 +191,7 @@ const translations = {
     never: 'Never',
     ennobledAt: 'Ennobled at',
     action: {
+      linkToTWHelp: 'Village file (external link) - TWHelp - A new stat tracking website.',
       showEnnoblements: 'Show ennoblements',
       countIncomingSupport: 'Count incoming support'
     }
@@ -627,7 +629,75 @@ var _default = (ennobledAt, speed) => {
 };
 
 exports.default = _default;
-},{"date-fns/differenceInMinutes":"oGJj"}],"tKRp":[function(require,module,exports) {
+},{"date-fns/differenceInMinutes":"oGJj"}],"J1Ly":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default() {
+  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return server.substr(0, 2);
+};
+
+exports.default = _default;
+},{}],"gvXE":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildVillageURL = exports.buildTribeURL = exports.buildPlayerURL = exports.buildURLToProfile = exports.buildURLToServerPage = exports.BASE_URL = void 0;
+const BASE_URL = 'tribalwarshelp.com';
+exports.BASE_URL = BASE_URL;
+
+const buildURLToServerPage = function buildURLToServerPage() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return "https://".concat(version, ".").concat(BASE_URL, "/server/").concat(server);
+};
+
+exports.buildURLToServerPage = buildURLToServerPage;
+
+const buildURLToProfile = function buildURLToProfile() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let entity = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+  return "".concat(buildURLToServerPage(version, server), "/").concat(entity, "/").concat(id);
+};
+
+exports.buildURLToProfile = buildURLToProfile;
+
+const buildPlayerURL = function buildPlayerURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'player');
+};
+
+exports.buildPlayerURL = buildPlayerURL;
+
+const buildTribeURL = function buildTribeURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'tribe');
+};
+
+exports.buildTribeURL = buildTribeURL;
+
+const buildVillageURL = function buildVillageURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'village');
+};
+
+exports.buildVillageURL = buildVillageURL;
+},{}],"tKRp":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -789,6 +859,10 @@ var _localStorage = require("./utils/localStorage");
 
 var _countLoyalty = _interopRequireDefault(require("./utils/countLoyalty"));
 
+var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
+
+var _twhelp = require("./utils/twhelp");
+
 var _showEnnoblementsPopup = _interopRequireDefault(require("./common/showEnnoblementsPopup"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -804,9 +878,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.2
+// @version      0.7.3
 // @description  Extended village profile
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
 // @grant        none
 // @run-at       document-end
@@ -1004,6 +1078,10 @@ const wrapAction = action => {
 };
 
 const renderActions = () => {
+  const linkToTWHelp = document.createElement('a');
+  linkToTWHelp.href = (0, _twhelp.buildVillageURL)((0, _getServerVersionCode.default)(SERVER), SERVER, VILLAGE_ID);
+  linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
+  actionContainer.appendChild(wrapAction(linkToTWHelp));
   const showEnnoblementsPopup = document.createElement('a');
   showEnnoblementsPopup.href = '#';
   (0, _pagination.setPage)(showEnnoblementsPopup, '1');
@@ -1100,4 +1178,4 @@ const renderAdditionalInfo = function renderAdditionalInfo() {
     console.log('extended village profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/buildUnitImgURL":"KX6P","./utils/formatDate":"V6Mf","./utils/wait":"oUdd","./utils/localStorage":"KWxH","./utils/countLoyalty":"ATOB","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/buildUnitImgURL":"KX6P","./utils/formatDate":"V6Mf","./utils/wait":"oUdd","./utils/localStorage":"KWxH","./utils/countLoyalty":"ATOB","./utils/getServerVersionCode":"J1Ly","./utils/twhelp":"gvXE","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)

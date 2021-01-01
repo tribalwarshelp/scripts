@@ -1,6 +1,8 @@
 import requestCreator from './libs/requestCreator';
 import getTranslations from './i18n/warStatsGenerator';
 import getServer from './utils/getCurrentServer';
+import getServerVersionCode from './utils/getServerVersionCode';
+import { buildURLToServerPage } from './utils/twhelp';
 import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 
 // ==UserScript==
@@ -8,9 +10,9 @@ import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-// @version      0.3.0
+// @version      0.3.1
 // @description  War stats generator
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=ranking*mode=wars*
 // @grant        none
 // @run-at       document-end
@@ -180,6 +182,13 @@ const handleFormSubmit = async (e) => {
 const showWarStatsForm = (e) => {
   const html = `
         <form>
+        <h1 style="margin-bottom: 0px; text-align: center;"><a href="${buildURLToServerPage(
+          getServerVersionCode(SERVER),
+          SERVER
+        )}">TWHelp</a></h1>
+            <h3 style="margin-bottom: 10px; margin-top: 0;">${
+              translations.devNote
+            }</h3>
             <div id="${RESULT_CONTAINER_ID}">
             </div>
             <div style="margin-bottom: 10px;">
@@ -199,18 +208,24 @@ const showWarStatsForm = (e) => {
                     <h3>${translations.sideOne}</h3>
                     <div id="${SIDE_ONE_INPUT_CONTAINER_ID}">
                     </div>
-                    <button id="${SIDE_ONE_BUTTON_ID}" class="btn" type="button">${translations.addTribe}</button>
+                    <button id="${SIDE_ONE_BUTTON_ID}" class="btn" type="button">${
+    translations.addTribe
+  }</button>
                 </div>
                 <div style="margin: 0 5px;"></div>
                 <div>
                     <h3>${translations.sideTwo}</h3>
                     <div id="${SIDE_TWO_INPUT_CONTAINER_ID}">
                     </div>
-                    <button id="${SIDE_TWO_BUTTON_ID}" class="btn" type="button">${translations.addTribe}</button>
+                    <button id="${SIDE_TWO_BUTTON_ID}" class="btn" type="button">${
+    translations.addTribe
+  }</button>
                 </div>
             </div>
             <div style="text-align: center;">
-              <button class="btn" type="submit">${translations.generateWarStats}</button>
+              <button class="btn" type="submit">${
+                translations.generateWarStats
+              }</button>
             </div>
         </form>
     `;

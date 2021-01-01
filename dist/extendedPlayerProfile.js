@@ -276,6 +276,7 @@ const translations = {
     exportedVillages: 'Wyeksportowane wioski',
     tribeChanges: 'Zmiany plemion',
     action: {
+      linkToTWHelp: 'Akta gracza - TWHelp - nowa strona ze statystykami i narzędziami',
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
       exportVillages: 'Wyeksportuj wioski',
@@ -305,6 +306,7 @@ const translations = {
     exportedVillages: 'Exported villages',
     tribeChanges: 'Tribe changes',
     action: {
+      linkToTWHelp: 'User file (external link) - TWHelp - A new stat tracking website.',
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
       exportVillages: 'Export villages',
@@ -1038,6 +1040,20 @@ exports.default = void 0;
 var _default = () => window.location.host.split('.')[0];
 
 exports.default = _default;
+},{}],"J1Ly":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default() {
+  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return server.substr(0, 2);
+};
+
+exports.default = _default;
 },{}],"Syko":[function(require,module,exports) {
 "use strict";
 
@@ -1053,6 +1069,60 @@ const formatPlayerURL = function formatPlayerURL() {
 };
 
 exports.formatPlayerURL = formatPlayerURL;
+},{}],"gvXE":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildVillageURL = exports.buildTribeURL = exports.buildPlayerURL = exports.buildURLToProfile = exports.buildURLToServerPage = exports.BASE_URL = void 0;
+const BASE_URL = 'tribalwarshelp.com';
+exports.BASE_URL = BASE_URL;
+
+const buildURLToServerPage = function buildURLToServerPage() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return "https://".concat(version, ".").concat(BASE_URL, "/server/").concat(server);
+};
+
+exports.buildURLToServerPage = buildURLToServerPage;
+
+const buildURLToProfile = function buildURLToProfile() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let entity = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+  return "".concat(buildURLToServerPage(version, server), "/").concat(entity, "/").concat(id);
+};
+
+exports.buildURLToProfile = buildURLToProfile;
+
+const buildPlayerURL = function buildPlayerURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'player');
+};
+
+exports.buildPlayerURL = buildPlayerURL;
+
+const buildTribeURL = function buildTribeURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'tribe');
+};
+
+exports.buildTribeURL = buildTribeURL;
+
+const buildVillageURL = function buildVillageURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'village');
+};
+
+exports.buildVillageURL = buildVillageURL;
 },{}],"KWxH":[function(require,module,exports) {
 "use strict";
 
@@ -1105,11 +1175,15 @@ var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
+var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
+
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
 var _twstats = require("./utils/twstats");
 
 var _tribalwars = require("./utils/tribalwars");
+
+var _twhelp = require("./utils/twhelp");
 
 var _localStorage = require("./utils/localStorage");
 
@@ -1124,9 +1198,9 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.5
+// @version      1.1.6
 // @description  Extended player profile
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
 // @grant        none
 // @run-at       document-end
@@ -1476,6 +1550,10 @@ const wrapAction = action => {
 };
 
 const renderActions = () => {
+  const linkToTWHelp = document.createElement('a');
+  linkToTWHelp.href = (0, _twhelp.buildPlayerURL)((0, _getServerVersionCode.default)(SERVER), SERVER, PLAYER_ID);
+  linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
+  actionContainer.appendChild(wrapAction(linkToTWHelp));
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   (0, _pagination.setPage)(showTribeChanges, '1');
@@ -1519,4 +1597,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/hyphensToCamelCase":"GxsT","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/hyphensToCamelCase":"GxsT","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/getServerVersionCode":"J1Ly","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/twhelp":"gvXE","./utils/localStorage":"KWxH"}]},{},["yRop"], null)

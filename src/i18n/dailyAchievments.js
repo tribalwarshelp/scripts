@@ -7,6 +7,8 @@ const translations = {
     dotd: 'Obrońca dnia',
     sotd: 'Pomocnik dnia',
     gpotd: 'Mocarstwo dnia',
+    devNote:
+      'Informacja od autora - Właśnie uruchomiłem nową stronę ze statystykami, nie zapomnij jej sprawdzić :).',
   },
   en_DK: {
     title: 'Daily achievements - probable players',
@@ -15,6 +17,7 @@ const translations = {
     dotd: 'Defender of the day',
     sotd: 'Supporter of the day',
     gpotd: 'Great power of the day',
+    devNote: `Information from the author - I've just launched a new stat tracking website, don't forget to check it out :).`,
   },
 };
 

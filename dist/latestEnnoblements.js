@@ -317,6 +317,74 @@ const setItem = (key, payload) => {
 };
 
 exports.setItem = setItem;
+},{}],"gvXE":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildVillageURL = exports.buildTribeURL = exports.buildPlayerURL = exports.buildURLToProfile = exports.buildURLToServerPage = exports.BASE_URL = void 0;
+const BASE_URL = 'tribalwarshelp.com';
+exports.BASE_URL = BASE_URL;
+
+const buildURLToServerPage = function buildURLToServerPage() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return "https://".concat(version, ".").concat(BASE_URL, "/server/").concat(server);
+};
+
+exports.buildURLToServerPage = buildURLToServerPage;
+
+const buildURLToProfile = function buildURLToProfile() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let entity = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+  return "".concat(buildURLToServerPage(version, server), "/").concat(entity, "/").concat(id);
+};
+
+exports.buildURLToProfile = buildURLToProfile;
+
+const buildPlayerURL = function buildPlayerURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'player');
+};
+
+exports.buildPlayerURL = buildPlayerURL;
+
+const buildTribeURL = function buildTribeURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'tribe');
+};
+
+exports.buildTribeURL = buildTribeURL;
+
+const buildVillageURL = function buildVillageURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'village');
+};
+
+exports.buildVillageURL = buildVillageURL;
+},{}],"J1Ly":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default() {
+  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return server.substr(0, 2);
+};
+
+exports.default = _default;
 },{}],"FxgK":[function(require,module,exports) {
 "use strict";
 
@@ -335,7 +403,8 @@ const translations = {
     date: 'Data',
     filters: 'Filtry',
     apply: 'Zastosuj',
-    ennoblements: 'Przejęcia'
+    ennoblements: 'Przejęcia',
+    devNote: 'Informacja od autora - Właśnie uruchomiłem nową stronę ze statystykami, nie zapomnij jej sprawdzić :).'
   },
   en_DK: {
     showLatestEnnoblements: 'Show latest ennoblements',
@@ -347,7 +416,8 @@ const translations = {
     filters: 'Filters',
     date: 'Date',
     apply: 'Apply',
-    ennoblements: 'Ennoblements'
+    ennoblements: 'Ennoblements',
+    devNote: "Information from the author - I've just launched a new stat tracking website, don't forget to check it out :)."
   }
 };
 
@@ -369,6 +439,10 @@ var _tribalwars = require("./utils/tribalwars");
 
 var _localStorage = require("./utils/localStorage");
 
+var _twhelp = require("./utils/twhelp");
+
+var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
+
 var _latestEnnoblements = _interopRequireDefault(require("./i18n/latestEnnoblements"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -384,9 +458,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.0.5
+// @version      1.0.6
 // @description  Show the latest ennoblements
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*
 // @grant        none
 // @run-at       document-end
@@ -514,7 +588,7 @@ const renderLatestEnnoblements = function renderLatestEnnoblements() {
 
   const prepared = _objectSpread(_objectSpread({}, DEFAULT_FILTER), filters);
 
-  const html = "\n        <form style=\"margin-bottom: 15px\" id=\"".concat(FILTER_FORM_ID, "\">\n          <h3 style=\"margin-bottom: 5px\">").concat(translations.filters, "</h3>\n          <input type=\"text\" placeholder=\"").concat(translations.newOwner, "\" value=\"").concat(prepared.newOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.newOwnerTribe, "\" value=\"").concat(prepared.newOwnerTribe, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwner, "\" value=\"").concat(prepared.oldOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwnerTribe, "\" value=\"").concat(prepared.oldOwnerTribe, "\" />\n          <div>\n            <button type=\"submit\">").concat(translations.apply, "</button>\n          </div>\n        </form>\n        <table class=\"vis\" id=\"").concat(TABLE_ID, "\" style=\"width: 100%\">\n          <thead>\n            <tr>\n              <th>").concat(translations.village, "</th>\n              <th>").concat(translations.newOwner, "</th>\n              <th>").concat(translations.oldOwner, "</th>\n              <th>").concat(translations.date, "</th>\n            </tr>\n          </thead>\n          <tbody>\n            ").concat(formatEnnoblementRows(filterEnnoblements(ennoblements, prepared)).join(''), "\n          </tbody>\n        </table>\n        ");
+  const html = "\n        <form style=\"margin-bottom: 15px\" id=\"".concat(FILTER_FORM_ID, "\">\n        <h1 style=\"margin-bottom: 0px; text-align: center;\"><a href=\"").concat((0, _twhelp.buildURLToServerPage)((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n            <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n          <h3 style=\"margin-bottom: 5px\">").concat(translations.filters, "</h3>\n          <input type=\"text\" placeholder=\"").concat(translations.newOwner, "\" value=\"").concat(prepared.newOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.newOwnerTribe, "\" value=\"").concat(prepared.newOwnerTribe, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwner, "\" value=\"").concat(prepared.oldOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwnerTribe, "\" value=\"").concat(prepared.oldOwnerTribe, "\" />\n          <div>\n            <button type=\"submit\">").concat(translations.apply, "</button>\n          </div>\n        </form>\n        <table class=\"vis\" id=\"").concat(TABLE_ID, "\" style=\"width: 100%\">\n          <thead>\n            <tr>\n              <th>").concat(translations.village, "</th>\n              <th>").concat(translations.newOwner, "</th>\n              <th>").concat(translations.oldOwner, "</th>\n              <th>").concat(translations.date, "</th>\n            </tr>\n          </thead>\n          <tbody>\n            ").concat(formatEnnoblementRows(filterEnnoblements(ennoblements, prepared)).join(''), "\n          </tbody>\n        </table>\n        ");
   (0, _showPopup.default)({
     e: {
       clientY: 60
@@ -562,4 +636,4 @@ const renderButton = () => {
 (function () {
   renderButton();
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/showPopup":"chDM","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH","./i18n/latestEnnoblements":"FxgK"}]},{},["hkfB"], null)
+},{"./libs/requestCreator":"Ph2E","./utils/showPopup":"chDM","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH","./utils/twhelp":"gvXE","./utils/getServerVersionCode":"J1Ly","./i18n/latestEnnoblements":"FxgK"}]},{},["hkfB"], null)

@@ -10,6 +10,8 @@ const translations = {
     filters: 'Filtry',
     apply: 'Zastosuj',
     ennoblements: 'Przejęcia',
+    devNote:
+      'Informacja od autora - Właśnie uruchomiłem nową stronę ze statystykami, nie zapomnij jej sprawdzić :).',
   },
   en_DK: {
     showLatestEnnoblements: 'Show latest ennoblements',
@@ -22,6 +24,7 @@ const translations = {
     date: 'Date',
     apply: 'Apply',
     ennoblements: 'Ennoblements',
+    devNote: `Information from the author - I've just launched a new stat tracking website, don't forget to check it out :).`,
   },
 };
 

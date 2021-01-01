@@ -2949,7 +2949,8 @@ const translations = {
     aotd: 'Agresor dnia',
     dotd: 'Obrońca dnia',
     sotd: 'Pomocnik dnia',
-    gpotd: 'Mocarstwo dnia'
+    gpotd: 'Mocarstwo dnia',
+    devNote: 'Informacja od autora - Właśnie uruchomiłem nową stronę ze statystykami, nie zapomnij jej sprawdzić :).'
   },
   en_DK: {
     title: 'Daily achievements - probable players',
@@ -2957,7 +2958,8 @@ const translations = {
     aotd: 'Attacker of the day',
     dotd: 'Defender of the day',
     sotd: 'Supporter of the day',
-    gpotd: 'Great power of the day'
+    gpotd: 'Great power of the day',
+    devNote: "Information from the author - I've just launched a new stat tracking website, don't forget to check it out :)."
   }
 };
 
@@ -3058,6 +3060,20 @@ exports.default = void 0;
 var _default = () => window.location.host.split('.')[0];
 
 exports.default = _default;
+},{}],"J1Ly":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default() {
+  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return server.substr(0, 2);
+};
+
+exports.default = _default;
 },{}],"ZbyX":[function(require,module,exports) {
 "use strict";
 
@@ -3082,6 +3098,60 @@ const inUTC = function inUTC() {
 };
 
 exports.inUTC = inUTC;
+},{}],"gvXE":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildVillageURL = exports.buildTribeURL = exports.buildPlayerURL = exports.buildURLToProfile = exports.buildURLToServerPage = exports.BASE_URL = void 0;
+const BASE_URL = 'tribalwarshelp.com';
+exports.BASE_URL = BASE_URL;
+
+const buildURLToServerPage = function buildURLToServerPage() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return "https://".concat(version, ".").concat(BASE_URL, "/server/").concat(server);
+};
+
+exports.buildURLToServerPage = buildURLToServerPage;
+
+const buildURLToProfile = function buildURLToProfile() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let entity = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+  return "".concat(buildURLToServerPage(version, server), "/").concat(entity, "/").concat(id);
+};
+
+exports.buildURLToProfile = buildURLToProfile;
+
+const buildPlayerURL = function buildPlayerURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'player');
+};
+
+exports.buildPlayerURL = buildPlayerURL;
+
+const buildTribeURL = function buildTribeURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'tribe');
+};
+
+exports.buildTribeURL = buildTribeURL;
+
+const buildVillageURL = function buildVillageURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'village');
+};
+
+exports.buildVillageURL = buildVillageURL;
 },{}],"Jg9g":[function(require,module,exports) {
 "use strict";
 
@@ -3097,7 +3167,11 @@ var _tribalwars = require("./utils/tribalwars");
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
+var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
+
 var _date = require("./utils/date");
+
+var _twhelp = require("./utils/twhelp");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3112,9 +3186,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
-// @version      0.4.2
+// @version      0.4.3
 // @description  Daily achievements
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player&mode=awards*
 // @grant        none
 // ==/UserScript==
@@ -3165,7 +3239,7 @@ const render = (_ref) => {
     dailyPlayerStatsOrderedByScoreSup,
     dailyPlayerStatsOrderedByVillages
   } = _ref;
-  const html = "\n        <div class=\"award-group-head\">".concat(translations.title, "</div>\n        <div class=\"award-group-content\" style=\"text-align: center;\">\n            <div style=\"padding: 10px;\">\n                <h3 style=\"color: red;\"><strong>").concat(translations.warning, "</strong></h3>\n                <p><strong>").concat(translations.aotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreAtt.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreAtt.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.dotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreDef.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreDef.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.sotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreSup.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreSup.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.gpotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByVillages.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.villages.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n        </div>\n        <div class=\"award-group-foot\"></div>\n    ");
+  const html = "\n        <div class=\"award-group-head\">".concat(translations.title, "</div>\n        <div class=\"award-group-content\" style=\"text-align: center;\">\n            <div style=\"padding: 10px;\">\n            <h1 style=\"margin-bottom: 0px;\"><a href=\"").concat((0, _twhelp.buildURLToServerPage)((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n                <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n                <h3 style=\"color: red;\"><strong>").concat(translations.warning, "</strong></h3>\n                <p><strong>").concat(translations.aotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreAtt.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreAtt.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.dotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreDef.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreDef.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.sotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreSup.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreSup.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.gpotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByVillages.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.villages.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n        </div>\n        <div class=\"award-group-foot\"></div>\n    ");
 
   if (!container) {
     container = document.createElement('div');
@@ -3193,4 +3267,4 @@ const render = (_ref) => {
     console.log('dailyAchievements', error);
   }
 })();
-},{"date-fns/format":"OZJZ","./libs/requestCreator":"Ph2E","./i18n/dailyAchievments":"rX6I","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/getCurrentServer":"DMkL","./utils/date":"ZbyX"}]},{},["Jg9g"], null)
+},{"date-fns/format":"OZJZ","./libs/requestCreator":"Ph2E","./i18n/dailyAchievments":"rX6I","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/getCurrentServer":"DMkL","./utils/getServerVersionCode":"J1Ly","./utils/date":"ZbyX","./utils/twhelp":"gvXE"}]},{},["Jg9g"], null)

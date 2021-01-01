@@ -928,6 +928,7 @@ const translations = {
     dailyGrowth: 'Dzienny przyrost',
     playerLinks: 'Linki',
     action: {
+      linkToTWHelp: 'Akta plemienia - TWHelp - nowa strona ze statystykami i narzędziami',
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
       showMembersGrowth: 'Pokaż rozwój graczy',
@@ -964,6 +965,7 @@ const translations = {
     dailyGrowth: 'Daily growth',
     playerLinks: 'Player links',
     action: {
+      linkToTWHelp: 'Tribal file (external link) - TWHelp - A new stat tracking website.',
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
       showMembersGrowth: 'Show members growth',
@@ -1683,6 +1685,20 @@ const setItem = (key, payload) => {
 };
 
 exports.setItem = setItem;
+},{}],"J1Ly":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default() {
+  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return server.substr(0, 2);
+};
+
+exports.default = _default;
 },{}],"Syko":[function(require,module,exports) {
 "use strict";
 
@@ -1698,6 +1714,60 @@ const formatPlayerURL = function formatPlayerURL() {
 };
 
 exports.formatPlayerURL = formatPlayerURL;
+},{}],"gvXE":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buildVillageURL = exports.buildTribeURL = exports.buildPlayerURL = exports.buildURLToProfile = exports.buildURLToServerPage = exports.BASE_URL = void 0;
+const BASE_URL = 'tribalwarshelp.com';
+exports.BASE_URL = BASE_URL;
+
+const buildURLToServerPage = function buildURLToServerPage() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  return "https://".concat(version, ".").concat(BASE_URL, "/server/").concat(server);
+};
+
+exports.buildURLToServerPage = buildURLToServerPage;
+
+const buildURLToProfile = function buildURLToProfile() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let entity = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+  return "".concat(buildURLToServerPage(version, server), "/").concat(entity, "/").concat(id);
+};
+
+exports.buildURLToProfile = buildURLToProfile;
+
+const buildPlayerURL = function buildPlayerURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'player');
+};
+
+exports.buildPlayerURL = buildPlayerURL;
+
+const buildTribeURL = function buildTribeURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'tribe');
+};
+
+exports.buildTribeURL = buildTribeURL;
+
+const buildVillageURL = function buildVillageURL() {
+  let version = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let server = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  let id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  return buildURLToProfile(version, server, id, 'village');
+};
+
+exports.buildVillageURL = buildVillageURL;
 },{}],"r4nF":[function(require,module,exports) {
 "use strict";
 
@@ -1727,7 +1797,11 @@ var _localStorage = require("./utils/localStorage");
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
+var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
+
 var _twstats = require("./utils/twstats");
+
+var _twhelp = require("./utils/twhelp");
 
 var _tribalwars = require("./utils/tribalwars");
 
@@ -1744,14 +1818,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.0.9
+// @version      1.1.0
 // @description  Extended tribe profile
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
+const VERSION = (0, _getServerVersionCode.default)(SERVER);
 const TRIBE_ID = (0, _getIDFromURL.default)(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
 const TRIBE_QUERY = "\n    query tribe($server: String!, $id: Int!, $dailyTribeStatsSort: [String!], $dailyTribeStatsLimit: Int, $playerSort: [String!], $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n        tribe(server: $server, id: $id) {\n            id\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            createdAt\n            dominance\n        }\n        dailyTribeStats(server: $server, limit: $dailyTribeStatsLimit, sort: $dailyTribeStatsSort, filter: $dailyTribeStatsFilter) {\n          items {\n            rank\n            rankAtt\n            rankDef\n            rankTotal\n            points\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreTotal\n            villages\n            members\n          }\n        }\n        players(server: $server, sort: $playerSort, filter: $playerFilter) {\n          items {\n            id\n            rankAtt\n            rankDef\n            rankSup\n            rankTotal\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreSup\n            scoreTotal\n            dailyGrowth\n          }\n        }\n    }\n";
@@ -1765,7 +1840,7 @@ const TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $limit: 
 const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
 const TRIBE_CHANGES_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody');
-const actionsContainer = profileInfoTBody;
+const actionContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)');
 const membersContainer = document.querySelector('#content_value > table.vis > tbody');
 const translations = (0, _extendedTribeProfile.default)();
@@ -1866,7 +1941,13 @@ const extendMembersData = players => {
     const player = players.items.find(p => p.id === playerID);
 
     if (player) {
-      [[player.scoreAtt, player.rankAtt], [player.scoreDef, player.rankDef], [player.scoreSup, player.rankSup], [player.scoreTotal, player.rankTotal], player.dailyGrowth, [(0, _twstats.formatPlayerURL)(SERVER, player.id), 'TWStats']].forEach((data, index) => {
+      [[player.scoreAtt, player.rankAtt], [player.scoreDef, player.rankDef], [player.scoreSup, player.rankSup], [player.scoreTotal, player.rankTotal], player.dailyGrowth, [{
+        link: (0, _twhelp.buildPlayerURL)(VERSION, SERVER, player.id),
+        label: 'TWHelp'
+      }, {
+        link: (0, _twstats.formatPlayerURL)(SERVER, player.id),
+        label: 'TWStats'
+      }]].forEach((data, index) => {
         let td = tr.children[5 + index];
 
         if (!td) {
@@ -1877,8 +1958,14 @@ const extendMembersData = players => {
         if (Array.isArray(data)) {
           if (typeof data[0] === 'number') {
             td.innerHTML = "".concat(data[0].toLocaleString(), " (<strong>").concat(data[1], "</strong>)");
-          } else if ((0, _isURL.default)(data[0])) {
-            td.innerHTML = "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"".concat(data[0], "\">").concat(data[1], "</a>");
+          } else if (data[0].link) {
+            td.innerHTML = data.map((_ref2) => {
+              let {
+                link,
+                label
+              } = _ref2;
+              return "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"".concat(link, "\">").concat(label, "</a>");
+            }).join('<br>');
           }
         } else if (typeof data === 'number') {
           td.innerHTML = data.toLocaleString();
@@ -1888,12 +1975,12 @@ const extendMembersData = players => {
   });
 };
 
-const render = (_ref2) => {
+const render = (_ref3) => {
   let {
     tribe,
     dailyTribeStats,
     players
-  } = _ref2;
+  } = _ref3;
   [{
     title: translations.createdAt + ':',
     data: (0, _formatDate.default)(tribe.createdAt),
@@ -2273,39 +2360,43 @@ const wrapAction = action => {
 };
 
 const renderActions = () => {
+  const linkToTWHelp = document.createElement('a');
+  linkToTWHelp.href = (0, _twhelp.buildTribeURL)(VERSION, SERVER, TRIBE_ID);
+  linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
+  actionContainer.appendChild(wrapAction(linkToTWHelp));
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   (0, _pagination.setPage)(showEnnoblements, '1');
   showEnnoblements.innerHTML = translations.action.showEnnoblements;
   showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
-  actionsContainer.appendChild(wrapAction(showEnnoblements));
+  actionContainer.appendChild(wrapAction(showEnnoblements));
   const showHistory = document.createElement('a');
   showHistory.href = '#';
   (0, _pagination.setPage)(showHistory, '1');
   showHistory.innerHTML = translations.action.showHistory;
   showHistory.addEventListener('click', handleShowTribeHistoryClick);
-  actionsContainer.appendChild(wrapAction(showHistory));
+  actionContainer.appendChild(wrapAction(showHistory));
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   (0, _pagination.setPage)(showTribeChanges, '1');
   showTribeChanges.innerHTML = translations.action.showTribeChanges;
   showTribeChanges.addEventListener('click', handleShowTribeChangesClick);
-  actionsContainer.appendChild(wrapAction(showTribeChanges));
+  actionContainer.appendChild(wrapAction(showTribeChanges));
   const showMembersGrowth = document.createElement('a');
   showMembersGrowth.href = '#';
   showMembersGrowth.innerHTML = translations.action.showMembersGrowth;
   showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
-  actionsContainer.appendChild(wrapAction(showMembersGrowth));
+  actionContainer.appendChild(wrapAction(showMembersGrowth));
   const generateMailingList = document.createElement('a');
   generateMailingList.href = '#';
   generateMailingList.innerHTML = translations.action.generateMailingList;
   generateMailingList.addEventListener('click', handleGenerateMailingListClick);
-  actionsContainer.appendChild(wrapAction(generateMailingList));
+  actionContainer.appendChild(wrapAction(generateMailingList));
   const exportVillages = document.createElement('a');
   exportVillages.href = '#';
   exportVillages.innerHTML = translations.action.exportVillages;
   exportVillages.addEventListener('click', handleExportTribeVillagesClick);
-  actionsContainer.appendChild(wrapAction(exportVillages));
+  actionContainer.appendChild(wrapAction(exportVillages));
 };
 
 (async function () {
@@ -2327,4 +2418,4 @@ const renderActions = () => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./i18n/extendedTribeProfile":"iFDG","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)
+},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./i18n/extendedTribeProfile":"iFDG","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/getServerVersionCode":"J1Ly","./utils/twstats":"Syko","./utils/twhelp":"gvXE","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)

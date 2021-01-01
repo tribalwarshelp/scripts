@@ -16,7 +16,9 @@ import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import { setItem, getItem } from './utils/localStorage';
 import formatDate from './utils/formatDate';
+import getServerVersionCode from './utils/getServerVersionCode';
 import { formatPlayerURL } from './utils/twstats';
+import { buildPlayerURL, buildTribeURL } from './utils/twhelp';
 import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars';
 
 // ==UserScript==
@@ -24,15 +26,16 @@ import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.0.9
+// @version      1.1.0
 // @description  Extended tribe profile
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
 const SERVER = getCurrentServer();
+const VERSION = getServerVersionCode(SERVER);
 const TRIBE_ID = getIDFromURL(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
 const TRIBE_QUERY = `
@@ -196,7 +199,7 @@ const TRIBE_CHANGES_PER_PAGE = 15;
 const profileInfoTBody = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody'
 );
-const actionsContainer = profileInfoTBody;
+const actionContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)'
 );
@@ -300,7 +303,10 @@ const extendMembersData = (players) => {
         [player.scoreSup, player.rankSup],
         [player.scoreTotal, player.rankTotal],
         player.dailyGrowth,
-        [formatPlayerURL(SERVER, player.id), 'TWStats'],
+        [
+          { link: buildPlayerURL(VERSION, SERVER, player.id), label: 'TWHelp' },
+          { link: formatPlayerURL(SERVER, player.id), label: 'TWStats' },
+        ],
       ].forEach((data, index) => {
         let td = tr.children[5 + index];
         if (!td) {
@@ -312,8 +318,13 @@ const extendMembersData = (players) => {
             td.innerHTML = `${data[0].toLocaleString()} (<strong>${
               data[1]
             }</strong>)`;
-          } else if (isURL(data[0])) {
-            td.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="${data[0]}">${data[1]}</a>`;
+          } else if (data[0].link) {
+            td.innerHTML = data
+              .map(
+                ({ link, label }) =>
+                  `<a target="_blank" rel="noopener noreferrer" href="${link}">${label}</a>`
+              )
+              .join('<br>');
           }
         } else if (typeof data === 'number') {
           td.innerHTML = data.toLocaleString();
@@ -839,44 +850,49 @@ const wrapAction = (action) => {
 };
 
 const renderActions = () => {
+  const linkToTWHelp = document.createElement('a');
+  linkToTWHelp.href = buildTribeURL(VERSION, SERVER, TRIBE_ID);
+  linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
+  actionContainer.appendChild(wrapAction(linkToTWHelp));
+
   const showEnnoblements = document.createElement('a');
   showEnnoblements.href = '#';
   setPage(showEnnoblements, '1');
   showEnnoblements.innerHTML = translations.action.showEnnoblements;
   showEnnoblements.addEventListener('click', handleShowTribeEnnoblementsClick);
-  actionsContainer.appendChild(wrapAction(showEnnoblements));
+  actionContainer.appendChild(wrapAction(showEnnoblements));
 
   const showHistory = document.createElement('a');
   showHistory.href = '#';
   setPage(showHistory, '1');
   showHistory.innerHTML = translations.action.showHistory;
   showHistory.addEventListener('click', handleShowTribeHistoryClick);
-  actionsContainer.appendChild(wrapAction(showHistory));
+  actionContainer.appendChild(wrapAction(showHistory));
 
   const showTribeChanges = document.createElement('a');
   showTribeChanges.href = '#';
   setPage(showTribeChanges, '1');
   showTribeChanges.innerHTML = translations.action.showTribeChanges;
   showTribeChanges.addEventListener('click', handleShowTribeChangesClick);
-  actionsContainer.appendChild(wrapAction(showTribeChanges));
+  actionContainer.appendChild(wrapAction(showTribeChanges));
 
   const showMembersGrowth = document.createElement('a');
   showMembersGrowth.href = '#';
   showMembersGrowth.innerHTML = translations.action.showMembersGrowth;
   showMembersGrowth.addEventListener('click', handleShowMembersGrowthClick);
-  actionsContainer.appendChild(wrapAction(showMembersGrowth));
+  actionContainer.appendChild(wrapAction(showMembersGrowth));
 
   const generateMailingList = document.createElement('a');
   generateMailingList.href = '#';
   generateMailingList.innerHTML = translations.action.generateMailingList;
   generateMailingList.addEventListener('click', handleGenerateMailingListClick);
-  actionsContainer.appendChild(wrapAction(generateMailingList));
+  actionContainer.appendChild(wrapAction(generateMailingList));
 
   const exportVillages = document.createElement('a');
   exportVillages.href = '#';
   exportVillages.innerHTML = translations.action.exportVillages;
   exportVillages.addEventListener('click', handleExportTribeVillagesClick);
-  actionsContainer.appendChild(wrapAction(exportVillages));
+  actionContainer.appendChild(wrapAction(exportVillages));
 };
 
 (async function () {

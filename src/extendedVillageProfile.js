@@ -8,6 +8,8 @@ import formatDate from './utils/formatDate';
 import wait from './utils/wait';
 import { setItem, getItem } from './utils/localStorage';
 import countLoyalty from './utils/countLoyalty';
+import getServerVersionCode from './utils/getServerVersionCode';
+import { buildVillageURL } from './utils/twhelp';
 import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 
 // ==UserScript==
@@ -15,9 +17,9 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.2
+// @version      0.7.3
 // @description  Extended village profile
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*
 // @grant        none
 // @run-at       document-end
@@ -336,6 +338,15 @@ const wrapAction = (action) => {
 };
 
 const renderActions = () => {
+  const linkToTWHelp = document.createElement('a');
+  linkToTWHelp.href = buildVillageURL(
+    getServerVersionCode(SERVER),
+    SERVER,
+    VILLAGE_ID
+  );
+  linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
+  actionContainer.appendChild(wrapAction(linkToTWHelp));
+
   const showEnnoblementsPopup = document.createElement('a');
   showEnnoblementsPopup.href = '#';
   setPage(showEnnoblementsPopup, '1');
