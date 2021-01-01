@@ -14,7 +14,7 @@ import countLoyalty from './utils/countLoyalty';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.2
+// @version      0.6.3
 // @description  Extended map popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -228,7 +228,7 @@ const renderAdditionalInfo = (id, data, { config, unitConfig }) => {
                       return buildUnitArrivalInfo(
                         calcAttackDuration(
                           distance,
-                          config.unitSpeed,
+                          config.unitSpeed * config.speed,
                           unit.speed
                         ),
                         index

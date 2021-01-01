@@ -675,7 +675,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.2
+// @version      0.6.3
 // @description  Extended map popup
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -793,7 +793,7 @@ const renderAdditionalInfo = (id, data, _ref) => {
 
   const units = getAvailableUnits(unitConfig);
   unitsEl.innerHTML = "\n          <td colspan=\"2\">\n            <table style=\"border: 1px solid #ded3b9; max-width: 450px;\"\n              width=\"100%\"\n              cellpadding=\"0\"\n              cellspacing=\"0\">\n              <tbody>\n                <tr class=\"center\">\n                  ".concat(units.map(buildUnitHeader).join(''), "\n                </tr>\n                <tr class=\"center\">\n                  ").concat(units.map((unit, index) => {
-    return buildUnitArrivalInfo((0, _tribalwars.calcAttackDuration)(distance, config.unitSpeed, unit.speed), index);
+    return buildUnitArrivalInfo((0, _tribalwars.calcAttackDuration)(distance, config.unitSpeed * config.speed, unit.speed), index);
   }).join(''), "\n                </tr>\n              </tbody>\n            </table>\n          </td>\n      ");
   let lastEnnobledAt = parent.querySelector('#lastEnnobledAt');
 

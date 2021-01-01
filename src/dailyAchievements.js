@@ -1,15 +1,17 @@
+import format from 'date-fns/format';
 import requestCreator from './libs/requestCreator';
 import getTranslations from './i18n/dailyAchievments';
 import { setItem, getItem } from './utils/localStorage';
 import { formatPlayerURL } from './utils/tribalwars';
 import getCurrentServer from './utils/getCurrentServer';
+import { inTZ } from './utils/date';
 
 // ==UserScript==
 // @name         Daily achievements
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
-// @version      0.4.1
+// @version      0.4.2
 // @description  Daily achievements
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player&mode=awards*
@@ -23,6 +25,9 @@ const SERVER_QUERY = `
         server(key: $server) {
             key
             historyUpdatedAt
+            version {
+              timezone
+            }
         }
     }
 `;
@@ -85,12 +90,13 @@ const loadData = async () => {
     },
   });
   if (data.server) {
+    const d = inTZ(data.server.historyUpdatedAt, data.server.version.timezone);
     const dailyStatsData = await requestCreator({
       query: DAILY_STATS_QUERY,
       variables: {
         server: SERVER,
         createDateGTE:
-          data.server.historyUpdatedAt.split('T')[0] + 'T00:00:00Z',
+          format(d, 'yyyy-MM-dd') + 'T' + format(d, 'HH:mm:ss') + 'Z',
       },
     });
     data = {
