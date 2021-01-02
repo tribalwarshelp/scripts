@@ -16,9 +16,8 @@ import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import getServerVersionCode from './utils/getServerVersionCode';
 import formatDate from './utils/formatDate';
-import { formatPlayerURL } from './utils/twstats';
 import { formatTribeURL } from './utils/tribalwars';
-import { buildPlayerURL } from './utils/twhelp';
+import * as twhelputils from './utils/twhelp';
 import { setItem, getItem } from './utils/localStorage';
 
 // ==UserScript==
@@ -26,7 +25,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.6
+// @version      1.1.7
 // @description  Extended player profile
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -35,6 +34,7 @@ import { setItem, getItem } from './utils/localStorage';
 // ==/UserScript==
 
 const SERVER = getCurrentServer();
+const VERSION = getServerVersionCode(SERVER);
 let PLAYER_ID = getIDFromURL(window.location.search);
 const CURRENT_PLAYER_ID = parseInt(game_data.player.id);
 if (isNaN(PLAYER_ID) || !PLAYER_ID) {
@@ -306,7 +306,8 @@ const renderPlayerServers = (player) => {
     .sort()
     .map(
       (server) =>
-        `<a target="_blank" rel="noopener noreferrer" style="margin-right: 5px" href="${formatPlayerURL(
+        `<a target="_blank" rel="noopener noreferrer" style="margin-right: 5px" href="${twhelputils.buildPlayerURL(
+          VERSION,
           server,
           player.id
         )}">${server}</a>`
@@ -664,11 +665,7 @@ const wrapAction = (action) => {
 
 const renderActions = () => {
   const linkToTWHelp = document.createElement('a');
-  linkToTWHelp.href = buildPlayerURL(
-    getServerVersionCode(SERVER),
-    SERVER,
-    PLAYER_ID
-  );
+  linkToTWHelp.href = twhelputils.buildPlayerURL(VERSION, SERVER, PLAYER_ID);
   linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
   actionContainer.appendChild(wrapAction(linkToTWHelp));
 

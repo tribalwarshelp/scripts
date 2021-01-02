@@ -1054,21 +1054,6 @@ var _default = function _default() {
 };
 
 exports.default = _default;
-},{}],"Syko":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.formatPlayerURL = void 0;
-
-const formatPlayerURL = function formatPlayerURL() {
-  let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-  let id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  return "http://www.twstats.com/in/".concat(server, "/player/").concat(id);
-};
-
-exports.formatPlayerURL = formatPlayerURL;
 },{}],"gvXE":[function(require,module,exports) {
 "use strict";
 
@@ -1179,13 +1164,15 @@ var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVer
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
-var _twstats = require("./utils/twstats");
-
 var _tribalwars = require("./utils/tribalwars");
 
-var _twhelp = require("./utils/twhelp");
+var twhelputils = _interopRequireWildcard(require("./utils/twhelp"));
 
 var _localStorage = require("./utils/localStorage");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1198,7 +1185,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.6
+// @version      1.1.7
 // @description  Extended player profile
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -1206,6 +1193,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // @run-at       document-end
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
+const VERSION = (0, _getServerVersionCode.default)(SERVER);
 let PLAYER_ID = (0, _getIDFromURL.default)(window.location.search);
 const CURRENT_PLAYER_ID = parseInt(game_data.player.id);
 
@@ -1339,7 +1327,7 @@ const renderPlayerServers = player => {
     otherElementContainer.prepend(playerServers);
   }
 
-  playerServers.querySelector('td').innerHTML = player.servers.sort().map(server => "<a target=\"_blank\" rel=\"noopener noreferrer\" style=\"margin-right: 5px\" href=\"".concat((0, _twstats.formatPlayerURL)(server, player.id), "\">").concat(server, "</a>")).join('');
+  playerServers.querySelector('td').innerHTML = player.servers.sort().map(server => "<a target=\"_blank\" rel=\"noopener noreferrer\" style=\"margin-right: 5px\" href=\"".concat(twhelputils.buildPlayerURL(VERSION, server, player.id), "\">").concat(server, "</a>")).join('');
 };
 
 const renderPlayerOtherNames = player => {
@@ -1551,7 +1539,7 @@ const wrapAction = action => {
 
 const renderActions = () => {
   const linkToTWHelp = document.createElement('a');
-  linkToTWHelp.href = (0, _twhelp.buildPlayerURL)((0, _getServerVersionCode.default)(SERVER), SERVER, PLAYER_ID);
+  linkToTWHelp.href = twhelputils.buildPlayerURL(VERSION, SERVER, PLAYER_ID);
   linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
   actionContainer.appendChild(wrapAction(linkToTWHelp));
   const showTribeChanges = document.createElement('a');
@@ -1597,4 +1585,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/hyphensToCamelCase":"GxsT","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/getServerVersionCode":"J1Ly","./utils/formatDate":"V6Mf","./utils/twstats":"Syko","./utils/tribalwars":"fHHP","./utils/twhelp":"gvXE","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/hyphensToCamelCase":"GxsT","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/getServerVersionCode":"J1Ly","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/twhelp":"gvXE","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
