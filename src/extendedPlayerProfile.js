@@ -16,7 +16,7 @@ import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import getServerVersionCode from './utils/getServerVersionCode';
 import formatDate from './utils/formatDate';
-import { formatTribeURL } from './utils/tribalwars';
+import * as twutils from './utils/tribalwars';
 import * as twhelputils from './utils/twhelp';
 import { setItem, getItem } from './utils/localStorage';
 
@@ -530,14 +530,14 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
             let rowHTML =
               '<tr>' + `<td>${formatDate(tribeChange.createdAt)}</td>`;
             if (tribeChange.newTribe) {
-              rowHTML += `<td><a href="${formatTribeURL(
+              rowHTML += `<td><a href="${twutils.buildTribeURL(
                 tribeChange.newTribe.id
               )}">${tribeChange.newTribe.tag}</a></td>`;
             } else {
               rowHTML += '<td>-</td>';
             }
             if (tribeChange.oldTribe) {
-              rowHTML += `<td><a href="${formatTribeURL(
+              rowHTML += `<td><a href="${twutils.buildTribeURL(
                 tribeChange.oldTribe.id
               )}">${tribeChange.oldTribe.tag}</a></td>`;
             } else {

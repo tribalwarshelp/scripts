@@ -240,36 +240,36 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.buildVillageName = exports.buildVillageURL = exports.buildPlayerURL = exports.buildTribeURL = void 0;
 
-const formatTribeURL = id => {
+const buildTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_ally',
     id
   });
 };
 
-exports.formatTribeURL = formatTribeURL;
+exports.buildTribeURL = buildTribeURL;
 
-const formatPlayerURL = id => {
+const buildPlayerURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_player',
     id
   });
 };
 
-exports.formatPlayerURL = formatPlayerURL;
+exports.buildPlayerURL = buildPlayerURL;
 
-const formatVillageURL = id => {
+const buildVillageURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_village',
     id
   });
 };
 
-exports.formatVillageURL = formatVillageURL;
+exports.buildVillageURL = buildVillageURL;
 
-const formatVillageName = function formatVillageName() {
+const buildVillageName = function buildVillageName() {
   let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
   let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
@@ -277,10 +277,10 @@ const formatVillageName = function formatVillageName() {
   return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
 };
 
-exports.formatVillageName = formatVillageName;
+exports.buildVillageName = buildVillageName;
 
-const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round(distance * baseSpeed / unitSpeed);
+const calcAttackDuration = (distance, baseSpeed) => {
+  return Math.round(distance * baseSpeed);
 };
 
 exports.calcAttackDuration = calcAttackDuration;
@@ -435,15 +435,19 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
-var _tribalwars = require("./utils/tribalwars");
+var twutils = _interopRequireWildcard(require("./utils/tribalwars"));
 
 var _localStorage = require("./utils/localStorage");
 
-var _twhelp = require("./utils/twhelp");
+var twhelputils = _interopRequireWildcard(require("./utils/twhelp"));
 
 var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
 
 var _latestEnnoblements = _interopRequireDefault(require("./i18n/latestEnnoblements"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -557,7 +561,7 @@ const handleFilterFormSubmit = (e, ennoblements) => {
     oldOwnerTribe: e.target[3].value
   });
 
-  document.querySelector("#".concat(TABLE_ID, " tbody")).innerHTML = formatEnnoblementRows(filterEnnoblements(ennoblements, filters)).join('');
+  document.querySelector("#".concat(TABLE_ID, " tbody")).innerHTML = buildEnnoblementsRows(filterEnnoblements(ennoblements, filters)).join('');
   cacheFilters(filters);
 };
 
@@ -568,17 +572,17 @@ const addEventListeners = function addEventListeners() {
   });
 };
 
-const formatPlayerHTML = player => {
-  return player && player.name ? "<a href=\"".concat((0, _tribalwars.formatPlayerURL)(player.id), "\">").concat(player.name, "</a> (").concat(player.tribe && player.tribe.tag ? "<a href=\"".concat((0, _tribalwars.formatTribeURL)(player.tribe.id), "\">").concat(player.tribe.tag, "</a>") : '-', ")") : '-';
+const getPlayerHTML = player => {
+  return player && player.name ? "<a href=\"".concat(twutils.buildPlayerURL(player.id), "\">").concat(player.name, "</a> (").concat(player.tribe && player.tribe.tag ? "<a href=\"".concat(twutils.buildTribeURL(player.tribe.id), "\">").concat(player.tribe.tag, "</a>") : '-', ")") : '-';
 };
 
-const formatVillageHTML = village => {
-  return "<a href=\"".concat((0, _tribalwars.formatVillageURL)(village.id), "\">").concat((0, _tribalwars.formatVillageName)(village.name, village.x, village.y), "</a>");
+const getVillageHTML = village => {
+  return "<a href=\"".concat(twutils.buildVillageURL(village.id), "\">").concat(twutils.buildVillageName(village.name, village.x, village.y), "</a>");
 };
 
-const formatEnnoblementRows = ennoblements => {
+const buildEnnoblementsRows = ennoblements => {
   return ennoblements.reverse().map(ennoblement => {
-    return "<tr>\n              <td>".concat(formatVillageHTML(ennoblement.village), "</td>\n              <td>").concat(formatPlayerHTML(ennoblement.newOwner), "</td>\n              <td>").concat(formatPlayerHTML(ennoblement.oldOwner), "</td>\n              <td>").concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>\n            </tr>");
+    return "<tr>\n              <td>".concat(getVillageHTML(ennoblement.village), "</td>\n              <td>").concat(getPlayerHTML(ennoblement.newOwner), "</td>\n              <td>").concat(getPlayerHTML(ennoblement.oldOwner), "</td>\n              <td>").concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>\n            </tr>");
   });
 };
 
@@ -588,7 +592,7 @@ const renderLatestEnnoblements = function renderLatestEnnoblements() {
 
   const prepared = _objectSpread(_objectSpread({}, DEFAULT_FILTER), filters);
 
-  const html = "\n        <form style=\"margin-bottom: 15px\" id=\"".concat(FILTER_FORM_ID, "\">\n        <h1 style=\"margin-bottom: 0px; text-align: center;\"><a href=\"").concat((0, _twhelp.buildURLToServerPage)((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n            <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n          <h3 style=\"margin-bottom: 5px\">").concat(translations.filters, "</h3>\n          <input type=\"text\" placeholder=\"").concat(translations.newOwner, "\" value=\"").concat(prepared.newOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.newOwnerTribe, "\" value=\"").concat(prepared.newOwnerTribe, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwner, "\" value=\"").concat(prepared.oldOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwnerTribe, "\" value=\"").concat(prepared.oldOwnerTribe, "\" />\n          <div>\n            <button type=\"submit\">").concat(translations.apply, "</button>\n          </div>\n        </form>\n        <table class=\"vis\" id=\"").concat(TABLE_ID, "\" style=\"width: 100%\">\n          <thead>\n            <tr>\n              <th>").concat(translations.village, "</th>\n              <th>").concat(translations.newOwner, "</th>\n              <th>").concat(translations.oldOwner, "</th>\n              <th>").concat(translations.date, "</th>\n            </tr>\n          </thead>\n          <tbody>\n            ").concat(formatEnnoblementRows(filterEnnoblements(ennoblements, prepared)).join(''), "\n          </tbody>\n        </table>\n        ");
+  const html = "\n        <form style=\"margin-bottom: 15px\" id=\"".concat(FILTER_FORM_ID, "\">\n        <h1 style=\"margin-bottom: 0px; text-align: center;\"><a href=\"").concat(twhelputils.buildURLToServerPage((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n            <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n          <h3 style=\"margin-bottom: 5px\">").concat(translations.filters, "</h3>\n          <input type=\"text\" placeholder=\"").concat(translations.newOwner, "\" value=\"").concat(prepared.newOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.newOwnerTribe, "\" value=\"").concat(prepared.newOwnerTribe, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwner, "\" value=\"").concat(prepared.oldOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwnerTribe, "\" value=\"").concat(prepared.oldOwnerTribe, "\" />\n          <div>\n            <button type=\"submit\">").concat(translations.apply, "</button>\n          </div>\n        </form>\n        <table class=\"vis\" id=\"").concat(TABLE_ID, "\" style=\"width: 100%\">\n          <thead>\n            <tr>\n              <th>").concat(translations.village, "</th>\n              <th>").concat(translations.newOwner, "</th>\n              <th>").concat(translations.oldOwner, "</th>\n              <th>").concat(translations.date, "</th>\n            </tr>\n          </thead>\n          <tbody>\n            ").concat(buildEnnoblementsRows(filterEnnoblements(ennoblements, prepared)).join(''), "\n          </tbody>\n        </table>\n        ");
   (0, _showPopup.default)({
     e: {
       clientY: 60

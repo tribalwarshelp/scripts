@@ -2,7 +2,7 @@ import requestCreator from './libs/requestCreator';
 import getTranslations from './i18n/warStatsGenerator';
 import getServer from './utils/getCurrentServer';
 import getServerVersionCode from './utils/getServerVersionCode';
-import { buildURLToServerPage } from './utils/twhelp';
+import * as twhelputils from './utils/twhelp';
 import showPopup, { POPUP_SELECTOR } from './utils/showPopup';
 
 // ==UserScript==
@@ -182,7 +182,7 @@ const handleFormSubmit = async (e) => {
 const showWarStatsForm = (e) => {
   const html = `
         <form>
-        <h1 style="margin-bottom: 0px; text-align: center;"><a href="${buildURLToServerPage(
+        <h1 style="margin-bottom: 0px; text-align: center;"><a href="${twhelputils.buildURLToServerPage(
           getServerVersionCode(SERVER),
           SERVER
         )}">TWHelp</a></h1>

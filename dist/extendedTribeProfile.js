@@ -117,469 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"d3m2":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = assertString;
-
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
-function assertString(input) {
-  var isString = typeof input === 'string' || input instanceof String;
-
-  if (!isString) {
-    var invalidType;
-
-    if (input === null) {
-      invalidType = 'null';
-    } else {
-      invalidType = _typeof(input);
-
-      if (invalidType === 'object' && input.constructor && input.constructor.hasOwnProperty('name')) {
-        invalidType = input.constructor.name;
-      } else {
-        invalidType = "a ".concat(invalidType);
-      }
-    }
-
-    throw new TypeError("Expected string but received ".concat(invalidType, "."));
-  }
-}
-
-module.exports = exports.default;
-module.exports.default = exports.default;
-},{}],"hxfi":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = merge;
-
-function merge() {
-  var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var defaults = arguments.length > 1 ? arguments[1] : undefined;
-
-  for (var key in defaults) {
-    if (typeof obj[key] === 'undefined') {
-      obj[key] = defaults[key];
-    }
-  }
-
-  return obj;
-}
-
-module.exports = exports.default;
-module.exports.default = exports.default;
-},{}],"KGu6":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isFQDN;
-
-var _assertString = _interopRequireDefault(require("./util/assertString"));
-
-var _merge = _interopRequireDefault(require("./util/merge"));
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : {
-    default: obj
-  };
-}
-
-var default_fqdn_options = {
-  require_tld: true,
-  allow_underscores: false,
-  allow_trailing_dot: false
-};
-
-function isFQDN(str, options) {
-  (0, _assertString.default)(str);
-  options = (0, _merge.default)(options, default_fqdn_options);
-  /* Remove the optional trailing dot before checking validity */
-
-  if (options.allow_trailing_dot && str[str.length - 1] === '.') {
-    str = str.substring(0, str.length - 1);
-  }
-
-  var parts = str.split('.');
-
-  for (var i = 0; i < parts.length; i++) {
-    if (parts[i].length > 63) {
-      return false;
-    }
-  }
-
-  if (options.require_tld) {
-    var tld = parts.pop();
-
-    if (!parts.length || !/^([a-z\u00a1-\uffff]{2,}|xn[a-z0-9-]{2,})$/i.test(tld)) {
-      return false;
-    } // disallow spaces && special characers
-
-
-    if (/[\s\u2002-\u200B\u202F\u205F\u3000\uFEFF\uDB40\uDC20\u00A9\uFFFD]/.test(tld)) {
-      return false;
-    }
-  }
-
-  for (var part, _i = 0; _i < parts.length; _i++) {
-    part = parts[_i];
-
-    if (options.allow_underscores) {
-      part = part.replace(/_/g, '');
-    }
-
-    if (!/^[a-z\u00a1-\uffff0-9-]+$/i.test(part)) {
-      return false;
-    } // disallow full-width chars
-
-
-    if (/[\uff01-\uff5e]/.test(part)) {
-      return false;
-    }
-
-    if (part[0] === '-' || part[part.length - 1] === '-') {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-module.exports = exports.default;
-module.exports.default = exports.default;
-},{"./util/assertString":"d3m2","./util/merge":"hxfi"}],"NHAn":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isIP;
-
-var _assertString = _interopRequireDefault(require("./util/assertString"));
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : {
-    default: obj
-  };
-}
-/**
-11.3.  Examples
-
-   The following addresses
-
-             fe80::1234 (on the 1st link of the node)
-             ff02::5678 (on the 5th link of the node)
-             ff08::9abc (on the 10th organization of the node)
-
-   would be represented as follows:
-
-             fe80::1234%1
-             ff02::5678%5
-             ff08::9abc%10
-
-   (Here we assume a natural translation from a zone index to the
-   <zone_id> part, where the Nth zone of any scope is translated into
-   "N".)
-
-   If we use interface names as <zone_id>, those addresses could also be
-   represented as follows:
-
-            fe80::1234%ne0
-            ff02::5678%pvc1.3
-            ff08::9abc%interface10
-
-   where the interface "ne0" belongs to the 1st link, "pvc1.3" belongs
-   to the 5th link, and "interface10" belongs to the 10th organization.
- * * */
-
-
-var ipv4Maybe = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
-var ipv6Block = /^[0-9A-F]{1,4}$/i;
-
-function isIP(str) {
-  var version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-  (0, _assertString.default)(str);
-  version = String(version);
-
-  if (!version) {
-    return isIP(str, 4) || isIP(str, 6);
-  } else if (version === '4') {
-    if (!ipv4Maybe.test(str)) {
-      return false;
-    }
-
-    var parts = str.split('.').sort(function (a, b) {
-      return a - b;
-    });
-    return parts[3] <= 255;
-  } else if (version === '6') {
-    var addressAndZone = [str]; // ipv6 addresses could have scoped architecture
-    // according to https://tools.ietf.org/html/rfc4007#section-11
-
-    if (str.includes('%')) {
-      addressAndZone = str.split('%');
-
-      if (addressAndZone.length !== 2) {
-        // it must be just two parts
-        return false;
-      }
-
-      if (!addressAndZone[0].includes(':')) {
-        // the first part must be the address
-        return false;
-      }
-
-      if (addressAndZone[1] === '') {
-        // the second part must not be empty
-        return false;
-      }
-    }
-
-    var blocks = addressAndZone[0].split(':');
-    var foundOmissionBlock = false; // marker to indicate ::
-    // At least some OS accept the last 32 bits of an IPv6 address
-    // (i.e. 2 of the blocks) in IPv4 notation, and RFC 3493 says
-    // that '::ffff:a.b.c.d' is valid for IPv4-mapped IPv6 addresses,
-    // and '::a.b.c.d' is deprecated, but also valid.
-
-    var foundIPv4TransitionBlock = isIP(blocks[blocks.length - 1], 4);
-    var expectedNumberOfBlocks = foundIPv4TransitionBlock ? 7 : 8;
-
-    if (blocks.length > expectedNumberOfBlocks) {
-      return false;
-    } // initial or final ::
-
-
-    if (str === '::') {
-      return true;
-    } else if (str.substr(0, 2) === '::') {
-      blocks.shift();
-      blocks.shift();
-      foundOmissionBlock = true;
-    } else if (str.substr(str.length - 2) === '::') {
-      blocks.pop();
-      blocks.pop();
-      foundOmissionBlock = true;
-    }
-
-    for (var i = 0; i < blocks.length; ++i) {
-      // test for a :: which can not be at the string start/end
-      // since those cases have been handled above
-      if (blocks[i] === '' && i > 0 && i < blocks.length - 1) {
-        if (foundOmissionBlock) {
-          return false; // multiple :: in address
-        }
-
-        foundOmissionBlock = true;
-      } else if (foundIPv4TransitionBlock && i === blocks.length - 1) {// it has been checked before that the last
-        // block is a valid IPv4 address
-      } else if (!ipv6Block.test(blocks[i])) {
-        return false;
-      }
-    }
-
-    if (foundOmissionBlock) {
-      return blocks.length >= 1;
-    }
-
-    return blocks.length === expectedNumberOfBlocks;
-  }
-
-  return false;
-}
-
-module.exports = exports.default;
-module.exports.default = exports.default;
-},{"./util/assertString":"d3m2"}],"XMVV":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isURL;
-
-var _assertString = _interopRequireDefault(require("./util/assertString"));
-
-var _isFQDN = _interopRequireDefault(require("./isFQDN"));
-
-var _isIP = _interopRequireDefault(require("./isIP"));
-
-var _merge = _interopRequireDefault(require("./util/merge"));
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : {
-    default: obj
-  };
-}
-/*
-options for isURL method
-
-require_protocol - if set as true isURL will return false if protocol is not present in the URL
-require_valid_protocol - isURL will check if the URL's protocol is present in the protocols option
-protocols - valid protocols can be modified with this option
-require_host - if set as false isURL will not check if host is present in the URL
-allow_protocol_relative_urls - if set as true protocol relative URLs will be allowed
-
-*/
-
-
-var default_url_options = {
-  protocols: ['http', 'https', 'ftp'],
-  require_tld: true,
-  require_protocol: false,
-  require_host: true,
-  require_valid_protocol: true,
-  allow_underscores: false,
-  allow_trailing_dot: false,
-  allow_protocol_relative_urls: false
-};
-var wrapped_ipv6 = /^\[([^\]]+)\](?::([0-9]+))?$/;
-
-function isRegExp(obj) {
-  return Object.prototype.toString.call(obj) === '[object RegExp]';
-}
-
-function checkHost(host, matches) {
-  for (var i = 0; i < matches.length; i++) {
-    var match = matches[i];
-
-    if (host === match || isRegExp(match) && match.test(host)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function isURL(url, options) {
-  (0, _assertString.default)(url);
-
-  if (!url || url.length >= 2083 || /[\s<>]/.test(url)) {
-    return false;
-  }
-
-  if (url.indexOf('mailto:') === 0) {
-    return false;
-  }
-
-  options = (0, _merge.default)(options, default_url_options);
-  var protocol, auth, host, hostname, port, port_str, split, ipv6;
-  split = url.split('#');
-  url = split.shift();
-  split = url.split('?');
-  url = split.shift();
-  split = url.split('://');
-
-  if (split.length > 1) {
-    protocol = split.shift().toLowerCase();
-
-    if (options.require_valid_protocol && options.protocols.indexOf(protocol) === -1) {
-      return false;
-    }
-  } else if (options.require_protocol) {
-    return false;
-  } else if (url.substr(0, 2) === '//') {
-    if (!options.allow_protocol_relative_urls) {
-      return false;
-    }
-
-    split[0] = url.substr(2);
-  }
-
-  url = split.join('://');
-
-  if (url === '') {
-    return false;
-  }
-
-  split = url.split('/');
-  url = split.shift();
-
-  if (url === '' && !options.require_host) {
-    return true;
-  }
-
-  split = url.split('@');
-
-  if (split.length > 1) {
-    if (options.disallow_auth) {
-      return false;
-    }
-
-    auth = split.shift();
-
-    if (auth.indexOf(':') >= 0 && auth.split(':').length > 2) {
-      return false;
-    }
-  }
-
-  hostname = split.join('@');
-  port_str = null;
-  ipv6 = null;
-  var ipv6_match = hostname.match(wrapped_ipv6);
-
-  if (ipv6_match) {
-    host = '';
-    ipv6 = ipv6_match[1];
-    port_str = ipv6_match[2] || null;
-  } else {
-    split = hostname.split(':');
-    host = split.shift();
-
-    if (split.length) {
-      port_str = split.join(':');
-    }
-  }
-
-  if (port_str !== null) {
-    port = parseInt(port_str, 10);
-
-    if (!/^[0-9]+$/.test(port_str) || port <= 0 || port > 65535) {
-      return false;
-    }
-  }
-
-  if (!(0, _isIP.default)(host) && !(0, _isFQDN.default)(host, options) && (!ipv6 || !(0, _isIP.default)(ipv6, 6))) {
-    return false;
-  }
-
-  host = host || ipv6;
-
-  if (options.host_whitelist && !checkHost(host, options.host_whitelist)) {
-    return false;
-  }
-
-  if (options.host_blacklist && checkHost(host, options.host_blacklist)) {
-    return false;
-  }
-
-  return true;
-}
-
-module.exports = exports.default;
-module.exports.default = exports.default;
-},{"./util/assertString":"d3m2","./isFQDN":"KGu6","./isIP":"NHAn","./util/merge":"hxfi"}],"kK6Q":[function(require,module,exports) {
+})({"kK6Q":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1289,36 +827,36 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.buildVillageName = exports.buildVillageURL = exports.buildPlayerURL = exports.buildTribeURL = void 0;
 
-const formatTribeURL = id => {
+const buildTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_ally',
     id
   });
 };
 
-exports.formatTribeURL = formatTribeURL;
+exports.buildTribeURL = buildTribeURL;
 
-const formatPlayerURL = id => {
+const buildPlayerURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_player',
     id
   });
 };
 
-exports.formatPlayerURL = formatPlayerURL;
+exports.buildPlayerURL = buildPlayerURL;
 
-const formatVillageURL = id => {
+const buildVillageURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_village',
     id
   });
 };
 
-exports.formatVillageURL = formatVillageURL;
+exports.buildVillageURL = buildVillageURL;
 
-const formatVillageName = function formatVillageName() {
+const buildVillageName = function buildVillageName() {
   let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
   let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
@@ -1326,10 +864,10 @@ const formatVillageName = function formatVillageName() {
   return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
 };
 
-exports.formatVillageName = formatVillageName;
+exports.buildVillageName = buildVillageName;
 
-const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round(distance * baseSpeed / unitSpeed);
+const calcAttackDuration = (distance, baseSpeed) => {
+  return Math.round(distance * baseSpeed);
 };
 
 exports.calcAttackDuration = calcAttackDuration;
@@ -1355,7 +893,11 @@ var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
 var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
 
-var _tribalwars = require("../utils/tribalwars");
+var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1364,7 +906,7 @@ const translations = (0, _showEnnoblementsPopup.default)();
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
-    return "<td><a href=\"".concat((0, _tribalwars.formatPlayerURL)(player.id), "\">").concat(player.name, " (").concat(tribe ? "<a href=\"".concat((0, _tribalwars.formatTribeURL)(tribe.id), "\">").concat(tribe.tag, "</a>") : '-', ")</a></td>");
+    return "<td><a href=\"".concat(twutils.buildPlayerURL(player.id), "\">").concat(player.name, " (").concat(tribe ? "<a href=\"".concat(twutils.buildTribeURL(tribe.id), "\">").concat(tribe.tag, "</a>") : '-', ")</a></td>");
   }
 
   return '<td>-</td>';
@@ -1385,7 +927,7 @@ var _default = function _default(e, ennoblements) {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatVillageURL)(ennoblement.village.id), "\">").concat((0, _tribalwars.formatVillageName)(ennoblement.village.name, ennoblement.village.x, ennoblement.village.y), "</a></td>");
+      rowHTML += "<td><a href=\"".concat(twutils.buildVillageURL(ennoblement.village.id), "\">").concat(twutils.buildVillageName(ennoblement.village.name, ennoblement.village.x, ennoblement.village.y), "</a></td>");
     } else {
       rowHTML += '<td>-</td>';
     }
@@ -1581,7 +1123,11 @@ var _pagination = require("../utils/pagination");
 
 var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
 
-var _tribalwars = require("../utils/tribalwars");
+var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1616,7 +1162,7 @@ var _default = function _default(e, history, daily) {
     }), "</td>");
 
     if (!tribe && history.tribe) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(history.tribe.id), "\">").concat(history.tribe.tag, "</a></td>");
+      rowHTML += "<td><a href=\"".concat(twutils.buildTribeURL(history.tribe.id), "\">").concat(history.tribe.tag, "</a></td>");
     } else if (!tribe) {
       rowHTML += '<td>-</td>';
     }
@@ -1705,15 +1251,15 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.formatPlayerURL = void 0;
+exports.buildPlayerURL = void 0;
 
-const formatPlayerURL = function formatPlayerURL() {
+const buildPlayerURL = function buildPlayerURL() {
   let server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   let id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   return "http://www.twstats.com/in/".concat(server, "/player/").concat(id);
 };
 
-exports.formatPlayerURL = formatPlayerURL;
+exports.buildPlayerURL = buildPlayerURL;
 },{}],"gvXE":[function(require,module,exports) {
 "use strict";
 
@@ -1771,8 +1317,6 @@ exports.buildVillageURL = buildVillageURL;
 },{}],"r4nF":[function(require,module,exports) {
 "use strict";
 
-var _isURL = _interopRequireDefault(require("validator/lib/isURL"));
-
 var _differenceInDays = _interopRequireDefault(require("date-fns/differenceInDays"));
 
 var _extendedTribeProfile = _interopRequireDefault(require("./i18n/extendedTribeProfile"));
@@ -1799,11 +1343,15 @@ var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
 var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
 
-var _twstats = require("./utils/twstats");
+var twstatsutils = _interopRequireWildcard(require("./utils/twstats"));
 
-var _twhelp = require("./utils/twhelp");
+var twhelputils = _interopRequireWildcard(require("./utils/twhelp"));
 
-var _tribalwars = require("./utils/tribalwars");
+var twutils = _interopRequireWildcard(require("./utils/tribalwars"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1942,10 +1490,10 @@ const extendMembersData = players => {
 
     if (player) {
       [[player.scoreAtt, player.rankAtt], [player.scoreDef, player.rankDef], [player.scoreSup, player.rankSup], [player.scoreTotal, player.rankTotal], player.dailyGrowth, [{
-        link: (0, _twhelp.buildPlayerURL)(VERSION, SERVER, player.id),
+        link: twhelputils.buildPlayerURL(VERSION, SERVER, player.id),
         label: 'TWHelp'
       }, {
-        link: (0, _twstats.formatPlayerURL)(SERVER, player.id),
+        link: twstatsutils.buildPlayerURL(SERVER, player.id),
         label: 'TWStats'
       }]].forEach((data, index) => {
         let td = tr.children[5 + index];
@@ -2140,7 +1688,7 @@ const buildMembersGrowthTBody = stats => {
       tds.push("<td style=\"".concat(getMembersGrowthTdStyle(val), "\">").concat(val.toLocaleString(), "</td>"));
     }
 
-    return "<tr>\n            <td>\n              ".concat(player ? "<a href=\"".concat((0, _tribalwars.formatPlayerURL)(id), "\">").concat(player.name, "</a>") : '-', "\n            </td>\n            ").concat(tds.join(''), "\n            <td style=\"").concat(getMembersGrowthTdStyle(total), "\"><strong>").concat(total.toLocaleString(), "</strong></td>\n          </tr>");
+    return "<tr>\n            <td>\n              ".concat(player ? "<a href=\"".concat(twutils.buildPlayerURL(id), "\">").concat(player.name, "</a>") : '-', "\n            </td>\n            ").concat(tds.join(''), "\n            <td style=\"").concat(getMembersGrowthTdStyle(total), "\"><strong>").concat(total.toLocaleString(), "</strong></td>\n          </tr>");
   }).join(''), "\n      </tbody>\n  ");
 };
 
@@ -2210,7 +1758,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
 
     if (tribeChange.player) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatPlayerURL)(tribeChange.player.id), "\">").concat(tribeChange.player.name, "</a></td>");
+      rowHTML += "<td><a href=\"".concat(twutils.buildPlayerURL(tribeChange.player.id), "\">").concat(tribeChange.player.name, "</a></td>");
     } else {
       rowHTML += '<td>-</td>';
     }
@@ -2361,7 +1909,7 @@ const wrapAction = action => {
 
 const renderActions = () => {
   const linkToTWHelp = document.createElement('a');
-  linkToTWHelp.href = (0, _twhelp.buildTribeURL)(VERSION, SERVER, TRIBE_ID);
+  linkToTWHelp.href = twhelputils.buildTribeURL(VERSION, SERVER, TRIBE_ID);
   linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
   actionContainer.appendChild(wrapAction(linkToTWHelp));
   const showEnnoblements = document.createElement('a');
@@ -2418,4 +1966,4 @@ const renderActions = () => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"validator/lib/isURL":"XMVV","date-fns/differenceInDays":"mdVI","./i18n/extendedTribeProfile":"iFDG","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/getServerVersionCode":"J1Ly","./utils/twstats":"Syko","./utils/twhelp":"gvXE","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)
+},{"date-fns/differenceInDays":"mdVI","./i18n/extendedTribeProfile":"iFDG","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/getServerVersionCode":"J1Ly","./utils/twstats":"Syko","./utils/twhelp":"gvXE","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)

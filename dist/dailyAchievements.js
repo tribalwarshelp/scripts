@@ -2999,36 +2999,36 @@ exports.setItem = setItem;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.buildVillageName = exports.buildVillageURL = exports.buildPlayerURL = exports.buildTribeURL = void 0;
 
-const formatTribeURL = id => {
+const buildTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_ally',
     id
   });
 };
 
-exports.formatTribeURL = formatTribeURL;
+exports.buildTribeURL = buildTribeURL;
 
-const formatPlayerURL = id => {
+const buildPlayerURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_player',
     id
   });
 };
 
-exports.formatPlayerURL = formatPlayerURL;
+exports.buildPlayerURL = buildPlayerURL;
 
-const formatVillageURL = id => {
+const buildVillageURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_village',
     id
   });
 };
 
-exports.formatVillageURL = formatVillageURL;
+exports.buildVillageURL = buildVillageURL;
 
-const formatVillageName = function formatVillageName() {
+const buildVillageName = function buildVillageName() {
   let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
   let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
@@ -3036,10 +3036,10 @@ const formatVillageName = function formatVillageName() {
   return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
 };
 
-exports.formatVillageName = formatVillageName;
+exports.buildVillageName = buildVillageName;
 
-const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round(distance * baseSpeed / unitSpeed);
+const calcAttackDuration = (distance, baseSpeed) => {
+  return Math.round(distance * baseSpeed);
 };
 
 exports.calcAttackDuration = calcAttackDuration;
@@ -3163,7 +3163,7 @@ var _dailyAchievments = _interopRequireDefault(require("./i18n/dailyAchievments"
 
 var _localStorage = require("./utils/localStorage");
 
-var _tribalwars = require("./utils/tribalwars");
+var twutils = _interopRequireWildcard(require("./utils/tribalwars"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
@@ -3172,6 +3172,10 @@ var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVer
 var _date = require("./utils/date");
 
 var _twhelp = require("./utils/twhelp");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3239,7 +3243,7 @@ const render = (_ref) => {
     dailyPlayerStatsOrderedByScoreSup,
     dailyPlayerStatsOrderedByVillages
   } = _ref;
-  const html = "\n        <div class=\"award-group-head\">".concat(translations.title, "</div>\n        <div class=\"award-group-content\" style=\"text-align: center;\">\n            <div style=\"padding: 10px;\">\n            <h1 style=\"margin-bottom: 0px;\"><a href=\"").concat((0, _twhelp.buildURLToServerPage)((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n                <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n                <h3 style=\"color: red;\"><strong>").concat(translations.warning, "</strong></h3>\n                <p><strong>").concat(translations.aotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreAtt.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreAtt.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.dotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreDef.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreDef.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.sotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreSup.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreSup.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.gpotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByVillages.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat((0, _tribalwars.formatPlayerURL)(item.player.id), "\">").concat(item.player.name, " - ").concat(item.villages.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n        </div>\n        <div class=\"award-group-foot\"></div>\n    ");
+  const html = "\n        <div class=\"award-group-head\">".concat(translations.title, "</div>\n        <div class=\"award-group-content\" style=\"text-align: center;\">\n            <div style=\"padding: 10px;\">\n            <h1 style=\"margin-bottom: 0px;\"><a href=\"").concat((0, _twhelp.buildURLToServerPage)((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n                <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n                <h3 style=\"color: red;\"><strong>").concat(translations.warning, "</strong></h3>\n                <p><strong>").concat(translations.aotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreAtt.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat(twutils.buildPlayerURL(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreAtt.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.dotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreDef.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat(twutils.buildPlayerURL(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreDef.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.sotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByScoreSup.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat(twutils.buildPlayerURL(item.player.id), "\">").concat(item.player.name, " - ").concat(item.scoreSup.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n            <hr>\n            <div style=\"padding: 10px;\">\n                <p><strong>").concat(translations.gpotd, "</strong></p>\n                ").concat(dailyPlayerStatsOrderedByVillages.items.map((item, index) => "<span>".concat(index + 1, ". <a href=\"").concat(twutils.buildPlayerURL(item.player.id), "\">").concat(item.player.name, " - ").concat(item.villages.toLocaleString(), "</a></span>")).join('<br>'), "\n            </div>\n        </div>\n        <div class=\"award-group-foot\"></div>\n    ");
 
   if (!container) {
     container = document.createElement('div');

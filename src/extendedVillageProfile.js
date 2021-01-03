@@ -7,9 +7,9 @@ import buildUnitImgURL from './utils/buildUnitImgURL';
 import formatDate from './utils/formatDate';
 import wait from './utils/wait';
 import { setItem, getItem } from './utils/localStorage';
-import countLoyalty from './utils/countLoyalty';
+import calcLoyalty from './utils/calcLoyalty';
 import getServerVersionCode from './utils/getServerVersionCode';
-import { buildVillageURL } from './utils/twhelp';
+import * as twhelputils from './utils/twhelp';
 import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 
 // ==UserScript==
@@ -339,7 +339,7 @@ const wrapAction = (action) => {
 
 const renderActions = () => {
   const linkToTWHelp = document.createElement('a');
-  linkToTWHelp.href = buildVillageURL(
+  linkToTWHelp.href = twhelputils.buildVillageURL(
     getServerVersionCode(SERVER),
     SERVER,
     VILLAGE_ID
@@ -406,7 +406,7 @@ const renderAdditionalInfo = ({ config, ennoblements } = {}) => {
     id: 'loyalty',
     title: `${translations.possibleLoyalty}:`,
     data: firstEnnoblement
-      ? countLoyalty(new Date(firstEnnoblement.ennobledAt), config.speed)
+      ? calcLoyalty(new Date(firstEnnoblement.ennobledAt), config.speed)
       : 100,
   });
   renderTr({

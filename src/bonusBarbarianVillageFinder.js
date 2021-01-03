@@ -1,7 +1,7 @@
 import requestCreator from './libs/requestCreator';
 import getTranslations from './i18n/bonusBarbarianVillageFinder';
 import getCurrentServer from './utils/getCurrentServer';
-import { formatVillageURL, formatVillageName } from './utils/tribalwars';
+import * as twutils from './utils/tribalwars';
 import { calcDistanceBetweenTwoPoints } from './utils/math';
 
 // ==UserScript==
@@ -116,8 +116,12 @@ const buildTableBodyHTML = (villages) => {
                     .map(
                       (village) => `<tr>
                 <td>
-                    <a href="${formatVillageURL(village.id)}">
-                        ${formatVillageName(village.name, village.x, village.y)}
+                    <a href="${twutils.buildVillageURL(village.id)}">
+                        ${twutils.buildVillageName(
+                          village.name,
+                          village.x,
+                          village.y
+                        )}
                     </a>
                 </td>
                 <td>

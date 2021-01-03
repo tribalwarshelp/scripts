@@ -587,36 +587,36 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.buildVillageName = exports.buildVillageURL = exports.buildPlayerURL = exports.buildTribeURL = void 0;
 
-const formatTribeURL = id => {
+const buildTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_ally',
     id
   });
 };
 
-exports.formatTribeURL = formatTribeURL;
+exports.buildTribeURL = buildTribeURL;
 
-const formatPlayerURL = id => {
+const buildPlayerURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_player',
     id
   });
 };
 
-exports.formatPlayerURL = formatPlayerURL;
+exports.buildPlayerURL = buildPlayerURL;
 
-const formatVillageURL = id => {
+const buildVillageURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_village',
     id
   });
 };
 
-exports.formatVillageURL = formatVillageURL;
+exports.buildVillageURL = buildVillageURL;
 
-const formatVillageName = function formatVillageName() {
+const buildVillageName = function buildVillageName() {
   let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
   let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
@@ -624,10 +624,10 @@ const formatVillageName = function formatVillageName() {
   return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
 };
 
-exports.formatVillageName = formatVillageName;
+exports.buildVillageName = buildVillageName;
 
-const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round(distance * baseSpeed / unitSpeed);
+const calcAttackDuration = (distance, baseSpeed) => {
+  return Math.round(distance * baseSpeed);
 };
 
 exports.calcAttackDuration = calcAttackDuration;
@@ -653,7 +653,11 @@ var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
 var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
 
-var _tribalwars = require("../utils/tribalwars");
+var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -662,7 +666,7 @@ const translations = (0, _showEnnoblementsPopup.default)();
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
-    return "<td><a href=\"".concat((0, _tribalwars.formatPlayerURL)(player.id), "\">").concat(player.name, " (").concat(tribe ? "<a href=\"".concat((0, _tribalwars.formatTribeURL)(tribe.id), "\">").concat(tribe.tag, "</a>") : '-', ")</a></td>");
+    return "<td><a href=\"".concat(twutils.buildPlayerURL(player.id), "\">").concat(player.name, " (").concat(tribe ? "<a href=\"".concat(twutils.buildTribeURL(tribe.id), "\">").concat(tribe.tag, "</a>") : '-', ")</a></td>");
   }
 
   return '<td>-</td>';
@@ -683,7 +687,7 @@ var _default = function _default(e, ennoblements) {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatVillageURL)(ennoblement.village.id), "\">").concat((0, _tribalwars.formatVillageName)(ennoblement.village.name, ennoblement.village.x, ennoblement.village.y), "</a></td>");
+      rowHTML += "<td><a href=\"".concat(twutils.buildVillageURL(ennoblement.village.id), "\">").concat(twutils.buildVillageName(ennoblement.village.name, ennoblement.village.x, ennoblement.village.y), "</a></td>");
     } else {
       rowHTML += '<td>-</td>';
     }
@@ -954,7 +958,11 @@ var _pagination = require("../utils/pagination");
 
 var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
 
-var _tribalwars = require("../utils/tribalwars");
+var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -989,7 +997,7 @@ var _default = function _default(e, history, daily) {
     }), "</td>");
 
     if (!tribe && history.tribe) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(history.tribe.id), "\">").concat(history.tribe.tag, "</a></td>");
+      rowHTML += "<td><a href=\"".concat(twutils.buildTribeURL(history.tribe.id), "\">").concat(history.tribe.tag, "</a></td>");
     } else if (!tribe) {
       rowHTML += '<td>-</td>';
     }
@@ -1164,7 +1172,7 @@ var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVer
 
 var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
 
-var _tribalwars = require("./utils/tribalwars");
+var twutils = _interopRequireWildcard(require("./utils/tribalwars"));
 
 var twhelputils = _interopRequireWildcard(require("./utils/twhelp"));
 
@@ -1415,13 +1423,13 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
 
     if (tribeChange.newTribe) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(tribeChange.newTribe.id), "\">").concat(tribeChange.newTribe.tag, "</a></td>");
+      rowHTML += "<td><a href=\"".concat(twutils.buildTribeURL(tribeChange.newTribe.id), "\">").concat(tribeChange.newTribe.tag, "</a></td>");
     } else {
       rowHTML += '<td>-</td>';
     }
 
     if (tribeChange.oldTribe) {
-      rowHTML += "<td><a href=\"".concat((0, _tribalwars.formatTribeURL)(tribeChange.oldTribe.id), "\">").concat(tribeChange.oldTribe.tag, "</a></td>");
+      rowHTML += "<td><a href=\"".concat(twutils.buildTribeURL(tribeChange.oldTribe.id), "\">").concat(tribeChange.oldTribe.tag, "</a></td>");
     } else {
       rowHTML += '<td>-</td>';
     }

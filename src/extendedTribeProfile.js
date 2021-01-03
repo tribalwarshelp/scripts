@@ -1,4 +1,3 @@
-import isURL from 'validator/lib/isURL';
 import differenceInDays from 'date-fns/differenceInDays';
 import getTranslations from './i18n/extendedTribeProfile';
 import requestCreator from './libs/requestCreator';
@@ -17,9 +16,9 @@ import getCurrentServer from './utils/getCurrentServer';
 import { setItem, getItem } from './utils/localStorage';
 import formatDate from './utils/formatDate';
 import getServerVersionCode from './utils/getServerVersionCode';
-import { formatPlayerURL } from './utils/twstats';
-import { buildPlayerURL, buildTribeURL } from './utils/twhelp';
-import { formatPlayerURL as formatPlayerURLTribalWars } from './utils/tribalwars';
+import * as twstatsutils from './utils/twstats';
+import * as twhelputils from './utils/twhelp';
+import * as twutils from './utils/tribalwars';
 
 // ==UserScript==
 // @name         Extended tribe profile
@@ -304,8 +303,14 @@ const extendMembersData = (players) => {
         [player.scoreTotal, player.rankTotal],
         player.dailyGrowth,
         [
-          { link: buildPlayerURL(VERSION, SERVER, player.id), label: 'TWHelp' },
-          { link: formatPlayerURL(SERVER, player.id), label: 'TWStats' },
+          {
+            link: twhelputils.buildPlayerURL(VERSION, SERVER, player.id),
+            label: 'TWHelp',
+          },
+          {
+            link: twstatsutils.buildPlayerURL(SERVER, player.id),
+            label: 'TWStats',
+          },
         ],
       ].forEach((data, index) => {
         let td = tr.children[5 + index];
@@ -514,9 +519,7 @@ const buildMembersGrowthTBody = (stats) => {
             <td>
               ${
                 player
-                  ? `<a href="${formatPlayerURLTribalWars(id)}">${
-                      player.name
-                    }</a>`
+                  ? `<a href="${twutils.buildPlayerURL(id)}">${player.name}</a>`
                   : '-'
               }
             </td>
@@ -641,7 +644,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
             let rowHTML =
               '<tr>' + `<td>${formatDate(tribeChange.createdAt)}</td>`;
             if (tribeChange.player) {
-              rowHTML += `<td><a href="${formatPlayerURLTribalWars(
+              rowHTML += `<td><a href="${twutils.buildPlayerURL(
                 tribeChange.player.id
               )}">${tribeChange.player.name}</a></td>`;
             } else {
@@ -851,7 +854,7 @@ const wrapAction = (action) => {
 
 const renderActions = () => {
   const linkToTWHelp = document.createElement('a');
-  linkToTWHelp.href = buildTribeURL(VERSION, SERVER, TRIBE_ID);
+  linkToTWHelp.href = twhelputils.buildTribeURL(VERSION, SERVER, TRIBE_ID);
   linkToTWHelp.innerHTML = translations.action.linkToTWHelp;
   actionContainer.appendChild(wrapAction(linkToTWHelp));
 

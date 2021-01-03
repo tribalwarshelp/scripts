@@ -424,36 +424,36 @@ exports.calcDistanceBetweenTwoPoints = calcDistanceBetweenTwoPoints;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.buildVillageName = exports.buildVillageURL = exports.buildPlayerURL = exports.buildTribeURL = void 0;
 
-const formatTribeURL = id => {
+const buildTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_ally',
     id
   });
 };
 
-exports.formatTribeURL = formatTribeURL;
+exports.buildTribeURL = buildTribeURL;
 
-const formatPlayerURL = id => {
+const buildPlayerURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_player',
     id
   });
 };
 
-exports.formatPlayerURL = formatPlayerURL;
+exports.buildPlayerURL = buildPlayerURL;
 
-const formatVillageURL = id => {
+const buildVillageURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_village',
     id
   });
 };
 
-exports.formatVillageURL = formatVillageURL;
+exports.buildVillageURL = buildVillageURL;
 
-const formatVillageName = function formatVillageName() {
+const buildVillageName = function buildVillageName() {
   let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
   let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
@@ -461,10 +461,10 @@ const formatVillageName = function formatVillageName() {
   return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
 };
 
-exports.formatVillageName = formatVillageName;
+exports.buildVillageName = buildVillageName;
 
-const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round(distance * baseSpeed / unitSpeed);
+const calcAttackDuration = (distance, baseSpeed) => {
+  return Math.round(distance * baseSpeed);
 };
 
 exports.calcAttackDuration = calcAttackDuration;
@@ -616,7 +616,7 @@ function differenceInMinutes(dirtyDateLeft, dirtyDateRight) {
   var diff = (0, _index.default)(dirtyDateLeft, dirtyDateRight) / MILLISECONDS_IN_MINUTE;
   return diff > 0 ? Math.floor(diff) : Math.ceil(diff);
 }
-},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"ATOB":[function(require,module,exports) {
+},{"../differenceInMilliseconds/index.js":"H70G","../_lib/requiredArgs/index.js":"kK6Q"}],"kcC2":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -628,7 +628,7 @@ var _differenceInMinutes = _interopRequireDefault(require("date-fns/differenceIn
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _default = (ennobledAt, speed) => {
+const calcLoyalty = (ennobledAt, speed) => {
   let loyalty = 25 + Math.abs((0, _differenceInMinutes.default)(ennobledAt, new Date())) * (speed / 60);
 
   if (loyalty > 100) {
@@ -638,6 +638,7 @@ var _default = (ennobledAt, speed) => {
   return Math.floor(loyalty);
 };
 
+var _default = calcLoyalty;
 exports.default = _default;
 },{"date-fns/differenceInMinutes":"oGJj"}],"HdqX":[function(require,module,exports) {
 "use strict";
@@ -660,7 +661,7 @@ var _localStorage = require("./utils/localStorage");
 
 var _tribalwars = require("./utils/tribalwars");
 
-var _countLoyalty = _interopRequireDefault(require("./utils/countLoyalty"));
+var _calcLoyalty = _interopRequireDefault(require("./utils/calcLoyalty"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -675,7 +676,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.4
+// @version      0.6.5
 // @description  Extended map popup
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -793,7 +794,7 @@ const renderAdditionalInfo = (id, data, _ref) => {
 
   const units = getAvailableUnits(unitConfig);
   unitsEl.innerHTML = "\n          <td colspan=\"2\">\n            <table style=\"border: 1px solid #ded3b9; max-width: 450px;\"\n              width=\"100%\"\n              cellpadding=\"0\"\n              cellspacing=\"0\">\n              <tbody>\n                <tr class=\"center\">\n                  ".concat(units.map(buildUnitHeader).join(''), "\n                </tr>\n                <tr class=\"center\">\n                  ").concat(units.map((unit, index) => {
-    return buildUnitArrivalInfo((0, _tribalwars.calcAttackDuration)(distance, config.unitSpeed * config.speed, unit.speed), index);
+    return buildUnitArrivalInfo((0, _tribalwars.calcAttackDuration)(distance, unit.speed), index);
   }).join(''), "\n                </tr>\n              </tbody>\n            </table>\n          </td>\n      ");
   let lastEnnobledAt = parent.querySelector('#lastEnnobledAt');
 
@@ -812,7 +813,7 @@ const renderAdditionalInfo = (id, data, _ref) => {
     parent.appendChild(loyalty);
   }
 
-  loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? (0, _countLoyalty.default)(new Date(ennoblement.ennobledAt), config.speed) : 100, "\n          </td>\n      ");
+  loyalty.innerHTML = "\n          <td>\n              ".concat(translations.possibleLoyalty, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? (0, _calcLoyalty.default)(new Date(ennoblement.ennobledAt), config.speed) : 100, "\n          </td>\n      ");
   let canSendNoble = parent.querySelector('#canSendNoble');
 
   if (!canSendNoble) {
@@ -852,4 +853,4 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
     console.log('extended map popup', error);
   }
 })();
-},{"date-fns/addMinutes":"pfh4","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/buildUnitImgURL":"KX6P","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/countLoyalty":"ATOB"}]},{},["HdqX"], null)
+},{"date-fns/addMinutes":"pfh4","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/buildUnitImgURL":"KX6P","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/calcLoyalty":"kcC2"}]},{},["HdqX"], null)

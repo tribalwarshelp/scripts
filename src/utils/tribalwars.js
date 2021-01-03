@@ -1,4 +1,4 @@
-export const formatTribeURL = (id) => {
+export const buildTribeURL = (id) => {
   return (
     window.location.origin +
     TribalWars.buildURL('', {
@@ -8,7 +8,7 @@ export const formatTribeURL = (id) => {
   );
 };
 
-export const formatPlayerURL = (id) => {
+export const buildPlayerURL = (id) => {
   return (
     window.location.origin +
     TribalWars.buildURL('', {
@@ -18,7 +18,7 @@ export const formatPlayerURL = (id) => {
   );
 };
 
-export const formatVillageURL = (id) => {
+export const buildVillageURL = (id) => {
   return (
     window.location.origin +
     TribalWars.buildURL('', {
@@ -28,13 +28,13 @@ export const formatVillageURL = (id) => {
   );
 };
 
-export const formatVillageName = (n = '', x = 500, y = 500) => {
+export const buildVillageName = (n = '', x = 500, y = 500) => {
   const continent = 'K' + String(y)[0] + String(x)[0];
   return `${n} (${x}|${y}) ${continent}`;
 };
 
-export const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round((distance * baseSpeed) / unitSpeed);
+export const calcAttackDuration = (distance, baseSpeed) => {
+  return Math.round(distance * baseSpeed);
 };
 
 export const buildImgURL = (img) => {

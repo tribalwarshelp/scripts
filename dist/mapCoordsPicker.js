@@ -247,10 +247,11 @@ const saveConfig = () => {
 };
 
 const villageIDByCoords = (x, y) => {
-  const village = TWMap.villages[parseInt("".concat(x).concat(y))];
+  const xy = parseInt("".concat(x).concat(y), 10);
+  const village = TWMap.villages[xy];
 
   if (village) {
-    return TWMap.villages[parseInt("".concat(x).concat(y))].id;
+    return TWMap.villages[xy].id;
   }
 
   return NaN;
@@ -362,7 +363,7 @@ const renderGroups = () => {
   renderForm(formsContainer);
 };
 
-const exportVillagesHandler = () => {
+const handleExportVillages = () => {
   const groups = [];
 
   for (let name in config.groups) {
@@ -376,7 +377,7 @@ const exportVillagesHandler = () => {
 const renderActions = () => {
   const exportVillages = document.createElement('button');
   exportVillages.innerHTML = translations.export;
-  exportVillages.addEventListener('click', exportVillagesHandler);
+  exportVillages.addEventListener('click', handleExportVillages);
   actionsContainer.appendChild(exportVillages);
 };
 

@@ -6,7 +6,7 @@ import {
   getContainerStyles,
 } from '../utils/pagination';
 import formatDate from '../utils/formatDate';
-import { formatTribeURL } from '../utils/tribalwars';
+import * as twutils from '../utils/tribalwars';
 
 const PAGINATION_CONTAINER_ID = 'historyPagination';
 const translations = getTranslations();
@@ -73,9 +73,9 @@ export default (
                 day: '2-digit',
               })}</td>`;
             if (!tribe && history.tribe) {
-              rowHTML += `<td><a href="${formatTribeURL(history.tribe.id)}">${
-                history.tribe.tag
-              }</a></td>`;
+              rowHTML += `<td><a href="${twutils.buildTribeURL(
+                history.tribe.id
+              )}">${history.tribe.tag}</a></td>`;
             } else if (!tribe) {
               rowHTML += '<td>-</td>';
             }

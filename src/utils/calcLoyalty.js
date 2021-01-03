@@ -1,6 +1,6 @@
 import differenceInMinutes from 'date-fns/differenceInMinutes';
 
-export default (ennobledAt, speed) => {
+const calcLoyalty = (ennobledAt, speed) => {
   let loyalty =
     25 + Math.abs(differenceInMinutes(ennobledAt, new Date())) * (speed / 60);
   if (loyalty > 100) {
@@ -8,3 +8,5 @@ export default (ennobledAt, speed) => {
   }
   return Math.floor(loyalty);
 };
+
+export default calcLoyalty;

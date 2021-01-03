@@ -7,14 +7,14 @@ import { calcDistanceBetweenTwoPoints } from './utils/math';
 import buildUnitImgURL from './utils/buildUnitImgURL';
 import { setItem, getItem } from './utils/localStorage';
 import { calcAttackDuration } from './utils/tribalwars';
-import countLoyalty from './utils/countLoyalty';
+import calcLoyalty from './utils/calcLoyalty';
 
 // ==UserScript==
 // @name         Extended map popup
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.4
+// @version      0.6.5
 // @description  Extended map popup
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -226,11 +226,7 @@ const renderAdditionalInfo = (id, data, { config, unitConfig }) => {
                   ${units
                     .map((unit, index) => {
                       return buildUnitArrivalInfo(
-                        calcAttackDuration(
-                          distance,
-                          config.unitSpeed * config.speed,
-                          unit.speed
-                        ),
+                        calcAttackDuration(distance, unit.speed),
                         index
                       );
                     })
@@ -273,7 +269,7 @@ const renderAdditionalInfo = (id, data, { config, unitConfig }) => {
           <td>
               ${
                 ennoblement
-                  ? countLoyalty(new Date(ennoblement.ennobledAt), config.speed)
+                  ? calcLoyalty(new Date(ennoblement.ennobledAt), config.speed)
                   : 100
               }
           </td>

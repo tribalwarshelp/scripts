@@ -5,22 +5,19 @@ import {
 } from '../utils/pagination';
 import showPopup from '../utils/showPopup';
 import formatDate from '../utils/formatDate';
-import {
-  formatTribeURL,
-  formatPlayerURL as formatPlayerURLTribalWars,
-  formatVillageName,
-  formatVillageURL,
-} from '../utils/tribalwars';
+import * as twutils from '../utils/tribalwars';
 
 const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';
 const translations = getTranslations();
 
 const getPlayerTd = (player, tribe) => {
   if (player) {
-    return `<td><a href="${formatPlayerURLTribalWars(player.id)}">${
+    return `<td><a href="${twutils.buildPlayerURL(player.id)}">${
       player.name
     } (${
-      tribe ? `<a href="${formatTribeURL(tribe.id)}">${tribe.tag}</a>` : '-'
+      tribe
+        ? `<a href="${twutils.buildTribeURL(tribe.id)}">${tribe.tag}</a>`
+        : '-'
     })</a></td>`;
   }
   return '<td>-</td>';
@@ -61,9 +58,9 @@ export default (
             let rowHTML =
               '<tr>' + `<td>${formatDate(ennoblement.ennobledAt)}</td>`;
             if (ennoblement.village) {
-              rowHTML += `<td><a href="${formatVillageURL(
+              rowHTML += `<td><a href="${twutils.buildVillageURL(
                 ennoblement.village.id
-              )}">${formatVillageName(
+              )}">${twutils.buildVillageName(
                 ennoblement.village.name,
                 ennoblement.village.x,
                 ennoblement.village.y

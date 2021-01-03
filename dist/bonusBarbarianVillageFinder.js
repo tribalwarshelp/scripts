@@ -202,36 +202,36 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.buildImgURL = exports.calcAttackDuration = exports.formatVillageName = exports.formatVillageURL = exports.formatPlayerURL = exports.formatTribeURL = void 0;
+exports.buildImgURL = exports.calcAttackDuration = exports.buildVillageName = exports.buildVillageURL = exports.buildPlayerURL = exports.buildTribeURL = void 0;
 
-const formatTribeURL = id => {
+const buildTribeURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_ally',
     id
   });
 };
 
-exports.formatTribeURL = formatTribeURL;
+exports.buildTribeURL = buildTribeURL;
 
-const formatPlayerURL = id => {
+const buildPlayerURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_player',
     id
   });
 };
 
-exports.formatPlayerURL = formatPlayerURL;
+exports.buildPlayerURL = buildPlayerURL;
 
-const formatVillageURL = id => {
+const buildVillageURL = id => {
   return window.location.origin + TribalWars.buildURL('', {
     screen: 'info_village',
     id
   });
 };
 
-exports.formatVillageURL = formatVillageURL;
+exports.buildVillageURL = buildVillageURL;
 
-const formatVillageName = function formatVillageName() {
+const buildVillageName = function buildVillageName() {
   let n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   let x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
   let y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
@@ -239,10 +239,10 @@ const formatVillageName = function formatVillageName() {
   return "".concat(n, " (").concat(x, "|").concat(y, ") ").concat(continent);
 };
 
-exports.formatVillageName = formatVillageName;
+exports.buildVillageName = buildVillageName;
 
-const calcAttackDuration = (distance, unitSpeed, baseSpeed) => {
-  return Math.round(distance * baseSpeed / unitSpeed);
+const calcAttackDuration = (distance, baseSpeed) => {
+  return Math.round(distance * baseSpeed);
 };
 
 exports.calcAttackDuration = calcAttackDuration;
@@ -276,9 +276,13 @@ var _bonusBarbarianVillageFinder = _interopRequireDefault(require("./i18n/bonusB
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
-var _tribalwars = require("./utils/tribalwars");
+var twutils = _interopRequireWildcard(require("./utils/tribalwars"));
 
 var _math = require("./utils/math");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -360,7 +364,7 @@ const getBonuses = () => {
 };
 
 const buildTableBodyHTML = villages => {
-  return "\n        <tbody>\n            <tr>\n                <th>\n                    ".concat(translations.village, "\n                </th>\n                <th>\n                    ").concat(translations.distance, "\n                </th>\n                <th>\n                    ").concat(translations.action, "\n                </th>\n            </tr>\n            ").concat(Array.isArray(villages) ? villages.map(village => "<tr>\n                <td>\n                    <a href=\"".concat((0, _tribalwars.formatVillageURL)(village.id), "\">\n                        ").concat((0, _tribalwars.formatVillageName)(village.name, village.x, village.y), "\n                    </a>\n                </td>\n                <td>\n                    ").concat(village.distance.toFixed(1), "\n                </td>\n                <td>\n                    <a href=\"#\" onclick=\"return TWMap.focusUserSpecified(").concat(village.x, ", ").concat(village.y, ")\">Center</a>\n                </td>\n            </tr>")).join('') : '', "\n        </tbody>\n    ");
+  return "\n        <tbody>\n            <tr>\n                <th>\n                    ".concat(translations.village, "\n                </th>\n                <th>\n                    ").concat(translations.distance, "\n                </th>\n                <th>\n                    ").concat(translations.action, "\n                </th>\n            </tr>\n            ").concat(Array.isArray(villages) ? villages.map(village => "<tr>\n                <td>\n                    <a href=\"".concat(twutils.buildVillageURL(village.id), "\">\n                        ").concat(twutils.buildVillageName(village.name, village.x, village.y), "\n                    </a>\n                </td>\n                <td>\n                    ").concat(village.distance.toFixed(1), "\n                </td>\n                <td>\n                    <a href=\"#\" onclick=\"return TWMap.focusUserSpecified(").concat(village.x, ", ").concat(village.y, ")\">Center</a>\n                </td>\n            </tr>")).join('') : '', "\n        </tbody>\n    ");
 };
 
 const updateActualCoords = () => {

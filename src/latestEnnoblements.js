@@ -2,14 +2,9 @@ import requestCreator from './libs/requestCreator';
 import showPopup from './utils/showPopup';
 import getCurrentServer from './utils/getCurrentServer';
 import formatDate from './utils/formatDate';
-import {
-  formatTribeURL,
-  formatPlayerURL,
-  formatVillageURL,
-  formatVillageName,
-} from './utils/tribalwars';
+import * as twutils from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
-import { buildURLToServerPage } from './utils/twhelp';
+import * as twhelputils from './utils/twhelp';
 import getServerVersionCode from './utils/getServerVersionCode';
 import loadTranslations from './i18n/latestEnnoblements';
 
@@ -150,7 +145,7 @@ const handleFilterFormSubmit = (e, ennoblements) => {
   };
   document.querySelector(
     `#${TABLE_ID} tbody`
-  ).innerHTML = formatEnnoblementRows(
+  ).innerHTML = buildEnnoblementsRows(
     filterEnnoblements(ennoblements, filters)
   ).join('');
   cacheFilters(filters);
@@ -164,11 +159,11 @@ const addEventListeners = (ennoblements = []) => {
     });
 };
 
-const formatPlayerHTML = (player) => {
+const getPlayerHTML = (player) => {
   return player && player.name
-    ? `<a href="${formatPlayerURL(player.id)}">${player.name}</a> (${
+    ? `<a href="${twutils.buildPlayerURL(player.id)}">${player.name}</a> (${
         player.tribe && player.tribe.tag
-          ? `<a href="${formatTribeURL(player.tribe.id)}">${
+          ? `<a href="${twutils.buildTribeURL(player.tribe.id)}">${
               player.tribe.tag
             }</a>`
           : '-'
@@ -176,20 +171,18 @@ const formatPlayerHTML = (player) => {
     : '-';
 };
 
-const formatVillageHTML = (village) => {
-  return `<a href="${formatVillageURL(village.id)}">${formatVillageName(
-    village.name,
-    village.x,
-    village.y
-  )}</a>`;
+const getVillageHTML = (village) => {
+  return `<a href="${twutils.buildVillageURL(
+    village.id
+  )}">${twutils.buildVillageName(village.name, village.x, village.y)}</a>`;
 };
 
-const formatEnnoblementRows = (ennoblements) => {
+const buildEnnoblementsRows = (ennoblements) => {
   return ennoblements.reverse().map((ennoblement) => {
     return `<tr>
-              <td>${formatVillageHTML(ennoblement.village)}</td>
-              <td>${formatPlayerHTML(ennoblement.newOwner)}</td>
-              <td>${formatPlayerHTML(ennoblement.oldOwner)}</td>
+              <td>${getVillageHTML(ennoblement.village)}</td>
+              <td>${getPlayerHTML(ennoblement.newOwner)}</td>
+              <td>${getPlayerHTML(ennoblement.oldOwner)}</td>
               <td>${formatDate(ennoblement.ennobledAt)}</td>
             </tr>`;
   });
@@ -202,7 +195,7 @@ const renderLatestEnnoblements = (ennoblements = [], filters = {}) => {
   };
   const html = `
         <form style="margin-bottom: 15px" id="${FILTER_FORM_ID}">
-        <h1 style="margin-bottom: 0px; text-align: center;"><a href="${buildURLToServerPage(
+        <h1 style="margin-bottom: 0px; text-align: center;"><a href="${twhelputils.buildURLToServerPage(
           getServerVersionCode(SERVER),
           SERVER
         )}">TWHelp</a></h1>
@@ -236,7 +229,7 @@ const renderLatestEnnoblements = (ennoblements = [], filters = {}) => {
             </tr>
           </thead>
           <tbody>
-            ${formatEnnoblementRows(
+            ${buildEnnoblementsRows(
               filterEnnoblements(ennoblements, prepared)
             ).join('')}
           </tbody>

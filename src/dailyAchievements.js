@@ -2,7 +2,7 @@ import format from 'date-fns/format';
 import requestCreator from './libs/requestCreator';
 import getTranslations from './i18n/dailyAchievments';
 import { setItem, getItem } from './utils/localStorage';
-import { formatPlayerURL } from './utils/tribalwars';
+import * as twutils from './utils/tribalwars';
 import getCurrentServer from './utils/getCurrentServer';
 import getServerVersionCode from './utils/getServerVersionCode';
 import { inTZ } from './utils/date';
@@ -134,7 +134,7 @@ const render = ({
                 ${dailyPlayerStatsOrderedByScoreAtt.items
                   .map(
                     (item, index) =>
-                      `<span>${index + 1}. <a href="${formatPlayerURL(
+                      `<span>${index + 1}. <a href="${twutils.buildPlayerURL(
                         item.player.id
                       )}">${
                         item.player.name
@@ -148,7 +148,7 @@ const render = ({
                 ${dailyPlayerStatsOrderedByScoreDef.items
                   .map(
                     (item, index) =>
-                      `<span>${index + 1}. <a href="${formatPlayerURL(
+                      `<span>${index + 1}. <a href="${twutils.buildPlayerURL(
                         item.player.id
                       )}">${
                         item.player.name
@@ -162,7 +162,7 @@ const render = ({
                 ${dailyPlayerStatsOrderedByScoreSup.items
                   .map(
                     (item, index) =>
-                      `<span>${index + 1}. <a href="${formatPlayerURL(
+                      `<span>${index + 1}. <a href="${twutils.buildPlayerURL(
                         item.player.id
                       )}">${
                         item.player.name
@@ -176,7 +176,7 @@ const render = ({
                 ${dailyPlayerStatsOrderedByVillages.items
                   .map(
                     (item, index) =>
-                      `<span>${index + 1}. <a href="${formatPlayerURL(
+                      `<span>${index + 1}. <a href="${twutils.buildPlayerURL(
                         item.player.id
                       )}">${
                         item.player.name
