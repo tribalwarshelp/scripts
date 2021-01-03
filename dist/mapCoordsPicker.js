@@ -203,7 +203,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @version      0.7.3
 // @description  Map coords picker
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none
 // ==/UserScript==
@@ -240,7 +240,7 @@ const villageIDByCoords = (x, y) => {
   return NaN;
 };
 
-const setVillageBgColor = function setVillageBgColor(x, y) {
+const setVillageBorder = function setVillageBorder(x, y) {
   let color = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'transparent';
   const id = villageIDByCoords(x, y);
   if (isNaN(id)) return;
@@ -266,14 +266,14 @@ const handleMapClick = (x, y, e) => {
 
   if (selected) {
     config.groups[config.selectedGroup].villages = config.groups[config.selectedGroup].villages.filter(village => village.key !== key);
-    setVillageBgColor(x, y);
+    setVillageBorder(x, y, 'transparent');
   } else {
     config.groups[config.selectedGroup].villages = [...config.groups[config.selectedGroup].villages, {
       x,
       y,
       key
     }];
-    setVillageBgColor(x, y, config.groups[config.selectedGroup].color);
+    setVillageBorder(x, y, config.groups[config.selectedGroup].color);
     deleteVillageFromOtherGroups(key);
   }
 };
@@ -411,7 +411,7 @@ const handleButtonClick = () => {
 const colorizeGroupVillages = function colorizeGroupVillages(name) {
   let bgColor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   config.groups[name].villages.forEach(village => {
-    setVillageBgColor(village.x, village.y, bgColor ? bgColor : config.groups[name].color);
+    setVillageBorder(village.x, village.y, bgColor ? bgColor : config.groups[name].color);
   });
 };
 

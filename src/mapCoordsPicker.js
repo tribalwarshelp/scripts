@@ -8,7 +8,7 @@ import { getItem, setItem } from './utils/localStorage';
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @version      0.7.3
 // @description  Map coords picker
-// @author       Kichiyaki http://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
 // @grant        none
 // ==/UserScript==
@@ -44,7 +44,7 @@ const villageIDByCoords = (x, y) => {
   return NaN;
 };
 
-const setVillageBgColor = (x, y, color = 'transparent') => {
+const setVillageBorder = (x, y, color = 'transparent') => {
   const id = villageIDByCoords(x, y);
   if (isNaN(id)) return;
   const village = document.querySelector('#map_village_' + id);
@@ -75,7 +75,7 @@ const handleMapClick = (x, y, e) => {
     config.groups[config.selectedGroup].villages = config.groups[
       config.selectedGroup
     ].villages.filter((village) => village.key !== key);
-    setVillageBgColor(x, y);
+    setVillageBorder(x, y, 'transparent');
   } else {
     config.groups[config.selectedGroup].villages = [
       ...config.groups[config.selectedGroup].villages,
@@ -85,7 +85,7 @@ const handleMapClick = (x, y, e) => {
         key,
       },
     ];
-    setVillageBgColor(x, y, config.groups[config.selectedGroup].color);
+    setVillageBorder(x, y, config.groups[config.selectedGroup].color);
     deleteVillageFromOtherGroups(key);
   }
 };
@@ -241,7 +241,7 @@ const handleButtonClick = () => {
 
 const colorizeGroupVillages = (name, bgColor = '') => {
   config.groups[name].villages.forEach((village) => {
-    setVillageBgColor(
+    setVillageBorder(
       village.x,
       village.y,
       bgColor ? bgColor : config.groups[name].color
