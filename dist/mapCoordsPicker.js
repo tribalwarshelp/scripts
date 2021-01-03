@@ -154,21 +154,6 @@ const translations = {
 var _default = () => translations[window.game_data.locale] || translations.en_DK;
 
 exports.default = _default;
-},{}],"Mk65":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = hexToRgb;
-
-function hexToRgb(hex) {
-  const bigint = parseInt(hex, 16);
-  const r = bigint >> 16 & 255;
-  const g = bigint >> 8 & 255;
-  const b = bigint & 255;
-  return [r, g, b];
-}
 },{}],"KWxH":[function(require,module,exports) {
 "use strict";
 
@@ -201,8 +186,6 @@ exports.setItem = setItem;
 
 var _mapCoordsPicker = _interopRequireDefault(require("./i18n/mapCoordsPicker"));
 
-var _hexToRGB = _interopRequireDefault(require("./utils/hexToRGB"));
-
 var _localStorage = require("./utils/localStorage");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -218,7 +201,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
-// @version      0.7.1
+// @version      0.7.3
 // @description  Map coords picker
 // @author       Kichiyaki http://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=map*
@@ -258,22 +241,14 @@ const villageIDByCoords = (x, y) => {
 };
 
 const setVillageBgColor = function setVillageBgColor(x, y) {
-  let bgColor = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'transparent';
+  let color = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'transparent';
   const id = villageIDByCoords(x, y);
   if (isNaN(id)) return;
   const village = document.querySelector('#map_village_' + id);
 
   if (village) {
-    let overlay = document.querySelector('#' + 'map_village_overlay_' + id);
-
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'map_village_overlay_' + id;
-      overlay.style.cssText = document.defaultView.getComputedStyle(village, '').cssText;
-      village.parentElement.appendChild(overlay);
-    }
-
-    overlay.style.backgroundColor = bgColor !== 'transparent' ? "rgba(".concat((0, _hexToRGB.default)(bgColor.replace('#', '')).join(', '), ", 0.7)") : bgColor;
+    village.style.boxSizing = 'border-box';
+    village.style.border = color !== 'transparent' ? "5px solid ".concat(color) : 'none';
   }
 };
 
@@ -471,4 +446,4 @@ const renderUI = () => {
     console.log('Map Coords Picker', error);
   }
 })();
-},{"./i18n/mapCoordsPicker":"jH35","./utils/hexToRGB":"Mk65","./utils/localStorage":"KWxH"}]},{},["FWa8"], null)
+},{"./i18n/mapCoordsPicker":"jH35","./utils/localStorage":"KWxH"}]},{},["FWa8"], null)
