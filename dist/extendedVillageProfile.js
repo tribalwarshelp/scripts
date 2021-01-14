@@ -176,7 +176,7 @@ const translations = {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
     action: {
-      linkToTWHelp: 'Akta wioski - TWHelp - nowa strona ze statystykami i narzędziami',
+      linkToTWHelp: 'Akta wioski (TWHelp)',
       showEnnoblements: 'Pokaż przejęcia',
       countIncomingSupport: 'Policz nadchodzące wsparcie'
     }
@@ -191,7 +191,7 @@ const translations = {
     never: 'Never',
     ennobledAt: 'Ennobled at',
     action: {
-      linkToTWHelp: 'Village file (external link) - TWHelp - A new stat tracking website.',
+      linkToTWHelp: 'Village file (TWHelp)',
       showEnnoblements: 'Show ennoblements',
       countIncomingSupport: 'Count incoming support'
     }
@@ -732,43 +732,25 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = exports.POPUP_SELECTOR = void 0;
-const POPUP_WRAPPER_SELECTOR = '.popup_helper';
-const POPUP_SELECTOR = '#inline_popup';
+const POPUP_SELECTOR = '.popup_box';
 exports.POPUP_SELECTOR = POPUP_SELECTOR;
 
-var _default = function _default() {
+const showPopup = function showPopup() {
   let {
-    e,
-    title,
     html,
-    id
+    id,
+    title
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  Dialog.show(id, "<h3>".concat(title, "</h3>") + html);
   const popup = document.querySelector(POPUP_SELECTOR);
 
   if (popup) {
     popup.style.width = 'auto';
     popup.style.maxWidth = '1000px';
   }
-
-  if (popup.classList.contains('show')) {
-    popup.querySelector('#inline_popup_title').innerHTML = title;
-    popup.querySelector('#inline_popup_content').innerHTML = html;
-  } else {
-    inlinePopup(e, id, null, {
-      offset_x: 0,
-      offset_y: 0
-    }, html, title);
-  }
-
-  const popupWrapper = document.querySelector(POPUP_WRAPPER_SELECTOR);
-
-  if (popupWrapper) {
-    popupWrapper.style.width = 'auto';
-    popupWrapper.style.position = 'fixed';
-    popupWrapper.style.zIndex = '50001';
-  }
 };
 
+var _default = showPopup;
 exports.default = _default;
 },{}],"vNT1":[function(require,module,exports) {
 "use strict";
@@ -887,7 +869,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.3
+// @version      0.7.4
 // @description  Extended village profile
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_village*

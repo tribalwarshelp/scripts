@@ -25,7 +25,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.7
+// @version      1.1.8
 // @description  Extended player profile
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -306,7 +306,7 @@ const renderPlayerServers = (player) => {
     .sort()
     .map(
       (server) =>
-        `<a target="_blank" rel="noopener noreferrer" style="margin-right: 5px" href="${twhelputils.buildPlayerURL(
+        `<a target="_blank" style="margin-right: 5px" href="${twhelputils.buildPlayerURL(
           VERSION,
           server,
           player.id

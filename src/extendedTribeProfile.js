@@ -25,7 +25,7 @@ import * as twutils from './utils/tribalwars';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.1.0
+// @version      1.1.1
 // @description  Extended tribe profile
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -327,7 +327,7 @@ const extendMembersData = (players) => {
             td.innerHTML = data
               .map(
                 ({ link, label }) =>
-                  `<a target="_blank" rel="noopener noreferrer" href="${link}">${label}</a>`
+                  `<a target="_blank" href="${link}">${label}</a>`
               )
               .join('<br>');
           }

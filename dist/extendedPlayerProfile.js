@@ -276,7 +276,7 @@ const translations = {
     exportedVillages: 'Wyeksportowane wioski',
     tribeChanges: 'Zmiany plemion',
     action: {
-      linkToTWHelp: 'Akta gracza - TWHelp - nowa strona ze statystykami i narzędziami',
+      linkToTWHelp: 'Akta gracza (TWHelp)',
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
       exportVillages: 'Wyeksportuj wioski',
@@ -306,7 +306,7 @@ const translations = {
     exportedVillages: 'Exported villages',
     tribeChanges: 'Tribe changes',
     action: {
-      linkToTWHelp: 'User file (external link) - TWHelp - A new stat tracking website.',
+      linkToTWHelp: 'User file (TWHelp)',
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
       exportVillages: 'Export villages',
@@ -417,43 +417,25 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = exports.POPUP_SELECTOR = void 0;
-const POPUP_WRAPPER_SELECTOR = '.popup_helper';
-const POPUP_SELECTOR = '#inline_popup';
+const POPUP_SELECTOR = '.popup_box';
 exports.POPUP_SELECTOR = POPUP_SELECTOR;
 
-var _default = function _default() {
+const showPopup = function showPopup() {
   let {
-    e,
-    title,
     html,
-    id
+    id,
+    title
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  Dialog.show(id, "<h3>".concat(title, "</h3>") + html);
   const popup = document.querySelector(POPUP_SELECTOR);
 
   if (popup) {
     popup.style.width = 'auto';
     popup.style.maxWidth = '1000px';
   }
-
-  if (popup.classList.contains('show')) {
-    popup.querySelector('#inline_popup_title').innerHTML = title;
-    popup.querySelector('#inline_popup_content').innerHTML = html;
-  } else {
-    inlinePopup(e, id, null, {
-      offset_x: 0,
-      offset_y: 0
-    }, html, title);
-  }
-
-  const popupWrapper = document.querySelector(POPUP_WRAPPER_SELECTOR);
-
-  if (popupWrapper) {
-    popupWrapper.style.width = 'auto';
-    popupWrapper.style.position = 'fixed';
-    popupWrapper.style.zIndex = '50001';
-  }
 };
 
+var _default = showPopup;
 exports.default = _default;
 },{}],"tKRp":[function(require,module,exports) {
 "use strict";
@@ -1193,7 +1175,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.7
+// @version      1.1.8
 // @description  Extended player profile
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_player*
@@ -1335,7 +1317,7 @@ const renderPlayerServers = player => {
     otherElementContainer.prepend(playerServers);
   }
 
-  playerServers.querySelector('td').innerHTML = player.servers.sort().map(server => "<a target=\"_blank\" rel=\"noopener noreferrer\" style=\"margin-right: 5px\" href=\"".concat(twhelputils.buildPlayerURL(VERSION, server, player.id), "\">").concat(server, "</a>")).join('');
+  playerServers.querySelector('td').innerHTML = player.servers.sort().map(server => "<a target=\"_blank\" style=\"margin-right: 5px\" href=\"".concat(twhelputils.buildPlayerURL(VERSION, server, player.id), "\">").concat(server, "</a>")).join('');
 };
 
 const renderPlayerOtherNames = player => {

@@ -466,7 +466,7 @@ const translations = {
     dailyGrowth: 'Dzienny przyrost',
     playerLinks: 'Linki',
     action: {
-      linkToTWHelp: 'Akta plemienia - TWHelp - nowa strona ze statystykami i narzędziami',
+      linkToTWHelp: 'Akta plemienia (TWHelp)',
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
       showMembersGrowth: 'Pokaż rozwój graczy',
@@ -503,7 +503,7 @@ const translations = {
     dailyGrowth: 'Daily growth',
     playerLinks: 'Player links',
     action: {
-      linkToTWHelp: 'Tribal file (external link) - TWHelp - A new stat tracking website.',
+      linkToTWHelp: 'Tribal file (TWHelp)',
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
       showMembersGrowth: 'Show members growth',
@@ -763,43 +763,25 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = exports.POPUP_SELECTOR = void 0;
-const POPUP_WRAPPER_SELECTOR = '.popup_helper';
-const POPUP_SELECTOR = '#inline_popup';
+const POPUP_SELECTOR = '.popup_box';
 exports.POPUP_SELECTOR = POPUP_SELECTOR;
 
-var _default = function _default() {
+const showPopup = function showPopup() {
   let {
-    e,
-    title,
     html,
-    id
+    id,
+    title
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  Dialog.show(id, "<h3>".concat(title, "</h3>") + html);
   const popup = document.querySelector(POPUP_SELECTOR);
 
   if (popup) {
     popup.style.width = 'auto';
     popup.style.maxWidth = '1000px';
   }
-
-  if (popup.classList.contains('show')) {
-    popup.querySelector('#inline_popup_title').innerHTML = title;
-    popup.querySelector('#inline_popup_content').innerHTML = html;
-  } else {
-    inlinePopup(e, id, null, {
-      offset_x: 0,
-      offset_y: 0
-    }, html, title);
-  }
-
-  const popupWrapper = document.querySelector(POPUP_WRAPPER_SELECTOR);
-
-  if (popupWrapper) {
-    popupWrapper.style.width = 'auto';
-    popupWrapper.style.position = 'fixed';
-    popupWrapper.style.zIndex = '50001';
-  }
 };
 
+var _default = showPopup;
 exports.default = _default;
 },{}],"V6Mf":[function(require,module,exports) {
 "use strict";
@@ -1366,7 +1348,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.1.0
+// @version      1.1.1
 // @description  Extended tribe profile
 // @author       Kichiyaki https://dawid-wysokinski.pl/
 // @match        *://*/game.php*screen=info_ally*
@@ -1512,7 +1494,7 @@ const extendMembersData = players => {
                 link,
                 label
               } = _ref2;
-              return "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"".concat(link, "\">").concat(label, "</a>");
+              return "<a target=\"_blank\" href=\"".concat(link, "\">").concat(label, "</a>");
             }).join('<br>');
           }
         } else if (typeof data === 'number') {

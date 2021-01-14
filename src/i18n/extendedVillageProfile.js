@@ -9,8 +9,7 @@ const translations = {
     ennobledAt: 'Podbita o',
     never: 'Nigdy',
     action: {
-      linkToTWHelp:
-        'Akta wioski - TWHelp - nowa strona ze statystykami i narzędziami',
+      linkToTWHelp: 'Akta wioski (TWHelp)',
       showEnnoblements: 'Pokaż przejęcia',
       countIncomingSupport: 'Policz nadchodzące wsparcie',
     },
@@ -25,8 +24,7 @@ const translations = {
     never: 'Never',
     ennobledAt: 'Ennobled at',
     action: {
-      linkToTWHelp:
-        'Village file (external link) - TWHelp - A new stat tracking website.',
+      linkToTWHelp: 'Village file (TWHelp)',
       showEnnoblements: 'Show ennoblements',
       countIncomingSupport: 'Count incoming support',
     },

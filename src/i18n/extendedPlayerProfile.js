@@ -22,8 +22,7 @@ const translations = {
     exportedVillages: 'Wyeksportowane wioski',
     tribeChanges: 'Zmiany plemion',
     action: {
-      linkToTWHelp:
-        'Akta gracza - TWHelp - nowa strona ze statystykami i narzędziami',
+      linkToTWHelp: 'Akta gracza (TWHelp)',
       showTribeChanges: 'Pokaż zmiany plemion',
       showEnnoblements: 'Pokaż przejęcia',
       exportVillages: 'Wyeksportuj wioski',
@@ -54,8 +53,7 @@ const translations = {
     exportedVillages: 'Exported villages',
     tribeChanges: 'Tribe changes',
     action: {
-      linkToTWHelp:
-        'User file (external link) - TWHelp - A new stat tracking website.',
+      linkToTWHelp: 'User file (TWHelp)',
       showTribeChanges: 'Show tribe changes',
       showEnnoblements: 'Show ennoblements',
       exportVillages: 'Export villages',
