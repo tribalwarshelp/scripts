@@ -543,16 +543,33 @@ const generatePaginationItems = function generatePaginationItems() {
 };
 
 exports.generatePaginationItems = generatePaginationItems;
-},{}],"V6Mf":[function(require,module,exports) {
+},{}],"ZbyX":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.formatDate = exports.inUTC = exports.inTZ = void 0;
 
-var _default = (date, options) => {
-  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
+const inTZ = function inTZ() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  let tz = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC';
+  return new Date(new Date(d).toLocaleString('en-US', {
+    timeZone: tz
+  }));
+};
+
+exports.inTZ = inTZ;
+
+const inUTC = function inUTC() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  return inTZ(d);
+};
+
+exports.inUTC = inUTC;
+
+const formatDate = (date, options) => {
+  return new Date(date).toLocaleDateString(undefined, options ? options : {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -562,7 +579,7 @@ var _default = (date, options) => {
   });
 };
 
-exports.default = _default;
+exports.formatDate = formatDate;
 },{}],"fHHP":[function(require,module,exports) {
 "use strict";
 
@@ -633,7 +650,7 @@ var _pagination = require("../utils/pagination");
 
 var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
-var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
+var _date = require("../utils/date");
 
 var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
 
@@ -666,7 +683,7 @@ var _default = function _default(e, ennoblements) {
     currentPage
   });
   const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.village, "\n          </th>\n          <th>\n            ").concat(translations.newOwner, "\n          </th>\n          <th>\n            ").concat(translations.oldOwner, "\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
+    let rowHTML = '<tr>' + "<td>".concat((0, _date.formatDate)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
       rowHTML += "<td><a href=\"".concat(twutils.buildVillageURL(ennoblement.village.id), "\">").concat(twutils.buildVillageName(ennoblement.village.name, ennoblement.village.x, ennoblement.village.y), "</a></td>");
@@ -690,7 +707,7 @@ var _default = function _default(e, ennoblements) {
 };
 
 exports.default = _default;
-},{"../i18n/showEnnoblementsPopup":"tKRp","../utils/pagination":"fCHX","../utils/showPopup":"chDM","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"VYL5":[function(require,module,exports) {
+},{"../i18n/showEnnoblementsPopup":"tKRp","../utils/pagination":"fCHX","../utils/showPopup":"chDM","../utils/date":"ZbyX","../utils/tribalwars":"fHHP"}],"VYL5":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -938,7 +955,7 @@ var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
 var _pagination = require("../utils/pagination");
 
-var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
+var _date = require("../utils/date");
 
 var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
 
@@ -972,7 +989,7 @@ var _default = function _default(e, history, daily) {
     const stats = daily.items.find(stats => {
       return stats.createDate === subtracted;
     });
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(history.createDate, {
+    let rowHTML = '<tr>' + "<td>".concat((0, _date.formatDate)(history.createDate, {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
@@ -999,7 +1016,7 @@ var _default = function _default(e, history, daily) {
 };
 
 exports.default = _default;
-},{"date-fns/subDays":"mRRL","../i18n/showHistoryPopup":"hNDe","../utils/showPopup":"chDM","../utils/pagination":"fCHX","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"GxsT":[function(require,module,exports) {
+},{"date-fns/subDays":"mRRL","../i18n/showHistoryPopup":"hNDe","../utils/showPopup":"chDM","../utils/pagination":"fCHX","../utils/date":"ZbyX","../utils/tribalwars":"fHHP"}],"GxsT":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1152,7 +1169,7 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
 
-var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
+var _date = require("./utils/date");
 
 var twutils = _interopRequireWildcard(require("./utils/tribalwars"));
 
@@ -1175,7 +1192,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.9
+// @version      1.2.0
 // @description  Extended player profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_player*
@@ -1331,7 +1348,7 @@ const renderPlayerOtherNames = player => {
   }
 
   playerOtherNames.innerHTML = "\n      <table width=\"100%\" class=\"vis\">\n        <tbody>\n          <tr>\n            <th>\n            ".concat(translations.oldName, "\n            </th>\n            <th>\n            ").concat(translations.newName, "\n            </th>\n            <th>\n            ").concat(translations.date, "\n            </th>\n          </tr>\n        ").concat(player.nameChanges.map(nameChange => {
-    return "\n            <tr>\n              <td>\n                ".concat(nameChange.oldName, "\n              </td>\n              <td>\n                ").concat(nameChange.newName, "\n              </td>\n              <td>\n                ").concat((0, _formatDate.default)(nameChange.changeDate, {
+    return "\n            <tr>\n              <td>\n                ".concat(nameChange.oldName, "\n              </td>\n              <td>\n                ").concat(nameChange.newName, "\n              </td>\n              <td>\n                ").concat((0, _date.formatDate)(nameChange.changeDate, {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
@@ -1359,7 +1376,7 @@ const render = (_ref3) => {
   } = _ref3;
   [{
     title: translations.joinedAt + ':',
-    data: (0, _formatDate.default)(player.joinedAt),
+    data: (0, _date.formatDate)(player.joinedAt),
     id: 'joined_at'
   }, {
     title: translations.dailyGrowth + ':',
@@ -1367,15 +1384,15 @@ const render = (_ref3) => {
     id: 'dg'
   }, {
     title: translations.bestRank + ':',
-    data: player.bestRank + ' ' + "(".concat((0, _formatDate.default)(player.bestRankAt), ")"),
+    data: player.bestRank + ' ' + "(".concat((0, _date.formatDate)(player.bestRankAt), ")"),
     id: 'best_rank'
   }, {
     title: translations.mostPoints + ':',
-    data: player.mostPoints.toLocaleString() + ' ' + "(".concat((0, _formatDate.default)(player.mostPointsAt), ")"),
+    data: player.mostPoints.toLocaleString() + ' ' + "(".concat((0, _date.formatDate)(player.mostPointsAt), ")"),
     id: 'most_points'
   }, {
     title: translations.mostVillages + ':',
-    data: player.mostVillages + ' ' + "(".concat((0, _formatDate.default)(player.mostVillagesAt), ")"),
+    data: player.mostVillages + ' ' + "(".concat((0, _date.formatDate)(player.mostVillagesAt), ")"),
     id: 'most_villages'
   }].forEach(data => {
     renderTr(data);
@@ -1402,7 +1419,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     currentPage
   });
   const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.newTribe, "\n          </th>\n          <th>\n            ").concat(translations.oldTribe, "\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
+    let rowHTML = '<tr>' + "<td>".concat((0, _date.formatDate)(tribeChange.createdAt), "</td>");
 
     if (tribeChange.newTribe) {
       rowHTML += "<td><a href=\"".concat(twutils.buildTribeURL(tribeChange.newTribe.id), "\">").concat(tribeChange.newTribe.tag, "</a></td>");
@@ -1575,4 +1592,4 @@ const renderActions = () => {
     console.log('extended player profile', error);
   }
 })();
-},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/hyphensToCamelCase":"GxsT","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/getServerVersionCode":"J1Ly","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/twhelp":"gvXE","./utils/localStorage":"KWxH"}]},{},["yRop"], null)
+},{"./libs/InADayParser":"dSAr","./libs/requestCreator":"Ph2E","./i18n/extendedPlayerProfile":"I8dv","./common/renderTodaysStats":"yrCm","./utils/showPopup":"chDM","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/hyphensToCamelCase":"GxsT","./utils/pagination":"fCHX","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/getServerVersionCode":"J1Ly","./utils/date":"ZbyX","./utils/tribalwars":"fHHP","./utils/twhelp":"gvXE","./utils/localStorage":"KWxH"}]},{},["yRop"], null)

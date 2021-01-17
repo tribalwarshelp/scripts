@@ -4,7 +4,7 @@ import { setPage, getPage } from './utils/pagination';
 import getCurrentServer from './utils/getCurrentServer';
 import getIDFromURL from './utils/getIDFromURL';
 import buildUnitImgURL from './utils/buildUnitImgURL';
-import formatDate from './utils/formatDate';
+import { formatDate } from './utils/date';
 import wait from './utils/wait';
 import { setItem, getItem } from './utils/localStorage';
 import calcLoyalty from './utils/calcLoyalty';
@@ -17,7 +17,7 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.5
+// @version      0.7.6
 // @description  Extended village profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_village*

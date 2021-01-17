@@ -372,16 +372,33 @@ var _default = function _default() {
 };
 
 exports.default = _default;
-},{}],"V6Mf":[function(require,module,exports) {
+},{}],"ZbyX":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.formatDate = exports.inUTC = exports.inTZ = void 0;
 
-var _default = (date, options) => {
-  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
+const inTZ = function inTZ() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  let tz = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC';
+  return new Date(new Date(d).toLocaleString('en-US', {
+    timeZone: tz
+  }));
+};
+
+exports.inTZ = inTZ;
+
+const inUTC = function inUTC() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  return inTZ(d);
+};
+
+exports.inUTC = inUTC;
+
+const formatDate = (date, options) => {
+  return new Date(date).toLocaleDateString(undefined, options ? options : {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -391,7 +408,7 @@ var _default = (date, options) => {
   });
 };
 
-exports.default = _default;
+exports.formatDate = formatDate;
 },{}],"DMkL":[function(require,module,exports) {
 "use strict";
 
@@ -649,7 +666,7 @@ var _extendedMapPopup = _interopRequireDefault(require("./i18n/extendedMapPopup"
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
 
-var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
+var _date = require("./utils/date");
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
@@ -676,7 +693,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.6
+// @version      0.6.7
 // @description  Extended map popup
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=map*
@@ -772,7 +789,7 @@ const buildUnitHeader = (unit, index) => {
 };
 
 const buildUnitArrivalInfo = (t, index) => {
-  return "\n    <td style=\"padding: 2px; background-color: ".concat(getUnitTdBgColor(index), ";\">\n      ").concat((0, _formatDate.default)((0, _addMinutes.default)(Timing.getCurrentServerTime(), t)), "\n    </td>\n  ");
+  return "\n    <td style=\"padding: 2px; background-color: ".concat(getUnitTdBgColor(index), ";\">\n      ").concat((0, _date.formatDate)((0, _addMinutes.default)(Timing.getCurrentServerTime(), t)), "\n    </td>\n  ");
 };
 
 const renderAdditionalInfo = (id, data, _ref) => {
@@ -804,7 +821,7 @@ const renderAdditionalInfo = (id, data, _ref) => {
     parent.appendChild(lastEnnobledAt);
   }
 
-  lastEnnobledAt.innerHTML = "\n          <td>\n              ".concat(translations.ennobledAt, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? (0, _formatDate.default)(ennoblement.ennobledAt) : translations.never, "\n          </td>\n      ");
+  lastEnnobledAt.innerHTML = "\n          <td>\n              ".concat(translations.ennobledAt, ":\n          </td>\n          <td>\n              ").concat(ennoblement ? (0, _date.formatDate)(ennoblement.ennobledAt) : translations.never, "\n          </td>\n      ");
   let loyalty = parent.querySelector('#loyalty');
 
   if (!loyalty) {
@@ -853,4 +870,4 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
     console.log('extended map popup', error);
   }
 })();
-},{"date-fns/addMinutes":"pfh4","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/formatDate":"V6Mf","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/buildUnitImgURL":"KX6P","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/calcLoyalty":"kcC2"}]},{},["HdqX"], null)
+},{"date-fns/addMinutes":"pfh4","./i18n/extendedMapPopup":"ddIN","./libs/requestCreator":"Ph2E","./utils/date":"ZbyX","./utils/getCurrentServer":"DMkL","./utils/math":"XOOL","./utils/buildUnitImgURL":"KX6P","./utils/localStorage":"KWxH","./utils/tribalwars":"fHHP","./utils/calcLoyalty":"kcC2"}]},{},["HdqX"], null)

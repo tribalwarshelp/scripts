@@ -5,7 +5,7 @@ import {
   generatePaginationItems,
   getContainerStyles,
 } from '../utils/pagination';
-import formatDate from '../utils/formatDate';
+import { formatDate } from '../utils/date';
 import * as twutils from '../utils/tribalwars';
 
 const PAGINATION_CONTAINER_ID = 'historyPagination';

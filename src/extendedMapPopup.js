@@ -1,7 +1,7 @@
 import addMinutes from 'date-fns/addMinutes';
 import getTranslations from './i18n/extendedMapPopup';
 import requestCreator from './libs/requestCreator';
-import formatDate from './utils/formatDate';
+import { formatDate } from './utils/date';
 import getCurrentServer from './utils/getCurrentServer';
 import { calcDistanceBetweenTwoPoints } from './utils/math';
 import buildUnitImgURL from './utils/buildUnitImgURL';
@@ -14,7 +14,7 @@ import calcLoyalty from './utils/calcLoyalty';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.6
+// @version      0.6.7
 // @description  Extended map popup
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=map*

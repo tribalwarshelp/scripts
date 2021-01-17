@@ -1,7 +1,7 @@
 import requestCreator from './libs/requestCreator';
 import showPopup from './utils/showPopup';
 import getCurrentServer from './utils/getCurrentServer';
-import formatDate from './utils/formatDate';
+import { formatDate } from './utils/date';
 import * as twutils from './utils/tribalwars';
 import { setItem, getItem } from './utils/localStorage';
 import * as twhelputils from './utils/twhelp';
@@ -13,7 +13,7 @@ import loadTranslations from './i18n/latestEnnoblements';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.0.8
+// @version      1.1.0
 // @description  Show the latest ennoblements
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*
@@ -22,38 +22,40 @@ import loadTranslations from './i18n/latestEnnoblements';
 // ==/UserScript==
 
 const SERVER = getCurrentServer();
-const FILTER_FORM_ID = 'sle_form';
-const TABLE_ID = 'sle_table';
+const FILTER_FORM_ID = 'le_form';
+const TABLE_ID = 'le_table';
 const CACHE_LOCAL_STORAGE_KEY = 'kiszkowaty_show_latest_ennoblements_cache';
 const FILTERS_LOCAL_STORAGE_KEY = 'kiszkowaty_show_latest_ennoblements_filter';
 const ICON_URL = 'https://i.imgur.com/4WP4098.png';
 const query = `
-    query liveEnnoblements($server: String!) {
-      liveEnnoblements(server: $server) {
-        newOwner {
-          id
-          name
-          tribe {
+    query ennoblements($server: String!, $sort: [String!], $limit: Int) {
+      ennoblements(server: $server, sort: $sort, limit: $limit) {
+        items {
+          newOwner {
             id
             name
-            tag
+            tribe {
+              id
+              name
+              tag
+            }
           }
-        }
-        oldOwner {
-          id
-          name
-          tribe {
+          oldOwner {
             id
             name
-            tag
+            tribe {
+              id
+              name
+              tag
+            }
           }
-        }
-        ennobledAt
-        village {
-          id
-          name
-          x
-          y
+          ennobledAt
+          village {
+            id
+            name
+            x
+            y
+          }
         }
       }
     }
@@ -87,6 +89,8 @@ const loadLatestEnnoblements = () => {
     query,
     variables: {
       server: SERVER,
+      limit: 50,
+      sort: ['ennobledAt DESC'],
     },
   }).then((data) => {
     cacheEnnoblements(data);
@@ -134,7 +138,7 @@ const filterEnnoblements = (
   });
 };
 
-const handleFilterFormSubmit = (e, ennoblements) => {
+const applyFilters = (e, ennoblements) => {
   e.preventDefault();
   const filters = {
     ...DEFAULT_FILTER,
@@ -155,7 +159,7 @@ const addEventListeners = (ennoblements = []) => {
   document
     .querySelector('#' + FILTER_FORM_ID)
     .addEventListener('submit', (e) => {
-      handleFilterFormSubmit(e, ennoblements);
+      applyFilters(e, ennoblements);
     });
 };
 
@@ -178,7 +182,7 @@ const getVillageHTML = (village) => {
 };
 
 const buildEnnoblementsRows = (ennoblements) => {
-  return ennoblements.reverse().map((ennoblement) => {
+  return ennoblements.map((ennoblement) => {
     return `<tr>
               <td>${getVillageHTML(ennoblement.village)}</td>
               <td>${getPlayerHTML(ennoblement.newOwner)}</td>
@@ -237,7 +241,6 @@ const renderLatestEnnoblements = (ennoblements = [], filters = {}) => {
         `;
 
   showPopup({
-    e: { clientY: 60 },
     title: translations.ennoblements,
     id: 'ennoblements',
     html,
@@ -251,13 +254,14 @@ const handleButtonClick = async () => {
     const cache = loadLatestEnnoblementsFromCache();
     const filters = loadFilters();
     if (
-      Array.isArray(cache.liveEnnoblements) &&
-      cache.liveEnnoblements.length > 0
+      cache.ennoblements &&
+      Array.isArray(cache.ennoblements.items) &&
+      cache.ennoblements.items.length > 0
     ) {
-      renderLatestEnnoblements(cache.liveEnnoblements, filters);
+      renderLatestEnnoblements(cache.ennoblements.items, filters);
     }
-    const { liveEnnoblements } = await loadLatestEnnoblements();
-    renderLatestEnnoblements(liveEnnoblements, filters);
+    const { ennoblements } = await loadLatestEnnoblements();
+    renderLatestEnnoblements(ennoblements.items, filters);
   } catch (error) {
     console.log('latestEnnoblements', error);
   }

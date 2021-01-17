@@ -4,7 +4,7 @@ import {
   getContainerStyles,
 } from '../utils/pagination';
 import showPopup from '../utils/showPopup';
-import formatDate from '../utils/formatDate';
+import { formatDate } from '../utils/date';
 import * as twutils from '../utils/tribalwars';
 
 const PAGINATION_CONTAINER_ID = 'ennoblementsPagination';

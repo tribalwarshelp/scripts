@@ -196,16 +196,33 @@ exports.default = void 0;
 var _default = () => window.location.host.split('.')[0];
 
 exports.default = _default;
-},{}],"V6Mf":[function(require,module,exports) {
+},{}],"ZbyX":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.formatDate = exports.inUTC = exports.inTZ = void 0;
 
-var _default = (date, options) => {
-  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
+const inTZ = function inTZ() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  let tz = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC';
+  return new Date(new Date(d).toLocaleString('en-US', {
+    timeZone: tz
+  }));
+};
+
+exports.inTZ = inTZ;
+
+const inUTC = function inUTC() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  return inTZ(d);
+};
+
+exports.inUTC = inUTC;
+
+const formatDate = (date, options) => {
+  return new Date(date).toLocaleDateString(undefined, options ? options : {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -215,7 +232,7 @@ var _default = (date, options) => {
   });
 };
 
-exports.default = _default;
+exports.formatDate = formatDate;
 },{}],"fHHP":[function(require,module,exports) {
 "use strict";
 
@@ -415,7 +432,7 @@ var _showPopup = _interopRequireDefault(require("./utils/showPopup"));
 
 var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer"));
 
-var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
+var _date = require("./utils/date");
 
 var twutils = _interopRequireWildcard(require("./utils/tribalwars"));
 
@@ -444,7 +461,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.0.8
+// @version      1.1.0
 // @description  Show the latest ennoblements
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*
@@ -452,12 +469,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @run-at       document-end
 // ==/UserScript==
 const SERVER = (0, _getCurrentServer.default)();
-const FILTER_FORM_ID = 'sle_form';
-const TABLE_ID = 'sle_table';
+const FILTER_FORM_ID = 'le_form';
+const TABLE_ID = 'le_table';
 const CACHE_LOCAL_STORAGE_KEY = 'kiszkowaty_show_latest_ennoblements_cache';
 const FILTERS_LOCAL_STORAGE_KEY = 'kiszkowaty_show_latest_ennoblements_filter';
 const ICON_URL = 'https://i.imgur.com/4WP4098.png';
-const query = "\n    query liveEnnoblements($server: String!) {\n      liveEnnoblements(server: $server) {\n        newOwner {\n          id\n          name\n          tribe {\n            id\n            name\n            tag\n          }\n        }\n        oldOwner {\n          id\n          name\n          tribe {\n            id\n            name\n            tag\n          }\n        }\n        ennobledAt\n        village {\n          id\n          name\n          x\n          y\n        }\n      }\n    }\n  ";
+const query = "\n    query ennoblements($server: String!, $sort: [String!], $limit: Int) {\n      ennoblements(server: $server, sort: $sort, limit: $limit) {\n        items {\n          newOwner {\n            id\n            name\n            tribe {\n              id\n              name\n              tag\n            }\n          }\n          oldOwner {\n            id\n            name\n            tribe {\n              id\n              name\n              tag\n            }\n          }\n          ennobledAt\n          village {\n            id\n            name\n            x\n            y\n          }\n        }\n      }\n    }\n  ";
 const DEFAULT_FILTER = {
   newOwner: '',
   newOwnerTribe: '',
@@ -488,7 +505,9 @@ const loadLatestEnnoblements = () => {
   return (0, _requestCreator.default)({
     query,
     variables: {
-      server: SERVER
+      server: SERVER,
+      limit: 50,
+      sort: ['ennobledAt DESC']
     }
   }).then(data => {
     cacheEnnoblements(data);
@@ -533,7 +552,7 @@ const filterEnnoblements = function filterEnnoblements() {
   });
 };
 
-const handleFilterFormSubmit = (e, ennoblements) => {
+const applyFilters = (e, ennoblements) => {
   e.preventDefault();
 
   const filters = _objectSpread(_objectSpread({}, DEFAULT_FILTER), {}, {
@@ -550,7 +569,7 @@ const handleFilterFormSubmit = (e, ennoblements) => {
 const addEventListeners = function addEventListeners() {
   let ennoblements = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   document.querySelector('#' + FILTER_FORM_ID).addEventListener('submit', e => {
-    handleFilterFormSubmit(e, ennoblements);
+    applyFilters(e, ennoblements);
   });
 };
 
@@ -563,8 +582,8 @@ const getVillageHTML = village => {
 };
 
 const buildEnnoblementsRows = ennoblements => {
-  return ennoblements.reverse().map(ennoblement => {
-    return "<tr>\n              <td>".concat(getVillageHTML(ennoblement.village), "</td>\n              <td>").concat(getPlayerHTML(ennoblement.newOwner), "</td>\n              <td>").concat(getPlayerHTML(ennoblement.oldOwner), "</td>\n              <td>").concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>\n            </tr>");
+  return ennoblements.map(ennoblement => {
+    return "<tr>\n              <td>".concat(getVillageHTML(ennoblement.village), "</td>\n              <td>").concat(getPlayerHTML(ennoblement.newOwner), "</td>\n              <td>").concat(getPlayerHTML(ennoblement.oldOwner), "</td>\n              <td>").concat((0, _date.formatDate)(ennoblement.ennobledAt), "</td>\n            </tr>");
   });
 };
 
@@ -576,9 +595,6 @@ const renderLatestEnnoblements = function renderLatestEnnoblements() {
 
   const html = "\n        <form style=\"margin-bottom: 15px\" id=\"".concat(FILTER_FORM_ID, "\">\n        <h1 style=\"margin-bottom: 0px; text-align: center;\"><a href=\"").concat(twhelputils.buildURLToServerPage((0, _getServerVersionCode.default)(SERVER), SERVER), "\">TWHelp</a></h1>\n            <h3 style=\"margin-bottom: 10px; margin-top: 0;\">").concat(translations.devNote, "</h3>\n          <h3 style=\"margin-bottom: 5px\">").concat(translations.filters, "</h3>\n          <input type=\"text\" placeholder=\"").concat(translations.newOwner, "\" value=\"").concat(prepared.newOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.newOwnerTribe, "\" value=\"").concat(prepared.newOwnerTribe, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwner, "\" value=\"").concat(prepared.oldOwner, "\" />\n          <input type=\"text\" placeholder=\"").concat(translations.oldOwnerTribe, "\" value=\"").concat(prepared.oldOwnerTribe, "\" />\n          <div>\n            <button type=\"submit\">").concat(translations.apply, "</button>\n          </div>\n        </form>\n        <table class=\"vis\" id=\"").concat(TABLE_ID, "\" style=\"width: 100%\">\n          <thead>\n            <tr>\n              <th>").concat(translations.village, "</th>\n              <th>").concat(translations.newOwner, "</th>\n              <th>").concat(translations.oldOwner, "</th>\n              <th>").concat(translations.date, "</th>\n            </tr>\n          </thead>\n          <tbody>\n            ").concat(buildEnnoblementsRows(filterEnnoblements(ennoblements, prepared)).join(''), "\n          </tbody>\n        </table>\n        ");
   (0, _showPopup.default)({
-    e: {
-      clientY: 60
-    },
     title: translations.ennoblements,
     id: 'ennoblements',
     html
@@ -591,14 +607,14 @@ const handleButtonClick = async () => {
     const cache = loadLatestEnnoblementsFromCache();
     const filters = loadFilters();
 
-    if (Array.isArray(cache.liveEnnoblements) && cache.liveEnnoblements.length > 0) {
-      renderLatestEnnoblements(cache.liveEnnoblements, filters);
+    if (cache.ennoblements && Array.isArray(cache.ennoblements.items) && cache.ennoblements.items.length > 0) {
+      renderLatestEnnoblements(cache.ennoblements.items, filters);
     }
 
     const {
-      liveEnnoblements
+      ennoblements
     } = await loadLatestEnnoblements();
-    renderLatestEnnoblements(liveEnnoblements, filters);
+    renderLatestEnnoblements(ennoblements.items, filters);
   } catch (error) {
     console.log('latestEnnoblements', error);
   }
@@ -622,4 +638,4 @@ const renderButton = () => {
 (function () {
   renderButton();
 })();
-},{"./libs/requestCreator":"Ph2E","./utils/showPopup":"chDM","./utils/getCurrentServer":"DMkL","./utils/formatDate":"V6Mf","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH","./utils/twhelp":"gvXE","./utils/getServerVersionCode":"J1Ly","./i18n/latestEnnoblements":"FxgK"}]},{},["hkfB"], null)
+},{"./libs/requestCreator":"Ph2E","./utils/showPopup":"chDM","./utils/getCurrentServer":"DMkL","./utils/date":"ZbyX","./utils/tribalwars":"fHHP","./utils/localStorage":"KWxH","./utils/twhelp":"gvXE","./utils/getServerVersionCode":"J1Ly","./i18n/latestEnnoblements":"FxgK"}]},{},["hkfB"], null)

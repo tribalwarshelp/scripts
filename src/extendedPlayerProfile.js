@@ -15,7 +15,7 @@ import {
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
 import getServerVersionCode from './utils/getServerVersionCode';
-import formatDate from './utils/formatDate';
+import { formatDate } from './utils/date';
 import * as twutils from './utils/tribalwars';
 import * as twhelputils from './utils/twhelp';
 import { setItem, getItem } from './utils/localStorage';
@@ -25,7 +25,7 @@ import { setItem, getItem } from './utils/localStorage';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.9
+// @version      1.2.0
 // @description  Extended player profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_player*

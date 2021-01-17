@@ -783,16 +783,33 @@ const showPopup = function showPopup() {
 
 var _default = showPopup;
 exports.default = _default;
-},{}],"V6Mf":[function(require,module,exports) {
+},{}],"ZbyX":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.formatDate = exports.inUTC = exports.inTZ = void 0;
 
-var _default = (date, options) => {
-  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
+const inTZ = function inTZ() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  let tz = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC';
+  return new Date(new Date(d).toLocaleString('en-US', {
+    timeZone: tz
+  }));
+};
+
+exports.inTZ = inTZ;
+
+const inUTC = function inUTC() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  return inTZ(d);
+};
+
+exports.inUTC = inUTC;
+
+const formatDate = (date, options) => {
+  return new Date(date).toLocaleDateString(undefined, options ? options : {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -802,7 +819,7 @@ var _default = (date, options) => {
   });
 };
 
-exports.default = _default;
+exports.formatDate = formatDate;
 },{}],"fHHP":[function(require,module,exports) {
 "use strict";
 
@@ -873,7 +890,7 @@ var _pagination = require("../utils/pagination");
 
 var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
-var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
+var _date = require("../utils/date");
 
 var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
 
@@ -906,7 +923,7 @@ var _default = function _default(e, ennoblements) {
     currentPage
   });
   const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.village, "\n          </th>\n          <th>\n            ").concat(translations.newOwner, "\n          </th>\n          <th>\n            ").concat(translations.oldOwner, "\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
+    let rowHTML = '<tr>' + "<td>".concat((0, _date.formatDate)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
       rowHTML += "<td><a href=\"".concat(twutils.buildVillageURL(ennoblement.village.id), "\">").concat(twutils.buildVillageName(ennoblement.village.name, ennoblement.village.x, ennoblement.village.y), "</a></td>");
@@ -930,7 +947,7 @@ var _default = function _default(e, ennoblements) {
 };
 
 exports.default = _default;
-},{"../i18n/showEnnoblementsPopup":"tKRp","../utils/pagination":"fCHX","../utils/showPopup":"chDM","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"VYL5":[function(require,module,exports) {
+},{"../i18n/showEnnoblementsPopup":"tKRp","../utils/pagination":"fCHX","../utils/showPopup":"chDM","../utils/date":"ZbyX","../utils/tribalwars":"fHHP"}],"VYL5":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1103,7 +1120,7 @@ var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
 var _pagination = require("../utils/pagination");
 
-var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
+var _date = require("../utils/date");
 
 var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
 
@@ -1137,7 +1154,7 @@ var _default = function _default(e, history, daily) {
     const stats = daily.items.find(stats => {
       return stats.createDate === subtracted;
     });
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(history.createDate, {
+    let rowHTML = '<tr>' + "<td>".concat((0, _date.formatDate)(history.createDate, {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
@@ -1164,7 +1181,7 @@ var _default = function _default(e, history, daily) {
 };
 
 exports.default = _default;
-},{"date-fns/subDays":"mRRL","../i18n/showHistoryPopup":"hNDe","../utils/showPopup":"chDM","../utils/pagination":"fCHX","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"tQUs":[function(require,module,exports) {
+},{"date-fns/subDays":"mRRL","../i18n/showHistoryPopup":"hNDe","../utils/showPopup":"chDM","../utils/pagination":"fCHX","../utils/date":"ZbyX","../utils/tribalwars":"fHHP"}],"tQUs":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1321,7 +1338,7 @@ var _getCurrentServer = _interopRequireDefault(require("./utils/getCurrentServer
 
 var _localStorage = require("./utils/localStorage");
 
-var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
+var _date = require("./utils/date");
 
 var _getServerVersionCode = _interopRequireDefault(require("./utils/getServerVersionCode"));
 
@@ -1348,7 +1365,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.1.2
+// @version      1.1.3
 // @description  Extended tribe profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_ally*
@@ -1513,7 +1530,7 @@ const render = (_ref3) => {
   } = _ref3;
   [{
     title: translations.createdAt + ':',
-    data: (0, _formatDate.default)(tribe.createdAt),
+    data: (0, _date.formatDate)(tribe.createdAt),
     id: 'created_at'
   }, {
     title: translations.dominance + ':',
@@ -1521,15 +1538,15 @@ const render = (_ref3) => {
     id: 'dominance'
   }, {
     title: translations.bestRank + ':',
-    data: tribe.bestRank + ' ' + "(".concat((0, _formatDate.default)(tribe.bestRankAt), ")"),
+    data: tribe.bestRank + ' ' + "(".concat((0, _date.formatDate)(tribe.bestRankAt), ")"),
     id: 'best_rank'
   }, {
     title: translations.mostPoints + ':',
-    data: tribe.mostPoints.toLocaleString() + ' ' + "(".concat((0, _formatDate.default)(tribe.mostPointsAt), ")"),
+    data: tribe.mostPoints.toLocaleString() + ' ' + "(".concat((0, _date.formatDate)(tribe.mostPointsAt), ")"),
     id: 'most_points'
   }, {
     title: translations.mostVillages + ':',
-    data: tribe.mostVillages + ' ' + "(".concat((0, _formatDate.default)(tribe.mostVillagesAt), ")"),
+    data: tribe.mostVillages + ' ' + "(".concat((0, _date.formatDate)(tribe.mostVillagesAt), ")"),
     id: 'most_villages'
   }].forEach(data => {
     renderTr(data);
@@ -1642,7 +1659,7 @@ const mapMembersGrowthTdValue = i => {
 const buildMembersGrowthTBody = stats => {
   const dates = [...new Set(stats.items.map(item => item.createDate))].reverse();
   return "\n    <tbody>\n        <tr>\n          <th>".concat(translations.player, "</th>\n          ").concat(dates.map(date => {
-    return "<th>".concat((0, _formatDate.default)(date, {
+    return "<th>".concat((0, _date.formatDate)(date, {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
@@ -1737,7 +1754,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
     currentPage
   });
   const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(TRIBE_CHANGES_PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.player, "\n          </th>\n          <th>\n            ").concat(translations.act, "\n          </th>\n        </tr>\n        ").concat(tribeChanges.items.map(tribeChange => {
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(tribeChange.createdAt), "</td>");
+    let rowHTML = '<tr>' + "<td>".concat((0, _date.formatDate)(tribeChange.createdAt), "</td>");
 
     if (tribeChange.player) {
       rowHTML += "<td><a href=\"".concat(twutils.buildPlayerURL(tribeChange.player.id), "\">").concat(tribeChange.player.name, "</a></td>");
@@ -1948,4 +1965,4 @@ const renderActions = () => {
     console.log('extended tribe profile', error);
   }
 })();
-},{"date-fns/differenceInDays":"mdVI","./i18n/extendedTribeProfile":"iFDG","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/formatDate":"V6Mf","./utils/getServerVersionCode":"J1Ly","./utils/twstats":"Syko","./utils/twhelp":"gvXE","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)
+},{"date-fns/differenceInDays":"mdVI","./i18n/extendedTribeProfile":"iFDG","./libs/requestCreator":"Ph2E","./utils/pagination":"fCHX","./common/renderTodaysStats":"yrCm","./common/showEnnoblementsPopup":"vNT1","./common/showHistoryPopup":"kEDU","./utils/showPopup":"chDM","./utils/getIDFromURL":"tQUs","./utils/getCurrentServer":"DMkL","./utils/localStorage":"KWxH","./utils/date":"ZbyX","./utils/getServerVersionCode":"J1Ly","./utils/twstats":"Syko","./utils/twhelp":"gvXE","./utils/tribalwars":"fHHP"}]},{},["r4nF"], null)

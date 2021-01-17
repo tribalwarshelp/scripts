@@ -3080,7 +3080,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.inUTC = exports.inTZ = void 0;
+exports.formatDate = exports.inUTC = exports.inTZ = void 0;
 
 const inTZ = function inTZ() {
   let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
@@ -3098,6 +3098,19 @@ const inUTC = function inUTC() {
 };
 
 exports.inUTC = inUTC;
+
+const formatDate = (date, options) => {
+  return new Date(date).toLocaleDateString(undefined, options ? options : {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+};
+
+exports.formatDate = formatDate;
 },{}],"gvXE":[function(require,module,exports) {
 "use strict";
 

@@ -373,16 +373,33 @@ var _default = unit => {
 };
 
 exports.default = _default;
-},{"./tribalwars":"fHHP"}],"V6Mf":[function(require,module,exports) {
+},{"./tribalwars":"fHHP"}],"ZbyX":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.formatDate = exports.inUTC = exports.inTZ = void 0;
 
-var _default = (date, options) => {
-  return new Date(date).toLocaleDateString(window.game_data.locale.replace('_', '-'), options ? options : {
+const inTZ = function inTZ() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  let tz = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC';
+  return new Date(new Date(d).toLocaleString('en-US', {
+    timeZone: tz
+  }));
+};
+
+exports.inTZ = inTZ;
+
+const inUTC = function inUTC() {
+  let d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+  return inTZ(d);
+};
+
+exports.inUTC = inUTC;
+
+const formatDate = (date, options) => {
+  return new Date(date).toLocaleDateString(undefined, options ? options : {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -392,7 +409,7 @@ var _default = (date, options) => {
   });
 };
 
-exports.default = _default;
+exports.formatDate = formatDate;
 },{}],"oUdd":[function(require,module,exports) {
 "use strict";
 
@@ -766,7 +783,7 @@ var _pagination = require("../utils/pagination");
 
 var _showPopup = _interopRequireDefault(require("../utils/showPopup"));
 
-var _formatDate = _interopRequireDefault(require("../utils/formatDate"));
+var _date = require("../utils/date");
 
 var twutils = _interopRequireWildcard(require("../utils/tribalwars"));
 
@@ -799,7 +816,7 @@ var _default = function _default(e, ennoblements) {
     currentPage
   });
   const html = "\n    <div style=\"".concat((0, _pagination.getContainerStyles)(), "\" id=\"").concat(PAGINATION_CONTAINER_ID, "\">\n      ").concat(paginationItems.join(''), "\n    </div>\n    <table class=\"vis\" style=\"border-collapse: separate; border-spacing: 2px; width: 100%;\">\n      <tbody>\n        <tr>\n          <th>\n            ").concat(translations.date, "\n          </th>\n          <th>\n            ").concat(translations.village, "\n          </th>\n          <th>\n            ").concat(translations.newOwner, "\n          </th>\n          <th>\n            ").concat(translations.oldOwner, "\n          </th>\n        </tr>\n        ").concat(ennoblements.items.map(ennoblement => {
-    let rowHTML = '<tr>' + "<td>".concat((0, _formatDate.default)(ennoblement.ennobledAt), "</td>");
+    let rowHTML = '<tr>' + "<td>".concat((0, _date.formatDate)(ennoblement.ennobledAt), "</td>");
 
     if (ennoblement.village) {
       rowHTML += "<td><a href=\"".concat(twutils.buildVillageURL(ennoblement.village.id), "\">").concat(twutils.buildVillageName(ennoblement.village.name, ennoblement.village.x, ennoblement.village.y), "</a></td>");
@@ -823,7 +840,7 @@ var _default = function _default(e, ennoblements) {
 };
 
 exports.default = _default;
-},{"../i18n/showEnnoblementsPopup":"tKRp","../utils/pagination":"fCHX","../utils/showPopup":"chDM","../utils/formatDate":"V6Mf","../utils/tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
+},{"../i18n/showEnnoblementsPopup":"tKRp","../utils/pagination":"fCHX","../utils/showPopup":"chDM","../utils/date":"ZbyX","../utils/tribalwars":"fHHP"}],"UdfQ":[function(require,module,exports) {
 "use strict";
 
 var _requestCreator = _interopRequireDefault(require("./libs/requestCreator"));
@@ -838,7 +855,7 @@ var _getIDFromURL = _interopRequireDefault(require("./utils/getIDFromURL"));
 
 var _buildUnitImgURL = _interopRequireDefault(require("./utils/buildUnitImgURL"));
 
-var _formatDate = _interopRequireDefault(require("./utils/formatDate"));
+var _date = require("./utils/date");
 
 var _wait = _interopRequireDefault(require("./utils/wait"));
 
@@ -869,7 +886,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.5
+// @version      0.7.6
 // @description  Extended village profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_village*
@@ -1138,7 +1155,7 @@ const renderAdditionalInfo = function renderAdditionalInfo() {
   renderTr({
     id: 'ennobledAt',
     title: "".concat(translations.ennobledAt, ":"),
-    data: firstEnnoblement ? (0, _formatDate.default)(firstEnnoblement.ennobledAt) : translations.never
+    data: firstEnnoblement ? (0, _date.formatDate)(firstEnnoblement.ennobledAt) : translations.never
   });
 
   try {
@@ -1169,4 +1186,4 @@ const renderAdditionalInfo = function renderAdditionalInfo() {
     console.log('extended village profile', error);
   }
 })();
-},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/buildUnitImgURL":"KX6P","./utils/formatDate":"V6Mf","./utils/wait":"oUdd","./utils/localStorage":"KWxH","./utils/calcLoyalty":"kcC2","./utils/getServerVersionCode":"J1Ly","./utils/twhelp":"gvXE","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)
+},{"./libs/requestCreator":"Ph2E","./i18n/extendedVillageProfile":"LNef","./utils/pagination":"fCHX","./utils/getCurrentServer":"DMkL","./utils/getIDFromURL":"tQUs","./utils/buildUnitImgURL":"KX6P","./utils/date":"ZbyX","./utils/wait":"oUdd","./utils/localStorage":"KWxH","./utils/calcLoyalty":"kcC2","./utils/getServerVersionCode":"J1Ly","./utils/twhelp":"gvXE","./common/showEnnoblementsPopup":"vNT1"}]},{},["UdfQ"], null)
