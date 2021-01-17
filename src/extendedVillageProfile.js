@@ -17,9 +17,9 @@ import showEnnoblementsPopup from './common/showEnnoblementsPopup';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-// @version      0.7.4
+// @version      0.7.5
 // @description  Extended village profile
-// @author       Kichiyaki https://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_village*
 // @grant        none
 // @run-at       document-end

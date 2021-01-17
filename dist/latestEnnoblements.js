@@ -444,9 +444,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.0.7
+// @version      1.0.8
 // @description  Show the latest ennoblements
-// @author       Kichiyaki https://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*
 // @grant        none
 // @run-at       document-end

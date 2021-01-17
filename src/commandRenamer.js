@@ -6,9 +6,9 @@ import wait from './utils/wait';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandRenamer.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/commandRenamer.js
-// @version      0.2.1
+// @version      0.2.3
 // @description  Command renamer
-// @author       Kichiyaki https://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*mode=incomings*
 // @grant        none
 // ==/UserScript==

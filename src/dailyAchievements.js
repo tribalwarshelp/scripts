@@ -13,9 +13,9 @@ import { buildURLToServerPage } from './utils/twhelp';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/dailyAchievements.js
-// @version      0.4.3
+// @version      0.4.4
 // @description  Daily achievements
-// @author       Kichiyaki https://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_player&mode=awards*
 // @grant        none
 // ==/UserScript==

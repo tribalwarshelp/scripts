@@ -1175,9 +1175,9 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js
-// @version      1.1.8
+// @version      1.1.9
 // @description  Extended player profile
-// @author       Kichiyaki https://dawid-wysokinski.pl/
+// @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_player*
 // @grant        none
 // @run-at       document-end
