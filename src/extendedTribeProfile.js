@@ -25,7 +25,7 @@ import * as twutils from './utils/tribalwars';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.1.3
+// @version      1.1.4
 // @description  Extended tribe profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_ally*
@@ -202,9 +202,9 @@ const actionContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)'
 );
-const membersContainer = document.querySelector(
-  '#content_value > table.vis > tbody'
-);
+const membersContainer = document
+  .querySelector('#content_value h3')
+  .nextElementSibling.querySelector('tbody');
 const translations = getTranslations();
 
 const loadDataFromCache = () => {
@@ -898,11 +898,10 @@ const renderActions = () => {
   actionContainer.appendChild(wrapAction(exportVillages));
 };
 
+const fixTribeMembersTableWidth = () => {};
+
 (async function () {
   try {
-    document.querySelector('#content_value > table:nth-child(3)').style.width =
-      '100%';
-
     renderActions();
 
     const dataFromCache = loadDataFromCache();
