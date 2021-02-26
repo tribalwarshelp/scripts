@@ -1946,8 +1946,6 @@ const renderActions = () => {
   actionContainer.appendChild(wrapAction(exportVillages));
 };
 
-const fixTribeMembersTableWidth = () => {};
-
 (async function () {
   try {
     renderActions();
