@@ -3,7 +3,7 @@ import isNil from '../utils/isNil';
 
 const translations = getTranslations();
 
-const getTodaysStatsTdStyle = (value) => {
+const getTodaysStatsTdStyle = value => {
   const statIncreaseStyle = 'color: #000; background-color: #0f0';
   const statDecreaseStyle = 'color: #000; background-color: #f00';
   const defaultStyle = 'color: #000; background-color: #808080';

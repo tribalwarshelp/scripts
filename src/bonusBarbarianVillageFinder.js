@@ -51,7 +51,7 @@ const buildReqOptions = (bonus, offset) => {
   };
 };
 
-const loadBonusVillages = async (bonus) => {
+const loadBonusVillages = async bonus => {
   const { villages } = await requestCreator(buildReqOptions(bonus, 0));
   for (let i = villages.length; i < villages.total; i += 1000) {
     const data = await requestCreator(buildReqOptions(bonus, 0));
@@ -60,14 +60,14 @@ const loadBonusVillages = async (bonus) => {
   return villages;
 };
 
-const searchBonusBarbarianVillages = async (e) => {
+const searchBonusBarbarianVillages = async e => {
   e.preventDefault();
 
   const villages = await loadBonusVillages(parseInt(e.target[0].value));
   const coords = TWMap.pos;
 
   villages.items = villages.items
-    .map((item) => {
+    .map(item => {
       return {
         ...item,
         distance: calcDistanceBetweenTwoPoints(
@@ -96,7 +96,7 @@ const getBonuses = () => {
   return bonuses;
 };
 
-const buildTableBodyHTML = (villages) => {
+const buildTableBodyHTML = villages => {
   return `
         <tbody>
             <tr>
@@ -114,7 +114,7 @@ const buildTableBodyHTML = (villages) => {
               Array.isArray(villages)
                 ? villages
                     .map(
-                      (village) => `<tr>
+                      village => `<tr>
                 <td>
                     <a href="${twutils.buildVillageURL(village.id)}">
                         ${twutils.buildVillageName(
@@ -154,7 +154,7 @@ const renderUI = () => {
             <select>
                 ${getBonuses()
                   .map(
-                    (bonus) =>
+                    bonus =>
                       `<option value="${bonus.value}">${bonus.text}</option>`
                   )
                   .join('')}

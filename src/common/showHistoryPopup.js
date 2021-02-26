@@ -11,7 +11,7 @@ import * as twutils from '../utils/tribalwars';
 const PAGINATION_CONTAINER_ID = 'historyPagination';
 const translations = getTranslations();
 
-const addMathSymbol = (v) => {
+const addMathSymbol = v => {
   return v > 0 ? '+' + v : v;
 };
 
@@ -56,12 +56,12 @@ export default (
           ${tribe ? '' : `<th>${translations.ods}</th>`}
         </tr>
         ${history.items
-          .map((history) => {
+          .map(history => {
             const subtracted =
               subDays(new Date(history.createDate), 1)
                 .toISOString()
                 .split('.')[0] + 'Z';
-            const stats = daily.items.find((stats) => {
+            const stats = daily.items.find(stats => {
               return stats.createDate === subtracted;
             });
 
@@ -142,7 +142,7 @@ export default (
 
   document
     .querySelectorAll('#' + PAGINATION_CONTAINER_ID + ' a')
-    .forEach((el) => {
+    .forEach(el => {
       el.addEventListener('click', onPageChange);
     });
 };

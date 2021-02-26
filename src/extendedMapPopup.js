@@ -97,7 +97,7 @@ const cacheServerConfig = (data = {}) => {
   setItem(SERVER_CONFIG_LOCAL_STORAGE_KEY, data);
 };
 
-const isConfigExpired = (date) => {
+const isConfigExpired = date => {
   return Math.abs(date.getTime() - new Date().getTime()) > 1000 * 60 * 60 * 24;
 };
 
@@ -166,7 +166,7 @@ const getAvailableUnits = (unitCfg = {}) => {
   return units;
 };
 
-const getUnitTdBgColor = (index) => (index % 2 === 0 ? '#f8f4e8' : '#ded3b9;');
+const getUnitTdBgColor = index => (index % 2 === 0 ? '#f8f4e8' : '#ded3b9;');
 
 const buildUnitHeader = (unit, index) => {
   return `
@@ -295,13 +295,13 @@ const renderAdditionalInfo = (id, data, { config, unitConfig }) => {
       `;
 };
 
-const createLoadVillageHandler = (cfg) => async (e) => {
+const createLoadVillageHandler = cfg => async e => {
   TWMap.popup._loadVillage(e);
   const data = await loadVillageData(parseInt(e));
   renderAdditionalInfo(parseInt(e), data, cfg);
 };
 
-const createDisplayForVillageHandler = (cfg) => async (e, a, t) => {
+const createDisplayForVillageHandler = cfg => async (e, a, t) => {
   TWMap.popup._displayForVillage(e, a, t);
   const data = await loadVillageData(parseInt(e.id), {
     cacheOnly: window.game_data.features.Premium.active,

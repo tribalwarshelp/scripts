@@ -15,7 +15,7 @@ import wait from './utils/wait';
 
 const translations = getTranslations();
 
-const handleSubmit = async (e) => {
+const handleSubmit = async e => {
   e.preventDefault();
   const name = e.target[0].value;
   if (!name) return;

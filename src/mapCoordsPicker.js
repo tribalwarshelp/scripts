@@ -55,11 +55,11 @@ const setVillageBorder = (x, y, color = 'transparent') => {
   }
 };
 
-const deleteVillageFromOtherGroups = (key) => {
+const deleteVillageFromOtherGroups = key => {
   for (let name in config.groups) {
     if (name === config.selectedGroup) return;
     config.groups[name].villages = config.groups[name].villages.filter(
-      (village) => village.key !== key
+      village => village.key !== key
     );
   }
 };
@@ -69,12 +69,12 @@ const handleMapClick = (x, y, e) => {
 
   const key = `${x}|${y}`;
   const selected = config.groups[config.selectedGroup].villages.some(
-    (village) => village.key === key
+    village => village.key === key
   );
   if (selected) {
     config.groups[config.selectedGroup].villages = config.groups[
       config.selectedGroup
-    ].villages.filter((village) => village.key !== key);
+    ].villages.filter(village => village.key !== key);
     setVillageBorder(x, y, 'transparent');
   } else {
     config.groups[config.selectedGroup].villages = [
@@ -114,7 +114,7 @@ const renderForm = (container, group) => {
 
   const form = document.createElement('form');
   form.innerHTML = html;
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', e => {
     e.preventDefault();
     if (group) {
       if (group.name === config.selectedGroup)
@@ -148,7 +148,7 @@ const renderForm = (container, group) => {
 
     const selectButton = form.querySelector('.selectButton');
     if (selectButton) {
-      selectButton.addEventListener('click', (e) => {
+      selectButton.addEventListener('click', e => {
         config.selectedGroup = group.name;
         renderGroups();
       });
@@ -173,7 +173,7 @@ const handleExportVillages = () => {
     groups.push(`<div style="margin-bottom: 30px;">
       <h3>${name}</h3>
       <textarea cols=30 rows=8 readonly>${config.groups[name].villages
-        .map((village) => village.key)
+        .map(village => village.key)
         .join(' ')
         .trim()}</textarea>
     </div>`);
@@ -240,7 +240,7 @@ const handleButtonClick = () => {
 };
 
 const colorizeGroupVillages = (name, bgColor = '') => {
-  config.groups[name].villages.forEach((village) => {
+  config.groups[name].villages.forEach(village => {
     setVillageBorder(
       village.x,
       village.y,

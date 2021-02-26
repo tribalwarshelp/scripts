@@ -35,17 +35,15 @@ const addTribe = () => {
   container.appendChild(div);
 };
 
-const handleFormSubmit = async (e) => {
+const handleFormSubmit = async e => {
   e.preventDefault();
   const limit = parseInt(document.querySelector('#' + LIMIT_INPUT_ID).value);
   const tribes = [];
   const type =
     new URLSearchParams(window.location.search).get('type') || 'kill_att';
-  document
-    .querySelectorAll('#' + TRIBE_CONTAINER_ID + ' input')
-    .forEach((el) => {
-      if (el.value) tribes.push(el.value.trim());
-    });
+  document.querySelectorAll('#' + TRIBE_CONTAINER_ID + ' input').forEach(el => {
+    if (el.value) tribes.push(el.value.trim());
+  });
 
   let players = [];
   let page = 0;

@@ -15,7 +15,7 @@ export const setPage = (el, page = 1) => {
   el.setAttribute(ATTRIBUTE, page + '');
 };
 
-export const getPage = (el) => {
+export const getPage = el => {
   if (!el instanceof HTMLElement) {
     return 0;
   }

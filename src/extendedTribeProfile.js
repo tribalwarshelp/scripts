@@ -217,7 +217,7 @@ const cacheTribeData = (data = {}) => {
 
 const getMemberIDs = () => {
   const ids = [];
-  membersContainer.querySelectorAll('a').forEach((a) => {
+  membersContainer.querySelectorAll('a').forEach(a => {
     const href = a.getAttribute('href');
     if (href.includes('info_player')) {
       ids.push(getIDFromURL(href));
@@ -228,7 +228,7 @@ const getMemberIDs = () => {
 
 const getMemberNames = () => {
   const ids = [];
-  membersContainer.querySelectorAll('a').forEach((a) => {
+  membersContainer.querySelectorAll('a').forEach(a => {
     if (a.getAttribute('href').includes('info_player')) {
       ids.push(a.innerText.trim());
     }
@@ -271,7 +271,7 @@ const renderTr = ({ title, data, id }) => {
   tr.children[1].innerHTML = data;
 };
 
-const extendMembersData = (players) => {
+const extendMembersData = players => {
   membersContainer.parentElement.style.width = '100%';
   const heading = membersContainer.querySelector('tr:first-child');
   if (heading.children.length !== 11) {
@@ -282,19 +282,19 @@ const extendMembersData = (players) => {
       translations.od,
       translations.dailyGrowth,
       translations.playerLinks,
-    ].forEach((v) => {
+    ].forEach(v => {
       const th = document.createElement('th');
       th.innerHTML = v;
       heading.appendChild(th);
     });
   }
-  membersContainer.querySelectorAll('tr').forEach((tr) => {
+  membersContainer.querySelectorAll('tr').forEach(tr => {
     const a = tr.querySelector('a');
     if (!a) {
       return;
     }
     const playerID = getIDFromURL(a.getAttribute('href'));
-    const player = players.items.find((p) => p.id === playerID);
+    const player = players.items.find(p => p.id === playerID);
     if (player) {
       [
         [player.scoreAtt, player.rankAtt],
@@ -369,7 +369,7 @@ const render = ({ tribe, dailyTribeStats, players }) => {
       data: tribe.mostVillages + ' ' + `(${formatDate(tribe.mostVillagesAt)})`,
       id: 'most_villages',
     },
-  ].forEach((data) => {
+  ].forEach(data => {
     renderTr(data);
   });
 
@@ -382,7 +382,7 @@ const render = ({ tribe, dailyTribeStats, players }) => {
   }
 };
 
-const handleShowTribeEnnoblementsClick = async (e) => {
+const handleShowTribeEnnoblementsClick = async e => {
   e.preventDefault();
   const page = getPage(e.target);
   if (!isNaN(page)) {
@@ -409,7 +409,7 @@ const handleShowTribeEnnoblementsClick = async (e) => {
   }
 };
 
-const handleShowTribeHistoryClick = async (e) => {
+const handleShowTribeHistoryClick = async e => {
   e.preventDefault();
   const page = getPage(e.target);
   if (!isNaN(page)) {
@@ -440,7 +440,7 @@ const handleShowTribeHistoryClick = async (e) => {
   }
 };
 
-const getMembersGrowthTdStyle = (value) => {
+const getMembersGrowthTdStyle = value => {
   const statIncreaseStyle = 'color: #000; background-color: #0f0';
   const statDecreaseStyle = 'color: #000; background-color: #f00';
   const defaultStyle = 'color: #000; background-color: #808080';
@@ -452,7 +452,7 @@ const getMembersGrowthTdStyle = (value) => {
     : defaultStyle;
 };
 
-const mapMembersGrowthTdValue = (i) => {
+const mapMembersGrowthTdValue = i => {
   switch (MEMBERS_GROWTH_MODE) {
     case 'points':
       return i.points;
@@ -471,9 +471,9 @@ const mapMembersGrowthTdValue = (i) => {
   }
 };
 
-const buildMembersGrowthTBody = (stats) => {
+const buildMembersGrowthTBody = stats => {
   const dates = [
-    ...new Set(stats.items.map((item) => item.createDate)),
+    ...new Set(stats.items.map(item => item.createDate)),
   ].reverse();
 
   return `
@@ -481,7 +481,7 @@ const buildMembersGrowthTBody = (stats) => {
         <tr>
           <th>${translations.player}</th>
           ${dates
-            .map((date) => {
+            .map(date => {
               return `<th>${formatDate(date, {
                 year: 'numeric',
                 month: '2-digit',
@@ -492,9 +492,9 @@ const buildMembersGrowthTBody = (stats) => {
           <th>${translations.total}</th>
         </tr>
         ${getMemberIDs()
-          .map((id) => {
+          .map(id => {
             const filtered = stats.items
-              .filter((item) => item.player && item.player.id === id)
+              .filter(item => item.player && item.player.id === id)
               .reverse();
             let player = undefined;
             if (filtered.length > 0) {
@@ -503,7 +503,7 @@ const buildMembersGrowthTBody = (stats) => {
             const tds = [];
             let total = 0;
             for (let date of dates) {
-              const i = filtered.find((i) => i.createDate === date);
+              const i = filtered.find(i => i.createDate === date);
               let val = 0;
               if (i) {
                 val = mapMembersGrowthTdValue(i);
@@ -537,7 +537,7 @@ const buildMembersGrowthTBody = (stats) => {
 const MEMBERS_GROWTH_TABLE_ID = 'membersGrowth';
 const MEMBERS_GROWTH_FORM = MEMBERS_GROWTH_TABLE_ID + 'Form';
 
-const createChangeTypeHandler = (stats) => (e) => {
+const createChangeTypeHandler = stats => e => {
   e.preventDefault();
   MEMBERS_GROWTH_MODE = e.target[0].value;
   document.querySelector(
@@ -554,7 +554,7 @@ const renderMembersGrowthPopup = (e, stats) => {
     ['odd', translations.opponentsDefeatedAsDefender],
     ['ods', translations.opponentsDefeatedAsSupporter],
   ].map(
-    (v) =>
+    v =>
       `<option ${
         MEMBERS_GROWTH_MODE === v[0] ? 'selected="selected"' : ''
       } value="${v[0]}">${v[1]}</option>`
@@ -604,7 +604,7 @@ const loadMembersGrowthData = async ({ createDateLTE, createDateGT } = {}) => {
   return data;
 };
 
-const handleShowMembersGrowthClick = async (e) => {
+const handleShowMembersGrowthClick = async e => {
   e.preventDefault();
   const createDateGT = new Date();
   createDateGT.setDate(createDateGT.getDate() - 7);
@@ -640,7 +640,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
           </th>
         </tr>
         ${tribeChanges.items
-          .map((tribeChange) => {
+          .map(tribeChange => {
             let rowHTML =
               '<tr>' + `<td>${formatDate(tribeChange.createdAt)}</td>`;
             if (tribeChange.player) {
@@ -671,12 +671,12 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
 
   document
     .querySelectorAll('#' + TRIBE_CHANGES_PAGINATION_CONTAINER_ID + ' a')
-    .forEach((el) => {
+    .forEach(el => {
       el.addEventListener('click', handleShowTribeChangesClick);
     });
 };
 
-const handleShowTribeChangesClick = async (e) => {
+const handleShowTribeChangesClick = async e => {
   e.preventDefault();
   const page = getPage(e.target);
   if (!isNaN(page)) {
@@ -699,7 +699,7 @@ const handleShowTribeChangesClick = async (e) => {
   }
 };
 
-const handleGenerateMailingListClick = (e) => {
+const handleGenerateMailingListClick = e => {
   e.preventDefault();
 
   const members = getMemberNames();
@@ -758,7 +758,7 @@ const showLoadingDialog = (current = 0, total = 0) => {
   );
 };
 
-const handleExportTribeVillagesFormSubmit = async (e) => {
+const handleExportTribeVillagesFormSubmit = async e => {
   e.preventDefault();
   let limit = parseInt(e.target[4].value);
   const variables = {
@@ -798,13 +798,13 @@ const handleExportTribeVillagesFormSubmit = async (e) => {
     'exportTribeVillages',
     `
     <textarea cols=60 rows=8 readonly>${items
-      .map((item) => `${item.x}|${item.y}`)
+      .map(item => `${item.x}|${item.y}`)
       .join(' ')}</textarea>
   `
   );
 };
 
-const handleExportTribeVillagesClick = (e) => {
+const handleExportTribeVillagesClick = e => {
   e.preventDefault();
   const FORM_ID = 'etvForm';
 
@@ -843,7 +843,7 @@ const handleExportTribeVillagesClick = (e) => {
     .addEventListener('submit', handleExportTribeVillagesFormSubmit);
 };
 
-const wrapAction = (action) => {
+const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
   actionWrapperTd.append(action);

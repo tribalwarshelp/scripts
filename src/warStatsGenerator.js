@@ -67,7 +67,7 @@ const showResult = (sideOne = 0, sideTwo = 0) => {
   document.querySelector('#' + RESULT_CONTAINER_ID).innerHTML = html;
 };
 
-const createAddTribeHandler = (container) => {
+const createAddTribeHandler = container => {
   return () => {
     const div = document.createElement('div');
     div.innerHTML = `
@@ -82,21 +82,21 @@ const createAddTribeHandler = (container) => {
   };
 };
 
-const handleFormSubmit = async (e) => {
+const handleFormSubmit = async e => {
   e.preventDefault();
 
   const sideOneTags = [];
   const sideTwoTags = [];
   e.target
     .querySelectorAll(`#${SIDE_ONE_INPUT_CONTAINER_ID} input`)
-    .forEach((el) => {
+    .forEach(el => {
       if (el.value.trim()) {
         sideOneTags.push(el.value.trim());
       }
     });
   e.target
     .querySelectorAll(`#${SIDE_TWO_INPUT_CONTAINER_ID} input`)
-    .forEach((el) => {
+    .forEach(el => {
       if (el.value.trim()) {
         sideTwoTags.push(el.value.trim());
       }
@@ -124,7 +124,7 @@ const handleFormSubmit = async (e) => {
   if (toInputs.length === 2 && toInputs[0].value && toInputs[1].value) {
     ennobledAtLTE = new Date(`${toInputs[0].value}T${toInputs[1].value}:00`);
   }
-  e.target.querySelectorAll('button').forEach((button) => {
+  e.target.querySelectorAll('button').forEach(button => {
     button.disabled = true;
   });
 
@@ -139,11 +139,11 @@ const handleFormSubmit = async (e) => {
       },
     });
     const sideOneTribes = tribes.items
-      .filter((item) => sideOneTags.some((tag) => item.tag === tag))
-      .map((tribe) => tribe.id);
+      .filter(item => sideOneTags.some(tag => item.tag === tag))
+      .map(tribe => tribe.id);
     const sideTwoTribes = tribes.items
-      .filter((item) => sideTwoTags.some((tag) => item.tag === tag))
-      .map((tribe) => tribe.id);
+      .filter(item => sideTwoTags.some(tag => item.tag === tag))
+      .map(tribe => tribe.id);
 
     const { sideOneEnnoblements, sideTwoEnnoblements } = await requestCreator({
       query: ENNOBLEMENTS_QUERY,
@@ -174,12 +174,12 @@ const handleFormSubmit = async (e) => {
   } catch (error) {
     console.log('handleFormSubmit', error);
   }
-  e.target.querySelectorAll('button').forEach((button) => {
+  e.target.querySelectorAll('button').forEach(button => {
     button.disabled = false;
   });
 };
 
-const showWarStatsForm = (e) => {
+const showWarStatsForm = e => {
   const html = `
         <form>
         <h1 style="margin-bottom: 0px; text-align: center;"><a href="${twhelputils.buildURLToServerPage(

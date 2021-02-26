@@ -1,4 +1,4 @@
-export default (str) => {
+export default str => {
   const arr = str.split(/[_-]/);
   let newStr = '';
   for (let i = 1; i < arr.length; i++) {

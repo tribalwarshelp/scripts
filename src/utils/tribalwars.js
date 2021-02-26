@@ -1,4 +1,4 @@
-export const buildTribeURL = (id) => {
+export const buildTribeURL = id => {
   return (
     window.location.origin +
     TribalWars.buildURL('', {
@@ -8,7 +8,7 @@ export const buildTribeURL = (id) => {
   );
 };
 
-export const buildPlayerURL = (id) => {
+export const buildPlayerURL = id => {
   return (
     window.location.origin +
     TribalWars.buildURL('', {
@@ -18,7 +18,7 @@ export const buildPlayerURL = (id) => {
   );
 };
 
-export const buildVillageURL = (id) => {
+export const buildVillageURL = id => {
   return (
     window.location.origin +
     TribalWars.buildURL('', {
@@ -37,6 +37,6 @@ export const calcAttackDuration = (distance, baseSpeed) => {
   return Math.round(distance * baseSpeed);
 };
 
-export const buildImgURL = (img) => {
+export const buildImgURL = img => {
   return image_base + img;
 };

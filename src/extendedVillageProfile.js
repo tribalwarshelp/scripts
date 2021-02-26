@@ -138,7 +138,7 @@ const cacheServerConfig = (data = {}) => {
   setItem(SERVER_CONFIG_LOCAL_STORAGE_KEY, data);
 };
 
-const isConfigExpired = (date) => {
+const isConfigExpired = date => {
   return Math.abs(date.getTime() - new Date().getTime()) > 1000 * 60 * 60 * 24;
 };
 
@@ -177,7 +177,7 @@ const loadPageData = async () => {
   return data;
 };
 
-const handleShowTribeEnnoblementsClick = async (e) => {
+const handleShowTribeEnnoblementsClick = async e => {
   e.preventDefault();
   const page = getPage(e.target);
   if (!isNaN(page)) {
@@ -201,7 +201,7 @@ const handleShowTribeEnnoblementsClick = async (e) => {
   }
 };
 
-const buildCellsForIncSupport = (units) => {
+const buildCellsForIncSupport = units => {
   const cells = [];
   let pop = 0;
   for (let unit in units) {
@@ -212,14 +212,14 @@ const buildCellsForIncSupport = (units) => {
   return cells;
 };
 
-const handleCountIncomingSupportClick = async (e) => {
+const handleCountIncomingSupportClick = async e => {
   e.preventDefault();
 
   const ids = [];
   const allyCommand = {};
   document
     .querySelectorAll('span.command_hover_details[data-command-type="support"]')
-    .forEach((el) => {
+    .forEach(el => {
       const id = parseInt(el.getAttribute('data-command-id'));
       if (el.classList.contains('commandicon-ally')) {
         allyCommand[id] = true;
@@ -328,7 +328,7 @@ const handleCountIncomingSupportClick = async (e) => {
   }
 };
 
-const wrapAction = (action) => {
+const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
   actionWrapperTd.append(action);
@@ -423,7 +423,7 @@ const renderAdditionalInfo = ({ config, ennoblements } = {}) => {
     tr.style.textAlign = 'center';
     tr.style.fontWeight = 'bold';
     tr.appendChild(document.createElement('td'));
-    units.forEach((count) => {
+    units.forEach(count => {
       const td = document.createElement('td');
       td.innerHTML = count;
       tr.appendChild(td);

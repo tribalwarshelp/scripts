@@ -92,9 +92,9 @@ const loadLatestEnnoblements = () => {
       limit: 50,
       sort: ['ennobledAt DESC'],
     },
-  }).then((data) => {
+  }).then(data => {
     cacheEnnoblements(data);
-    return new Promise((resolve) => resolve(data));
+    return new Promise(resolve => resolve(data));
   });
 };
 
@@ -115,7 +115,7 @@ const filterEnnoblements = (
   ennoblements = [],
   { newOwner, newOwnerTribe, oldOwner, oldOwnerTribe } = {}
 ) => {
-  return ennoblements.filter((ennoblement) => {
+  return ennoblements.filter(ennoblement => {
     if (newOwner && !isValidPlayer(ennoblement.newOwner, newOwner)) {
       return false;
     }
@@ -156,14 +156,12 @@ const applyFilters = (e, ennoblements) => {
 };
 
 const addEventListeners = (ennoblements = []) => {
-  document
-    .querySelector('#' + FILTER_FORM_ID)
-    .addEventListener('submit', (e) => {
-      applyFilters(e, ennoblements);
-    });
+  document.querySelector('#' + FILTER_FORM_ID).addEventListener('submit', e => {
+    applyFilters(e, ennoblements);
+  });
 };
 
-const getPlayerHTML = (player) => {
+const getPlayerHTML = player => {
   return player && player.name
     ? `<a href="${twutils.buildPlayerURL(player.id)}">${player.name}</a> (${
         player.tribe && player.tribe.tag
@@ -175,14 +173,14 @@ const getPlayerHTML = (player) => {
     : '-';
 };
 
-const getVillageHTML = (village) => {
+const getVillageHTML = village => {
   return `<a href="${twutils.buildVillageURL(
     village.id
   )}">${twutils.buildVillageName(village.name, village.x, village.y)}</a>`;
 };
 
-const buildEnnoblementsRows = (ennoblements) => {
-  return ennoblements.map((ennoblement) => {
+const buildEnnoblementsRows = ennoblements => {
+  return ennoblements.map(ennoblement => {
     return `<tr>
               <td>${getVillageHTML(ennoblement.village)}</td>
               <td>${getPlayerHTML(ennoblement.newOwner)}</td>

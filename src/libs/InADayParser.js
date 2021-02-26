@@ -16,7 +16,7 @@ export default class InADayParser {
     if (
       this.filters.tribes &&
       Array.isArray(this.filters.tribes) &&
-      !this.filters.tribes.some((tribe) => tribe === row.tribe)
+      !this.filters.tribes.some(tribe => tribe === row.tribe)
     ) {
       return false;
     }

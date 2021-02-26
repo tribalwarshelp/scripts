@@ -54,7 +54,7 @@ export default (
           </th>
         </tr>
         ${ennoblements.items
-          .map((ennoblement) => {
+          .map(ennoblement => {
             let rowHTML =
               '<tr>' + `<td>${formatDate(ennoblement.ennobledAt)}</td>`;
             if (ennoblement.village) {
@@ -94,7 +94,7 @@ export default (
 
   document
     .querySelectorAll('#' + PAGINATION_CONTAINER_ID + ' a')
-    .forEach((el) => {
+    .forEach(el => {
       el.addEventListener('click', onPageChange);
     });
 };

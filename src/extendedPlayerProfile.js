@@ -280,7 +280,7 @@ const renderTr = ({ title, data, id }) => {
   tr.children[1].innerHTML = data;
 };
 
-const renderPlayerServers = (player) => {
+const renderPlayerServers = player => {
   let playerServers = document.querySelector('#playerServers');
   if (!playerServers) {
     playerServers = document.createElement('table');
@@ -305,7 +305,7 @@ const renderPlayerServers = (player) => {
   playerServers.querySelector('td').innerHTML = player.servers
     .sort()
     .map(
-      (server) =>
+      server =>
         `<a target="_blank" style="margin-right: 5px" href="${twhelputils.buildPlayerURL(
           VERSION,
           server,
@@ -315,7 +315,7 @@ const renderPlayerServers = (player) => {
     .join('');
 };
 
-const renderPlayerOtherNames = (player) => {
+const renderPlayerOtherNames = player => {
   let playerOtherNames = document.querySelector('#playerOtherNames');
   if (!playerOtherNames) {
     playerOtherNames = document.createElement('div');
@@ -338,7 +338,7 @@ const renderPlayerOtherNames = (player) => {
             </th>
           </tr>
         ${player.nameChanges
-          .map((nameChange) => {
+          .map(nameChange => {
             return `
             <tr>
               <td>
@@ -363,7 +363,7 @@ const renderPlayerOtherNames = (player) => {
   `;
 };
 
-const renderInADayRanks = (player) => {
+const renderInADayRanks = player => {
   let inADayRanks = document.querySelector('#inADayRanks');
   if (!inADayRanks) {
     inADayRanks = document.createElement('div');
@@ -486,7 +486,7 @@ const render = ({ player, dailyPlayerStats }) => {
         player.mostVillages + ' ' + `(${formatDate(player.mostVillagesAt)})`,
       id: 'most_villages',
     },
-  ].forEach((data) => {
+  ].forEach(data => {
     renderTr(data);
   });
 
@@ -526,7 +526,7 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
           </th>
         </tr>
         ${tribeChanges.items
-          .map((tribeChange) => {
+          .map(tribeChange => {
             let rowHTML =
               '<tr>' + `<td>${formatDate(tribeChange.createdAt)}</td>`;
             if (tribeChange.newTribe) {
@@ -559,12 +559,12 @@ const renderTribeChanges = (e, currentPage, tribeChanges) => {
 
   document
     .querySelectorAll('#' + TRIBE_CHANGES_PAGINATION_CONTAINER_ID + ' a')
-    .forEach((el) => {
+    .forEach(el => {
       el.addEventListener('click', handleShowTribeChangesButtonClick);
     });
 };
 
-const handleShowTribeChangesButtonClick = async (e) => {
+const handleShowTribeChangesButtonClick = async e => {
   e.preventDefault();
   const page = getPage(e.target);
   if (!isNaN(page)) {
@@ -584,7 +584,7 @@ const handleShowTribeChangesButtonClick = async (e) => {
   }
 };
 
-const handleShowPlayerHistoryClick = async (e) => {
+const handleShowPlayerHistoryClick = async e => {
   e.preventDefault();
   const page = getPage(e.target);
   if (!isNaN(page)) {
@@ -615,7 +615,7 @@ const handleShowPlayerHistoryClick = async (e) => {
   }
 };
 
-const handleShowPlayerEnnoblementsClick = async (e) => {
+const handleShowPlayerEnnoblementsClick = async e => {
   e.preventDefault();
   const page = getPage(e.target);
   if (!isNaN(page)) {
@@ -642,7 +642,7 @@ const handleShowPlayerEnnoblementsClick = async (e) => {
   }
 };
 
-const handleExportPlayerVillagesButtonClick = (e) => {
+const handleExportPlayerVillagesButtonClick = e => {
   e.preventDefault();
 
   Dialog.show(
@@ -654,7 +654,7 @@ const handleExportPlayerVillagesButtonClick = (e) => {
   );
 };
 
-const wrapAction = (action) => {
+const wrapAction = action => {
   const actionWrapperTd = document.createElement('td');
   actionWrapperTd.colSpan = '2';
   actionWrapperTd.append(action);

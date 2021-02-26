@@ -1,1 +1,1 @@
-export default (v) => v === undefined || v === null;
+export default v => v === undefined || v === null;
