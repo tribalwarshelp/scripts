@@ -1365,7 +1365,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.1.4
+// @version      1.1.5
 // @description  Extended tribe profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_ally*
@@ -1376,7 +1376,7 @@ const SERVER = (0, _getCurrentServer.default)();
 const VERSION = (0, _getServerVersionCode.default)(SERVER);
 const TRIBE_ID = (0, _getIDFromURL.default)(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
-const TRIBE_QUERY = "\n    query tribe($server: String!, $id: Int!, $dailyTribeStatsSort: [String!], $dailyTribeStatsLimit: Int, $playerSort: [String!], $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {\n        tribe(server: $server, id: $id) {\n            id\n            bestRank\n            bestRankAt\n            mostPoints\n            mostPointsAt\n            mostVillages\n            mostVillagesAt\n            createdAt\n            dominance\n        }\n        dailyTribeStats(server: $server, limit: $dailyTribeStatsLimit, sort: $dailyTribeStatsSort, filter: $dailyTribeStatsFilter) {\n          items {\n            rank\n            rankAtt\n            rankDef\n            rankTotal\n            points\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreTotal\n            villages\n            members\n          }\n        }\n        players(server: $server, sort: $playerSort, filter: $playerFilter) {\n          items {\n            id\n            rankAtt\n            rankDef\n            rankSup\n            rankTotal\n            scoreAtt\n            scoreAtt\n            scoreDef\n            scoreSup\n            scoreTotal\n            dailyGrowth\n          }\n        }\n    }\n";
+const TRIBE_QUERY = "\n  query tribe(\n    $server: String!\n    $id: Int!\n    $dailyTribeStatsSort: [String!]\n    $dailyTribeStatsLimit: Int\n    $playersLimit: Int\n    $playersSort: [String!]\n    $playerFilter: PlayerFilter!\n    $dailyTribeStatsFilter: DailyTribeStatsFilter!\n  ) {\n    tribe(server: $server, id: $id) {\n      id\n      bestRank\n      bestRankAt\n      mostPoints\n      mostPointsAt\n      mostVillages\n      mostVillagesAt\n      createdAt\n      dominance\n    }\n    dailyTribeStats(\n      server: $server\n      limit: $dailyTribeStatsLimit\n      sort: $dailyTribeStatsSort\n      filter: $dailyTribeStatsFilter\n    ) {\n      items {\n        rank\n        rankAtt\n        rankDef\n        rankTotal\n        points\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreTotal\n        villages\n        members\n      }\n    }\n    players(server: $server, sort: $playersSort, filter: $playerFilter, limit: $playersLimit) {\n      items {\n        id\n        rankAtt\n        rankDef\n        rankSup\n        rankTotal\n        scoreAtt\n        scoreAtt\n        scoreDef\n        scoreSup\n        scoreTotal\n        dailyGrowth\n      }\n    }\n  }\n";
 const ENNOBLEMENTS_QUERY = "\n    query ennoblements($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: EnnoblementFilter!) {\n      ennoblements(server: $server, limit: $limit, offset: $offset, sort: $sort, filter: $filter) {\n        total\n        items {\n          village {\n            id\n            name\n            x\n            y\n          }\n          oldOwner {\n            id\n            name\n          }\n          oldOwnerTribe {\n            id\n            tag\n          }\n          newOwner {\n            id\n            name\n          }\n          newOwnerTribe {\n            id\n            tag\n          }\n          ennobledAt\n        }\n      }\n    }\n";
 const ENNOBLEMENTS_PER_PAGE = 15;
 const TRIBE_HISTORY_AND_TRIBE_DAILY_STATS_QUERY = "\nquery tribeHistoryAndTribeDailyStats($server: String!,\n     $tribeHistoryFilter: TribeHistoryFilter!,\n     $dailyTribeStatsFilter: DailyTribeStatsFilter!,\n     $sort: [String!],\n     $offset: Int,\n     $limit: Int) {\n  tribeHistory(server: $server, sort: $sort, limit: $limit, offset: $offset, filter: $tribeHistoryFilter) {\n    total\n    items {\n      totalVillages\n      points\n      rank\n      scoreAtt\n      rankAtt\n      scoreDef\n      rankDef\n      scoreTotal\n      rankTotal\n      createDate\n      totalMembers\n    }\n  }\n  dailyTribeStats(server: $server, sort: $sort, limit: $limit, offset: $offset, filter: $dailyTribeStatsFilter) {\n    items {\n        points\n        scoreAtt\n        scoreDef\n        scoreTotal\n        villages\n        createDate\n        members\n      }\n    }\n}\n";
@@ -1431,11 +1431,12 @@ const loadData = async () => {
       server: SERVER,
       id: TRIBE_ID,
       dailyTribeStatsSort: ['createDate DESC'],
-      dailyTibeStatsLimit: 1,
+      dailyTribeStatsLimit: 1,
       dailyTribeStatsFilter: {
         tribeID: [TRIBE_ID]
       },
-      playerSort: ['rank ASC'],
+      playersSort: ['rank ASC'],
+      playersLimit: memberIDs.length,
       playerFilter: {
         id: memberIDs
       }

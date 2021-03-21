@@ -25,7 +25,7 @@ import * as twutils from './utils/tribalwars';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js
-// @version      1.1.4
+// @version      1.1.5
 // @description  Extended tribe profile
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=info_ally*
@@ -38,49 +38,63 @@ const VERSION = getServerVersionCode(SERVER);
 const TRIBE_ID = getIDFromURL(window.location.search);
 const LOCAL_STORAGE_KEY = 'kichiyaki_extended_tribe_profile' + TRIBE_ID;
 const TRIBE_QUERY = `
-    query tribe($server: String!, $id: Int!, $dailyTribeStatsSort: [String!], $dailyTribeStatsLimit: Int, $playerSort: [String!], $playerFilter: PlayerFilter!, $dailyTribeStatsFilter: DailyTribeStatsFilter!) {
-        tribe(server: $server, id: $id) {
-            id
-            bestRank
-            bestRankAt
-            mostPoints
-            mostPointsAt
-            mostVillages
-            mostVillagesAt
-            createdAt
-            dominance
-        }
-        dailyTribeStats(server: $server, limit: $dailyTribeStatsLimit, sort: $dailyTribeStatsSort, filter: $dailyTribeStatsFilter) {
-          items {
-            rank
-            rankAtt
-            rankDef
-            rankTotal
-            points
-            scoreAtt
-            scoreAtt
-            scoreDef
-            scoreTotal
-            villages
-            members
-          }
-        }
-        players(server: $server, sort: $playerSort, filter: $playerFilter) {
-          items {
-            id
-            rankAtt
-            rankDef
-            rankSup
-            rankTotal
-            scoreAtt
-            scoreAtt
-            scoreDef
-            scoreSup
-            scoreTotal
-            dailyGrowth
-          }
-        }
+  query tribe(
+    $server: String!
+    $id: Int!
+    $dailyTribeStatsSort: [String!]
+    $dailyTribeStatsLimit: Int
+    $playersLimit: Int
+    $playersSort: [String!]
+    $playerFilter: PlayerFilter!
+    $dailyTribeStatsFilter: DailyTribeStatsFilter!
+  ) {
+    tribe(server: $server, id: $id) {
+      id
+      bestRank
+      bestRankAt
+      mostPoints
+      mostPointsAt
+      mostVillages
+      mostVillagesAt
+      createdAt
+      dominance
     }
+    dailyTribeStats(
+      server: $server
+      limit: $dailyTribeStatsLimit
+      sort: $dailyTribeStatsSort
+      filter: $dailyTribeStatsFilter
+    ) {
+      items {
+        rank
+        rankAtt
+        rankDef
+        rankTotal
+        points
+        scoreAtt
+        scoreAtt
+        scoreDef
+        scoreTotal
+        villages
+        members
+      }
+    }
+    players(server: $server, sort: $playersSort, filter: $playerFilter, limit: $playersLimit) {
+      items {
+        id
+        rankAtt
+        rankDef
+        rankSup
+        rankTotal
+        scoreAtt
+        scoreAtt
+        scoreDef
+        scoreSup
+        scoreTotal
+        dailyGrowth
+      }
+    }
+  }
 `;
 const ENNOBLEMENTS_QUERY = `
     query ennoblements($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: EnnoblementFilter!) {
@@ -244,11 +258,12 @@ const loadData = async () => {
       server: SERVER,
       id: TRIBE_ID,
       dailyTribeStatsSort: ['createDate DESC'],
-      dailyTibeStatsLimit: 1,
+      dailyTribeStatsLimit: 1,
       dailyTribeStatsFilter: {
         tribeID: [TRIBE_ID],
       },
-      playerSort: ['rank ASC'],
+      playersSort: ['rank ASC'],
+      playersLimit: memberIDs.length,
       playerFilter: {
         id: memberIDs,
       },
