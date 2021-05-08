@@ -1,10 +1,10 @@
-# Scripts for the browser game tribal wars.
+# Scripts for the browser-based game Tribal Wars.
 
 ## Installation
 
 1. Add [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) to your browser.
-2. Select a script that you wish to use, and copy the code.
-3. Open Tampermonkey in your browser and click the Add Script tab.
+2. Select a script that you wish to use from the list below, then copy the code.
+3. Open Tampermonkey in your browser and click the 'Add Script' tab.
 4. Paste the code, hit save (shortcut: CTRL + s).
 5. The script should be visible in the game.
 
@@ -25,7 +25,7 @@
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js)
 
-This script shows you the latest ennoblements from your server. Works in real-time.
+This script shows you the latest ennoblements from your server (from the last hour).
 
 ![Screenshot](/screenshots/latestEnnoblements.png?raw=true)
 
@@ -33,7 +33,7 @@ This script shows you the latest ennoblements from your server. Works in real-ti
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedPlayerProfile.js)
 
-This script adds many useful actions and pieces of information to the player profile.
+This script adds new actions and pieces of information to the player profile.
 
 - Daily growth
 - Best rank
@@ -58,7 +58,7 @@ New actions:
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedTribeProfile.js)
 
-This script adds many useful actions and pieces of information to the tribe profile.
+This script adds new actions and pieces of information to the tribe profile.
 
 - Dominance
 - Best rank
@@ -99,7 +99,7 @@ New actions:
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js)
 
-Adds to map screen new functionality to search bonus barbarian villages easily.
+With this script, you can easily find bonus barbarian villages.
 
 ![Screenshot](/screenshots/bonusBarbarianVillageFinder.png?raw=true)
 
@@ -109,15 +109,17 @@ Adds to map screen new functionality to search bonus barbarian villages easily.
 
 ![Screenshot](/screenshots/dailyAchievements.png?raw=true)
 
+Have you ever wondered who has AOTD, DOTD, SOTD? Then this script might be useful for you! (This script isn't 100% accurate, but in most cases should be enough to determine who is on top today).
+
 ### 7. Extended map popup
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js)
 
-Adds to popup:
+Adds to the popup:
 
 - Information about possible loyalty
-- Last ennoble date
-- Information if you can send noble from the current village
+- Date of the last ennoblement
+- Information if you can send a nobleman from the current village
 - Unit arrival time
 
 ![Screenshot](/screenshots/extendedMapPopup.png?raw=true)
