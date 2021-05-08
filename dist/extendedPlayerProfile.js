@@ -312,6 +312,36 @@ const translations = {
       exportVillages: 'Export villages',
       showHistory: 'Show history'
     }
+  },
+  de_DE: {
+    date: 'Datum',
+    newTribe: 'Neuer Stamm',
+    oldTribe: 'Alter Stamm',
+    joinedAt: 'Beigetreten am',
+    dailyGrowth: 'Tägl. Wachstum',
+    bestRank: 'Bester Rang',
+    mostPoints: 'Meiste Punkte',
+    mostVillages: 'Meiste Dörfer',
+    oldName: 'Alter Name',
+    newName: 'Neuer Name',
+    playerServers: "Spieler Server",
+    inADayBestScores: "'An einem Tag' Bestwerte",
+    unitsDefeatedWhileAttacking: 'Besiegte Gegner als Angreifer',
+    unitsDefeatedWhileDefending: 'Besiegte Gegner als Verteidiger',
+    unitsDefeatedWhileSupporting: 'Besiegte Gegner als Unterstützer',
+    resourcesPlundered: 'Geplünderte Rohstoffe',
+    villagesPlundered: 'Geplünderte Dörfer',
+    resourcesGathered: 'Gesammelte Rohstoffe',
+    villagesConquered: 'Eroberte Dörfer',
+    exportedVillages: 'Exportierte Dörfer',
+    tribeChanges: 'Stammeswechsel',
+    action: {
+      linkToTWHelp: 'Spielerakte (TWHelp)',
+      showTribeChanges: 'Zeige Stammeswechsel',
+      showEnnoblements: 'Zeige Adelungen',
+      exportVillages: 'Dörfer exportieren',
+      showHistory: 'Zeige Verlauf'
+    }
   }
 };
 
@@ -355,6 +385,21 @@ const translations = {
     odsRank: 'ODS Rank',
     od: 'OD',
     odRank: 'OD Rank'
+  },
+  de_DE: {
+    title: "Heutige Werte \xC4nderungen",
+    points: 'Punkte',
+    rank: 'Rang',
+    villages: 'Dörfer',
+    members: 'Mitglieder',
+    oda: 'BGA',
+    odaRank: 'BGA Rang',
+    odd: 'BGD',
+    oddRank: 'BGD Rang',
+    ods: 'BGS',
+    odsRank: 'BGS Rang',
+    od: 'BP',
+    odRank: 'BP Rang'
   }
 };
 
@@ -458,6 +503,13 @@ const translations = {
     oldOwner: 'Old owner',
     village: 'Village',
     title: 'Ennoblements'
+  },
+  de_DE: {
+    date: 'Datum',
+    newOwner: 'Neuer Besitzer',
+    oldOwner: 'Alter Besitzer',
+    village: 'Dorf',
+    title: 'Adelungen'
   }
 };
 
@@ -933,6 +985,18 @@ const translations = {
     odd: 'ODD',
     ods: 'ODS',
     od: 'OD'
+  },
+  de_DE: {
+    title: "Verlauf",
+    date: 'Datum',
+    tribe: 'Stamm',
+    points: 'Punkte',
+    villages: 'Dörfer',
+    members: 'Mitglieder',
+    oda: 'BGA',
+    odd: 'BGV',
+    ods: 'BGS',
+    od: 'BP'
   }
 };
 

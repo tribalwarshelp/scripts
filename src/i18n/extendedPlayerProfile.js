@@ -60,6 +60,36 @@ const translations = {
       showHistory: 'Show history',
     },
   },
+  de_DE: {
+    date: 'Datum',    
+    newTribe: 'Neuer Stamm',
+    oldTribe: 'Alter Stamm',
+    joinedAt: 'Beigetreten am',
+    dailyGrowth: 'Tägl. Wachstum',
+    bestRank: 'Bester Rang',
+    mostPoints: 'Meiste Punkte',
+    mostVillages: 'Meiste Dörfer',
+    oldName: 'Alter Name',
+    newName: 'Neuer Name',
+    playerServers: "Spieler Server",
+    inADayBestScores: "'An einem Tag' Bestwerte",
+    unitsDefeatedWhileAttacking: 'Besiegte Gegner als Angreifer',
+    unitsDefeatedWhileDefending: 'Besiegte Gegner als Verteidiger',
+    unitsDefeatedWhileSupporting: 'Besiegte Gegner als Unterstützer',
+    resourcesPlundered: 'Geplünderte Rohstoffe',
+    villagesPlundered: 'Geplünderte Dörfer',
+    resourcesGathered: 'Gesammelte Rohstoffe',
+    villagesConquered: 'Eroberte Dörfer',
+    exportedVillages: 'Exportierte Dörfer',
+    tribeChanges: 'Stammeswechsel',
+    action: {
+      linkToTWHelp: 'Spielerakte (TWHelp)',
+      showTribeChanges: 'Zeige Stammeswechsel',
+      showEnnoblements: 'Zeige Adelungen',
+      exportVillages: 'Dörfer exportieren',
+      showHistory: 'Zeige Verlauf'
+    },
+  },
 };
 
 export default () =>

@@ -29,6 +29,21 @@ const translations = {
     od: 'OD',
     odRank: 'OD Rank',
   },
+  de_DE: {
+    title: `Heutige Werte Änderungen`,
+    points: 'Punkte',
+    rank: 'Rang',
+    villages: 'Dörfer',
+    members: 'Mitglieder',
+    oda: 'BGA',
+    odaRank: 'BGA Rang',
+    odd: 'BGD',
+    oddRank: 'BGD Rang',
+    ods: 'BGS',
+    odsRank: 'BGS Rang',
+    od: 'BP',
+    odRank: 'BP Rang',
+  },
 };
 
 export default () =>

@@ -511,6 +511,43 @@ const translations = {
       generateMailingList: 'Generate mailing list',
       exportVillages: 'Export villages'
     }
+  },
+  de_DE: {
+    date: 'Datum',
+    createdAt: 'Erstellt am',
+    dominance: 'Dominanz',
+    bestRank: 'Bester Rang',
+    mostPoints: 'Meiste Punkte',
+    mostVillages: 'Meiste Dörfer',
+    player: 'Spieler',
+    points: 'Punkte',
+    villages: 'Dörfer',
+    opponentsDefeated: 'Besiegte Gegner',
+    opponentsDefeatedAsAttacker: 'Besiegte Gegner als Angreifer',
+    opponentsDefeatedAsDefender: 'Besiegte Gegner als Verteidiger',
+    opponentsDefeatedAsSupporter: 'Besiegte Gegner als Unterstützer',
+    change: 'Änderungen',
+    membersGrowth: 'Mitglieder Wachstum',
+    tribeChanges: 'Stammeswechsel',
+    left: 'Verlassen',
+    joined: 'Beigetreten',
+    act: 'Aktion',
+    total: 'Total',
+    oda: 'BGA',
+    odd: 'BGV',
+    ods: 'BGS',
+    od: 'BP',
+    dailyGrowth: 'Tägl. Wachstum',
+    playerLinks: 'Spieler Links',
+    action: {
+      linkToTWHelp: 'Stammesakte (TWHelp)',
+      showTribeChanges: 'Zeige Stammeswechsel',
+      showEnnoblements: 'Zeige Adelungen',
+      showMembersGrowth: 'Zeige Mitglieder-Wachstum',
+      showHistory: 'Zeige Verlauf',
+      generateMailingList: 'Maillisten-Generator',
+      exportVillages: 'Dörfer exportieren'
+    }
   }
 };
 
@@ -674,6 +711,21 @@ const translations = {
     odsRank: 'ODS Rank',
     od: 'OD',
     odRank: 'OD Rank'
+  },
+  de_DE: {
+    title: "Heutige Werte \xC4nderungen",
+    points: 'Punkte',
+    rank: 'Rang',
+    villages: 'Dörfer',
+    members: 'Mitglieder',
+    oda: 'BGA',
+    odaRank: 'BGA Rang',
+    odd: 'BGD',
+    oddRank: 'BGD Rang',
+    ods: 'BGS',
+    odsRank: 'BGS Rang',
+    od: 'BP',
+    odRank: 'BP Rang'
   }
 };
 
@@ -750,6 +802,13 @@ const translations = {
     oldOwner: 'Old owner',
     village: 'Village',
     title: 'Ennoblements'
+  },
+  de_DE: {
+    date: 'Datum',
+    newOwner: 'Neuer Besitzer',
+    oldOwner: 'Alter Besitzer',
+    village: 'Dorf',
+    title: 'Adelungen'
   }
 };
 
@@ -1098,6 +1157,18 @@ const translations = {
     odd: 'ODD',
     ods: 'ODS',
     od: 'OD'
+  },
+  de_DE: {
+    title: "Verlauf",
+    date: 'Datum',
+    tribe: 'Stamm',
+    points: 'Punkte',
+    villages: 'Dörfer',
+    members: 'Mitglieder',
+    oda: 'BGA',
+    odd: 'BGV',
+    ods: 'BGS',
+    od: 'BP'
   }
 };
 

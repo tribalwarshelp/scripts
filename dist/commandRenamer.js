@@ -132,6 +132,10 @@ const translations = {
   en_DK: {
     rename: 'Rename',
     name: 'Name'
+  },
+  de_DE: {
+    rename: 'Umbenennen',
+    name: 'Name'
   }
 };
 

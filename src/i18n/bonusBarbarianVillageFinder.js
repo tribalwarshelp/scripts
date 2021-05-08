@@ -13,6 +13,13 @@ const translations = {
     distance: 'Distance',
     action: 'Action',
   },
+  de_DE: {
+    actualCoords: 'Aktuelle Koordinaten',
+    searchBonusBarbarianVillages: 'Suche Bonus-Barbarendörfer',
+    village: 'Dorf',
+    distance: 'Distanz',
+    action: 'Aktion',
+  },
 };
 
 export default () =>

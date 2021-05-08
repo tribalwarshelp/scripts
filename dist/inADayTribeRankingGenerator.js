@@ -233,6 +233,17 @@ const translations = {
     score: 'Score',
     date: 'Date',
     loaded: 'Loaded'
+  },
+  de_DE: {
+    addTribe: 'Stamm hinzufügen',
+    generate: 'Generieren',
+    delete: 'Löschen',
+    player: 'Spieler',
+    tribe: 'Stamm',
+    rank: 'Rang',
+    score: 'Punkte',
+    date: 'Datum',
+    loaded: 'Geladen'
   }
 };
 

@@ -15,6 +15,14 @@ const translations = {
     yes: 'Yes',
     no: 'No',
   },
+  de_DE: {
+    ennobledAt: 'Adelung bei',
+    never: 'Nie',
+    possibleLoyalty: 'Mögliche Zustimmung',
+    canSendNoble: 'Kann Adelsgeschlecht senden',
+    yes: 'Ja',
+    no: 'Nein',
+  },
 };
 
 export default () =>

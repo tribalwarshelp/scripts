@@ -195,6 +195,21 @@ const translations = {
       showEnnoblements: 'Show ennoblements',
       countIncomingSupport: 'Count incoming support'
     }
+  },
+  de_DE: {
+    loaded: 'Geladen',
+    pop: 'Pop',
+    mySupport: 'Meine Unterstützung',
+    allySupport: 'Verbündete Unterstützung',
+    total: 'Total',
+    possibleLoyalty: 'Mögliche Zustimmung',
+    never: 'Niemals',
+    ennobledAt: 'Geadelt am',
+    action: {
+      linkToTWHelp: 'Dorfakte (TWHelp)',
+      showEnnoblements: 'Zeige Adelungen',
+      countIncomingSupport: 'Zähle ankommende Unterstützung'
+    }
   }
 };
 
@@ -736,6 +751,13 @@ const translations = {
     oldOwner: 'Old owner',
     village: 'Village',
     title: 'Ennoblements'
+  },
+  de_DE: {
+    date: 'Datum',
+    newOwner: 'Neuer Besitzer',
+    oldOwner: 'Alter Besitzer',
+    village: 'Dorf',
+    title: 'Adelungen'
   }
 };
 

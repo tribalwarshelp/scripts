@@ -24,6 +24,18 @@ const translations = {
     ods: 'ODS',
     od: 'OD',
   },
+  de_DE: {
+    title: `Verlauf`,
+    date: 'Datum',
+    tribe: 'Stamm',
+    points: 'Punkte',
+    villages: 'Dörfer',
+    members: 'Mitglieder',
+    oda: 'BGA',
+    odd: 'BGV',
+    ods: 'BGS',
+    od: 'BP',
+  },
 };
 
 export default () =>
