@@ -277,7 +277,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/inADayTribeRankingGenerator.js
-// @version      0.2.2
+// @version      0.2.3
 // @description  'In A Day' tribe ranking generator
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=ranking*mode=in_a_day*

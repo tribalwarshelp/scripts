@@ -13,7 +13,7 @@ import loadTranslations from './i18n/latestEnnoblements';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-// @version      1.1.0
+// @version      1.1.1
 // @description  Show the latest ennoblements
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*

@@ -701,7 +701,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      0.6.7
+// @version      0.6.8
 // @description  Extended map popup
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=map*
