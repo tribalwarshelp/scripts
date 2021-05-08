@@ -7,6 +7,10 @@ const translations = {
     rename: 'Rename',
     name: 'Name',
   },
+  de_DE: {
+    rename: 'Umbenennen',
+    name: 'Name',
+  },
 };
 
 export default () =>

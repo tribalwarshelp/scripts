@@ -197,6 +197,22 @@ const translations = {
     generateWarStats: 'Generate war stats',
     addTribe: 'Add tribe',
     devNote: "Information from the author - I've just launched a new stat tracking website, don't forget to check it out :)."
+  },
+  de_DE: {
+    conquers: 'Eroberungen',
+    sideOne: 'Partei A',
+    sideTwo: 'Partei B',
+    difference: 'Differenz',
+    tribeTag: 'Stammeskürzel',
+    delete: 'Löschen',
+    notEnoughTribesSideOne: 'Nicht genügend Stämme hinzugefügt zu Partei A.',
+    notEnoughTribesSideTwo: 'Nicht genügend Stämme hinzugefügt zu Partei B.',
+    from: 'Von',
+    to: 'Zu',
+    warStatsGenerator: 'Kriegsstatistik Generator',
+    generateWarStats: 'Generiere Statistik',
+    addTribe: 'Stamm Hinzufügen',
+    devNote: "Information vom Entwickler - Ich habe eine neue Statistik-Website gestartet, vergiss nicht diese zu testen :)."
   }
 };
 

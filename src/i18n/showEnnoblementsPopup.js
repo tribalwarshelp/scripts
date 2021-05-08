@@ -13,6 +13,13 @@ const translations = {
     village: 'Village',
     title: 'Ennoblements',
   },
+  de_DE: {
+    date: 'Datum',
+    newOwner: 'Neuer Besitzer',
+    oldOwner: 'Alter Besitzer',
+    village: 'Dorf',
+    title: 'Adelungen',
+  },
 };
 
 export default () =>

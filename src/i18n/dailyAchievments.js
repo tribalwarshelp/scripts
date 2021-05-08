@@ -19,6 +19,15 @@ const translations = {
     gpotd: 'Great power of the day',
     devNote: `Information from the author - I've just launched a new stat tracking website, don't forget to check it out :).`,
   },
+  de_DE: {
+    title: 'Tägliche Erfolge - Wahrscheinliche Spieler',
+    warning: 'Hinweis! Das Script zeigt die Punke, nicht besiegte Einheiten.',
+    aotd: 'Angreifer des Tages',
+    dotd: 'Verteidiger des Tages',
+    sotd: 'Unterstützer des Tages',
+    gpotd: 'Großmacht des Tages',
+    devNote: `Information vom Entwickler - Ich habe eine neue Statistik-Website gestartet, vergiss nicht diese zu testen :).`,
+  },
 };
 
 export default () =>

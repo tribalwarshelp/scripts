@@ -148,6 +148,18 @@ const translations = {
     save: 'Save',
     groupName: 'Group name',
     export: 'Export'
+  },
+  de_DE: {
+    startCoordsPicker: 'Starte Koordinaten-Selektor',
+    stopCoordsPicker: 'Stoppe Koordinaten-Selektor',
+    exportedVillages: 'Exportierte Dörfer',
+    cannotDeleteSelectedGroup: 'Gruppe kann nicht gelöscht werden!',
+    select: 'Selektieren',
+    delete: 'Löschen',
+    add: 'Hinzufügen',
+    save: 'Speichern',
+    groupName: 'Gruppen-Name',
+    export: 'Exportieren'
   }
 };
 

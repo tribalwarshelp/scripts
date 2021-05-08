@@ -417,6 +417,19 @@ const translations = {
     apply: 'Apply',
     ennoblements: 'Ennoblements',
     devNote: "Information from the author - I've just launched a new stat tracking website, don't forget to check it out :)."
+  },
+  de_DE: {
+    showLatestEnnoblements: 'Zeige letzten Adelungen',
+    village: 'Dorf',
+    newOwner: 'Neuer Besitzer',
+    newOwnerTribe: 'Neuer Stamm',
+    oldOwner: 'Alter Besitzer',
+    oldOwnerTribe: 'Alter Stamm',
+    filters: 'Filter',
+    date: 'Datum',
+    apply: 'Anwenden',
+    ennoblements: 'Adelungen',
+    devNote: "Information vom Entwickler - Ich habe eine neue Statistik-Website gestartet, vergiss nicht diese zu testen :)."
   }
 };
 
