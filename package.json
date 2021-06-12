@@ -8,11 +8,13 @@
     "build:tamper": "parcel build ./src/*.js --dist-dir dist --no-optimize --no-source-maps",
     "build:quickbar": "parcel build ./src/*.js --dist-dir dist/quickbar --no-source-maps",
     "build": "npm-run-all build:*",
+    "postbuild": "node postbuild.js",
     "git:add": "git add .",
     "format": "prettier --write \"src/*.{js,jsx,ts,tsx,json,md}\""
   },
   "dependencies": {
     "date-fns": "^2.22.1",
+    "lodash": "^4.17.21",
     "parcel": "2.0.0-beta.2"
   },
   "browserslist": [
