@@ -29,9 +29,8 @@ const handleSubmit = async e => {
     const icon = checkbox.parentElement.querySelector('.rename-icon');
     icon.click();
     await wait(20);
-    const quickeditForm = checkbox.parentElement.querySelector(
-      '.quickedit-edit'
-    );
+    const quickeditForm =
+      checkbox.parentElement.querySelector('.quickedit-edit');
     quickeditForm.querySelector('input').value = name;
     quickeditForm.querySelector('input[type="button"]').click();
     await wait(350);

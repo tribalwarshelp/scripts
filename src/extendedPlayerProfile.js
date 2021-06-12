@@ -257,9 +257,8 @@ const loadData = async () => {
       'scavenge',
       'conquer',
     ]) {
-      inADay[
-        hyphensToCamelCase(type.replace('kill_', ''))
-      ] = await loadInADayData(type, filter);
+      inADay[hyphensToCamelCase(type.replace('kill_', ''))] =
+        await loadInADayData(type, filter);
     }
     data.player.inADay = inADay;
   }

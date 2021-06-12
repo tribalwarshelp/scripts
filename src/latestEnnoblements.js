@@ -147,11 +147,8 @@ const applyFilters = (e, ennoblements) => {
     oldOwner: e.target[2].value,
     oldOwnerTribe: e.target[3].value,
   };
-  document.querySelector(
-    `#${TABLE_ID} tbody`
-  ).innerHTML = buildEnnoblementsRows(
-    filterEnnoblements(ennoblements, filters)
-  ).join('');
+  document.querySelector(`#${TABLE_ID} tbody`).innerHTML =
+    buildEnnoblementsRows(filterEnnoblements(ennoblements, filters)).join('');
   cacheFilters(filters);
 };
 
