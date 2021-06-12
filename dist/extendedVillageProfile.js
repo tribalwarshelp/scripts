@@ -463,7 +463,7 @@
   // @namespace    https://github.com/tribalwarshelp/scripts
   // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
   // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedVillageProfile.js
-  // @version      0.7.7
+  // @version      0.7.8
   // @description  Extended village profile
   // @author       Kichiyaki https://dwysokinski.me/
   // @match        *://*/game.php*screen=info_village*

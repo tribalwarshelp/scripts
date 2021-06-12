@@ -98,7 +98,7 @@
   // @namespace    https://github.com/tribalwarshelp/scripts
   // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
   // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/mapCoordsPicker.js
-  // @version      0.7.5
+  // @version      0.7.6
   // @description  Map coords picker
   // @author       Kichiyaki https://dwysokinski.me/
   // @match        *://*/game.php*screen=map*

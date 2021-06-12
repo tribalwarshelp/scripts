@@ -217,7 +217,7 @@
   // @namespace    https://github.com/tribalwarshelp/scripts
   // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
   // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
-  // @version      1.1.1
+  // @version      1.1.2
   // @description  Shows the latest ennoblements
   // @author       Kichiyaki https://dwysokinski.me/
   // @match        *://*/game.php*

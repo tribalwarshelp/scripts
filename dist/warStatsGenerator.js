@@ -123,7 +123,7 @@
   // @namespace    https://github.com/tribalwarshelp/scripts
   // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
   // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/warStatsGenerator.js
-  // @version      0.3.4
+  // @version      0.3.5
   // @description  War stats generator
   // @author       Kichiyaki https://dwysokinski.me/
   // @match        *://*/game.php*screen=ranking*mode=wars*

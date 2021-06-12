@@ -133,7 +133,7 @@
   // @namespace    https://github.com/tribalwarshelp/scripts
   // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
   // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/bonusBarbarianVillageFinder.js
-  // @version      0.4.6
+  // @version      0.4.7
   // @description  Bonus barbarian village finder
   // @author       Kichiyaki https://dwysokinski.me/
   // @match        *://*/game.php*screen=map*

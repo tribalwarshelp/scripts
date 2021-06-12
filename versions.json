@@ -1,13 +1,13 @@
 {
-  "bonusBarbarianVillageFinder.js": "0.4.6",
-  "commandRenamer.js": "0.2.4",
-  "dailyAchievements.js": "0.4.5",
-  "extendedMapPopup.js": "0.6.8",
-  "extendedPlayerProfile.js": "1.2.1",
-  "extendedTribeProfile.js": "1.1.6",
-  "extendedVillageProfile.js": "0.7.7",
-  "inADayTribeRankingGenerator.js": "0.2.3",
-  "latestEnnoblements.js": "1.1.1",
-  "mapCoordsPicker.js": "0.7.5",
-  "warStatsGenerator.js": "0.3.4"
+  "bonusBarbarianVillageFinder.js": "0.4.7",
+  "commandRenamer.js": "0.2.5",
+  "dailyAchievements.js": "0.4.6",
+  "extendedMapPopup.js": "0.7.0",
+  "extendedPlayerProfile.js": "1.2.2",
+  "extendedTribeProfile.js": "1.1.8",
+  "extendedVillageProfile.js": "0.7.8",
+  "inADayTribeRankingGenerator.js": "0.2.4",
+  "latestEnnoblements.js": "1.1.2",
+  "mapCoordsPicker.js": "0.7.6",
+  "warStatsGenerator.js": "0.3.5"
 }
