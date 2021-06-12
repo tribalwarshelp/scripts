@@ -371,7 +371,7 @@
   // ==/UserScript==
   const $dd5d786daadd6a3858722303ff53be21$var$SERVER = $075335fbc46b1a64d60d11b353f74662$export$default();
   const $dd5d786daadd6a3858722303ff53be21$var$CURR_SERVER_CONFIG = "\n    query server($key: String!) {\n        server(key: $key) {\n            config {\n                speed\n                unitSpeed\n                snob {\n                  maxDist\n                }\n            }\n            unitConfig {\n              spear {\n                speed\n              }\n              sword {\n                speed\n              }\n              axe {\n                speed\n              }\n              archer {\n                speed\n              }\n              spy {\n                speed\n              }\n              light {\n                speed\n              }\n              marcher {\n                speed\n              }\n              heavy {\n                speed\n              }\n              ram {\n                speed\n              }\n              catapult {\n                speed\n              }\n              knight {\n                speed\n              }\n              snob {\n                speed\n              }\n            }\n        }\n    }\n";
-  const $dd5d786daadd6a3858722303ff53be21$var$LAST_VILLAGE_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!, $sort: [String!], $limit: Int) {\n        ennoblements(server: $server, filter: $filter, sort: $sort, limit: $limit) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
+  const $dd5d786daadd6a3858722303ff53be21$var$LAST_CONQUER_QUERY = "\n    query ennoblements($server: String!, $filter: EnnoblementFilter!, $sort: [String!], $limit: Int) {\n        ennoblements(server: $server, filter: $filter, sort: $sort, limit: $limit) {\n            items {\n                ennobledAt\n                village {\n                    id\n                }\n            }\n        }\n    }\n";
   const $dd5d786daadd6a3858722303ff53be21$var$SERVER_CONFIG_LOCAL_STORAGE_KEY = 'kiszkowaty_extended_map_popup_server_cfg';
   const $dd5d786daadd6a3858722303ff53be21$var$translations = $b77e52fe2469092ef0c13094c9dc19c1$export$default();
   const $dd5d786daadd6a3858722303ff53be21$var$loadConfigFromLocalStorage = () => {
@@ -403,12 +403,15 @@
   };
   const $dd5d786daadd6a3858722303ff53be21$var$loadVillageData = async function loadVillageData(id) {
     let {cacheOnly = false} = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    if (!id) {
+      return;
+    }
     if (cacheOnly || TWMap.popup.extendedMapPopupCache[id]) {
       return TWMap.popup.extendedMapPopupCache[id];
     }
     try {
       const data = await $3af05e958b2a20a26445518aba292c50$export$default({
-        query: $dd5d786daadd6a3858722303ff53be21$var$LAST_VILLAGE_CONQUER_QUERY,
+        query: $dd5d786daadd6a3858722303ff53be21$var$LAST_CONQUER_QUERY,
         variables: {
           server: $dd5d786daadd6a3858722303ff53be21$var$SERVER,
           sort: ['ennobledAt DESC'],
@@ -485,14 +488,18 @@
   const $dd5d786daadd6a3858722303ff53be21$var$createLoadVillageHandler = cfg => async e => {
     TWMap.popup._loadVillage(e);
     const data = await $dd5d786daadd6a3858722303ff53be21$var$loadVillageData(parseInt(e));
-    $dd5d786daadd6a3858722303ff53be21$var$renderAdditionalInfo(parseInt(e), data, cfg);
+    if (data) {
+      $dd5d786daadd6a3858722303ff53be21$var$renderAdditionalInfo(parseInt(e), data, cfg);
+    }
   };
   const $dd5d786daadd6a3858722303ff53be21$var$createDisplayForVillageHandler = cfg => async (e, a, t) => {
     TWMap.popup._displayForVillage(e, a, t);
     const data = await $dd5d786daadd6a3858722303ff53be21$var$loadVillageData(parseInt(e.id), {
       cacheOnly: window.game_data.features.Premium.active
     });
-    $dd5d786daadd6a3858722303ff53be21$var$renderAdditionalInfo(parseInt(e.id), data, cfg);
+    if (data) {
+      $dd5d786daadd6a3858722303ff53be21$var$renderAdditionalInfo(parseInt(e.id), data, cfg);
+    }
   };
   (async function () {
     try {

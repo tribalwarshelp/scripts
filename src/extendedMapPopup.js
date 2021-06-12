@@ -73,7 +73,7 @@ const CURR_SERVER_CONFIG = `
         }
     }
 `;
-const LAST_VILLAGE_CONQUER_QUERY = `
+const LAST_CONQUER_QUERY = `
     query ennoblements($server: String!, $filter: EnnoblementFilter!, $sort: [String!], $limit: Int) {
         ennoblements(server: $server, filter: $filter, sort: $sort, limit: $limit) {
             items {
@@ -129,13 +129,17 @@ const loadConfig = async () => {
 };
 
 const loadVillageData = async (id, { cacheOnly = false } = {}) => {
+  if (!id) {
+    return;
+  }
+
   if (cacheOnly || TWMap.popup.extendedMapPopupCache[id]) {
     return TWMap.popup.extendedMapPopupCache[id];
   }
 
   try {
     const data = await requestCreator({
-      query: LAST_VILLAGE_CONQUER_QUERY,
+      query: LAST_CONQUER_QUERY,
       variables: {
         server: SERVER,
         sort: ['ennobledAt DESC'],
@@ -298,7 +302,9 @@ const renderAdditionalInfo = (id, data, { config, unitConfig }) => {
 const createLoadVillageHandler = cfg => async e => {
   TWMap.popup._loadVillage(e);
   const data = await loadVillageData(parseInt(e));
-  renderAdditionalInfo(parseInt(e), data, cfg);
+  if (data) {
+    renderAdditionalInfo(parseInt(e), data, cfg);
+  }
 };
 
 const createDisplayForVillageHandler = cfg => async (e, a, t) => {
@@ -306,7 +312,9 @@ const createDisplayForVillageHandler = cfg => async (e, a, t) => {
   const data = await loadVillageData(parseInt(e.id), {
     cacheOnly: window.game_data.features.Premium.active,
   });
-  renderAdditionalInfo(parseInt(e.id), data, cfg);
+  if (data) {
+    renderAdditionalInfo(parseInt(e.id), data, cfg);
+  }
 };
 
 (async function () {
