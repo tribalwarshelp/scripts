@@ -555,9 +555,8 @@ const MEMBERS_GROWTH_FORM = MEMBERS_GROWTH_TABLE_ID + 'Form';
 const createChangeTypeHandler = stats => e => {
   e.preventDefault();
   MEMBERS_GROWTH_MODE = e.target[0].value;
-  document.querySelector(
-    '#' + MEMBERS_GROWTH_TABLE_ID
-  ).innerHTML = buildMembersGrowthTBody(stats);
+  document.querySelector('#' + MEMBERS_GROWTH_TABLE_ID).innerHTML =
+    buildMembersGrowthTBody(stats);
 };
 
 const renderMembersGrowthPopup = (e, stats) => {
