@@ -130,7 +130,7 @@ const buildTableBodyHTML = villages => {
                 <td>
                     <a href="#" onclick="return TWMap.focusUserSpecified(${
                       village.x
-                    }, ${village.y})">Center</a>
+                    }, ${village.y})">${translations.center}</a>
                 </td>
             </tr>`
                     )

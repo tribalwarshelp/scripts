@@ -14,7 +14,7 @@ const translations = {
       'Informacja od autora - Właśnie uruchomiłem nową stronę ze statystykami, nie zapomnij jej sprawdzić :).',
   },
   en_DK: {
-    showLatestEnnoblements: 'Show latest ennoblements',
+    showLatestEnnoblements: 'Show the latest ennoblements',
     village: 'Village',
     newOwner: 'New owner',
     newOwnerTribe: 'New owner tribe',

@@ -142,7 +142,7 @@
       devNote: 'Informacja od autora - Właśnie uruchomiłem nową stronę ze statystykami, nie zapomnij jej sprawdzić :).'
     },
     en_DK: {
-      showLatestEnnoblements: 'Show latest ennoblements',
+      showLatestEnnoblements: 'Show the latest ennoblements',
       village: 'Village',
       newOwner: 'New owner',
       newOwnerTribe: 'New owner tribe',
@@ -213,12 +213,12 @@
     return obj;
   }
   // ==UserScript==
-  // @name         Latest ennoblements
+  // @name         The latest ennoblements
   // @namespace    https://github.com/tribalwarshelp/scripts
   // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
   // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js
   // @version      1.1.1
-  // @description  Show the latest ennoblements
+  // @description  Shows the latest ennoblements
   // @author       Kichiyaki https://dwysokinski.me/
   // @match        *://*/game.php*
   // @grant        none

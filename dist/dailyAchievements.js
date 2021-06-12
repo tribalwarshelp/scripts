@@ -2072,7 +2072,7 @@
   const $a777d6796a2564869cad39f35c35c293$var$translations = {
     pl_PL: {
       title: 'Dzienne osiągnięcia - prawdopodobni gracze',
-      warning: 'Pamiętaj! Ten skrypt pokazuje wykalkulowane przez TribalWars wyniki, nie pokonane jednostki.',
+      warning: 'Pamiętaj! Ten skrypt pokazuje wyliczone przez TribalWars wyniki a nie pokonane jednostki.',
       aotd: 'Agresor dnia',
       dotd: 'Obrońca dnia',
       sotd: 'Pomocnik dnia',

@@ -450,7 +450,7 @@ const handleShowTribeHistoryClick = async e => {
         onPageChange: handleShowTribeHistoryClick,
       });
     } catch (error) {
-      console.log('cannot load tribe history', error);
+      console.log('couldnt load tribe history', error);
     }
   }
 };

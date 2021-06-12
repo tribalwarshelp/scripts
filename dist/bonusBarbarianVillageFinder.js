@@ -27,21 +27,24 @@
       searchBonusBarbarianVillages: 'Wyszukaj koczownicze',
       village: 'Wioska',
       distance: 'Dystans',
-      action: 'Akcja'
+      action: 'Akcja',
+      center: 'Wycentruj'
     },
     en_DK: {
       actualCoords: 'Actual coords',
       searchBonusBarbarianVillages: 'Search bonus barbarian villages',
       village: 'Village',
       distance: 'Distance',
-      action: 'Action'
+      action: 'Action',
+      center: 'Center'
     },
     de_DE: {
       actualCoords: 'Aktuelle Koordinaten',
       searchBonusBarbarianVillages: 'Suche Bonus-Barbarendörfer',
       village: 'Dorf',
       distance: 'Distanz',
-      action: 'Aktion'
+      action: 'Aktion',
+      center: 'Center'
     }
   };
   var $3b197ddc404523dce25bd8470f854619$export$default = () => $3b197ddc404523dce25bd8470f854619$var$translations[window.game_data.locale] || $3b197ddc404523dce25bd8470f854619$var$translations.en_DK;
@@ -186,7 +189,7 @@
     return bonuses;
   };
   const $61671ab24a4170eb0a1c7d9e6ffb22e6$var$buildTableBodyHTML = villages => {
-    return ("\n        <tbody>\n            <tr>\n                <th>\n                    ").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.village, "\n                </th>\n                <th>\n                    ").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.distance, "\n                </th>\n                <th>\n                    ").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.action, "\n                </th>\n            </tr>\n            ").concat(Array.isArray(villages) ? villages.map(village => ("<tr>\n                <td>\n                    <a href=\"").concat($6a639e352c067a7850a9fa8cdc59ffca$export$buildVillageURL(village.id), "\">\n                        ").concat($6a639e352c067a7850a9fa8cdc59ffca$export$buildVillageName(village.name, village.x, village.y), "\n                    </a>\n                </td>\n                <td>\n                    ").concat(village.distance.toFixed(1), "\n                </td>\n                <td>\n                    <a href=\"#\" onclick=\"return TWMap.focusUserSpecified(").concat(village.x, ", ").concat(village.y, ")\">Center</a>\n                </td>\n            </tr>")).join('') : '', "\n        </tbody>\n    ");
+    return ("\n        <tbody>\n            <tr>\n                <th>\n                    ").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.village, "\n                </th>\n                <th>\n                    ").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.distance, "\n                </th>\n                <th>\n                    ").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.action, "\n                </th>\n            </tr>\n            ").concat(Array.isArray(villages) ? villages.map(village => ("<tr>\n                <td>\n                    <a href=\"").concat($6a639e352c067a7850a9fa8cdc59ffca$export$buildVillageURL(village.id), "\">\n                        ").concat($6a639e352c067a7850a9fa8cdc59ffca$export$buildVillageName(village.name, village.x, village.y), "\n                    </a>\n                </td>\n                <td>\n                    ").concat(village.distance.toFixed(1), "\n                </td>\n                <td>\n                    <a href=\"#\" onclick=\"return TWMap.focusUserSpecified(").concat(village.x, ", ").concat(village.y, ")\">").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.center, "</a>\n                </td>\n            </tr>")).join('') : '', "\n        </tbody>\n    ");
   };
   const $61671ab24a4170eb0a1c7d9e6ffb22e6$var$updateActualCoords = () => {
     document.querySelector('#' + $61671ab24a4170eb0a1c7d9e6ffb22e6$var$ACTUAL_COORDS_ID).innerHTML = ("").concat($61671ab24a4170eb0a1c7d9e6ffb22e6$var$translations.actualCoords, ": <strong>").concat(TWMap.pos.join('|'), "</strong>");

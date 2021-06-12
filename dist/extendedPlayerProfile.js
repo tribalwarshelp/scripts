@@ -940,7 +940,7 @@
           tribe: false
         });
       } catch (error) {
-        console.log('cannot load player history', error);
+        console.log('couldnt load player history', error);
       }
     }
   };

@@ -1060,7 +1060,7 @@
           onPageChange: $921f485217c0c6d00ec9dfbf07cee198$var$handleShowTribeHistoryClick
         });
       } catch (error) {
-        console.log('cannot load tribe history', error);
+        console.log('couldnt load tribe history', error);
       }
     }
   };

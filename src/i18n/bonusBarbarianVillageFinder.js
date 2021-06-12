@@ -5,6 +5,7 @@ const translations = {
     village: 'Wioska',
     distance: 'Dystans',
     action: 'Akcja',
+    center: 'Wycentruj',
   },
   en_DK: {
     actualCoords: 'Actual coords',
@@ -12,6 +13,7 @@ const translations = {
     village: 'Village',
     distance: 'Distance',
     action: 'Action',
+    center: 'Center',
   },
   de_DE: {
     actualCoords: 'Aktuelle Koordinaten',
@@ -19,6 +21,7 @@ const translations = {
     village: 'Dorf',
     distance: 'Distanz',
     action: 'Aktion',
+    center: 'Center',
   },
 };
 
