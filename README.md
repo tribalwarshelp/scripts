@@ -10,7 +10,7 @@
 
 ## Scripts
 
-- [Latest ennoblements](#1-latest-ennoblements)
+- [The latest ennoblements](#1-the-latest-ennoblements)
 - [Extended player profile](#2-extended-player-profile)
 - [Extended tribe profile](#3-extended-tribe-profile)
 - [Extended village profile](#4-extended-village-profile)
@@ -21,7 +21,7 @@
 - ['In A Day' tribe ranking generator](#9-in-a-day-tribe-ranking-generator)
 - [War stats generator](#10-war-stats-generator)
 
-### 1. Latest ennoblements
+### 1. The latest ennoblements
 
 [Code](https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/latestEnnoblements.js)
 
