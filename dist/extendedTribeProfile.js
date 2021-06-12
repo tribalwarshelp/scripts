@@ -864,10 +864,11 @@
   const $921f485217c0c6d00ec9dfbf07cee198$var$TRIBE_CHANGES_QUERY = "\n    query tribeChanges($server: String!, $limit: Int, $offset: Int, $sort: [String!], $filter: TribeChangeFilter!) {\n      tribeChanges(server: $server, offset: $offset, limit: $limit, sort: $sort, filter: $filter) {\n        total\n        items {\n          player {\n            id\n            name\n          }\n          newTribe {\n            id\n            tag\n          }\n          createdAt\n        }\n      }\n    }\n";
   const $921f485217c0c6d00ec9dfbf07cee198$var$TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
   const $921f485217c0c6d00ec9dfbf07cee198$var$TRIBE_CHANGES_PER_PAGE = 15;
+  const $921f485217c0c6d00ec9dfbf07cee198$var$contentValue = document.querySelector('#content_value');
   const $921f485217c0c6d00ec9dfbf07cee198$var$profileInfoTBody = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody');
   const $921f485217c0c6d00ec9dfbf07cee198$var$actionContainer = $921f485217c0c6d00ec9dfbf07cee198$var$profileInfoTBody;
   const $921f485217c0c6d00ec9dfbf07cee198$var$otherElementsContainer = document.querySelector('#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)');
-  const $921f485217c0c6d00ec9dfbf07cee198$var$membersContainer = document.querySelector('#content_value h3').nextElementSibling.querySelector('tbody');
+  const $921f485217c0c6d00ec9dfbf07cee198$var$membersContainer = $921f485217c0c6d00ec9dfbf07cee198$var$contentValue.querySelector('h3').nextElementSibling.querySelector('tbody');
   const $921f485217c0c6d00ec9dfbf07cee198$var$translations = $df85c597a30dfe85efd21eb9457ef85e$export$default();
   const $921f485217c0c6d00ec9dfbf07cee198$var$loadDataFromCache = () => {
     return $3d935538f644f492fe681e00121114a4$export$getItem($921f485217c0c6d00ec9dfbf07cee198$var$LOCAL_STORAGE_KEY);
@@ -932,6 +933,7 @@
   };
   const $921f485217c0c6d00ec9dfbf07cee198$var$extendMembersData = players => {
     $921f485217c0c6d00ec9dfbf07cee198$var$membersContainer.parentElement.style.width = '100%';
+    $921f485217c0c6d00ec9dfbf07cee198$var$contentValue.append($921f485217c0c6d00ec9dfbf07cee198$var$membersContainer.parentElement);
     const heading = $921f485217c0c6d00ec9dfbf07cee198$var$membersContainer.querySelector('tr:first-child');
     if (heading.children.length !== 11) {
       [$921f485217c0c6d00ec9dfbf07cee198$var$translations.oda, $921f485217c0c6d00ec9dfbf07cee198$var$translations.odd, $921f485217c0c6d00ec9dfbf07cee198$var$translations.ods, $921f485217c0c6d00ec9dfbf07cee198$var$translations.od, $921f485217c0c6d00ec9dfbf07cee198$var$translations.dailyGrowth, $921f485217c0c6d00ec9dfbf07cee198$var$translations.playerLinks].forEach(v => {
@@ -1143,7 +1145,7 @@
       createDateLTE,
       createDateGT
     };
-    const data = await $3af05e958b2a20a26445518aba292c50$export$default({
+    return await $3af05e958b2a20a26445518aba292c50$export$default({
       query: $921f485217c0c6d00ec9dfbf07cee198$var$TRIBE_MEMBERS_DAILY_STATS_QUERY,
       variables: {
         filter,
@@ -1152,7 +1154,6 @@
         server: $921f485217c0c6d00ec9dfbf07cee198$var$SERVER
       }
     });
-    return data;
   };
   const $921f485217c0c6d00ec9dfbf07cee198$var$handleShowMembersGrowthClick = async e => {
     e.preventDefault();

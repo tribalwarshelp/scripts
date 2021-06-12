@@ -2,10 +2,10 @@ import differenceInDays from 'date-fns/differenceInDays';
 import getTranslations from './i18n/extendedTribeProfile';
 import requestCreator from './libs/requestCreator';
 import {
-  setPage,
-  getPage,
   generatePaginationItems,
   getContainerStyles,
+  getPage,
+  setPage,
 } from './utils/pagination';
 import renderTodaysStats from './common/renderTodaysStats';
 import showEnnoblementsPopup from './common/showEnnoblementsPopup';
@@ -13,7 +13,7 @@ import showHistoryPopup from './common/showHistoryPopup';
 import showPopup from './utils/showPopup';
 import getIDFromURL from './utils/getIDFromURL';
 import getCurrentServer from './utils/getCurrentServer';
-import { setItem, getItem } from './utils/localStorage';
+import { getItem, setItem } from './utils/localStorage';
 import { formatDate } from './utils/date';
 import getServerVersionCode from './utils/getServerVersionCode';
 import * as twstatsutils from './utils/twstats';
@@ -209,6 +209,7 @@ const TRIBE_CHANGES_QUERY = `
 `;
 const TRIBE_CHANGES_PAGINATION_CONTAINER_ID = 'tribeChangesPagination';
 const TRIBE_CHANGES_PER_PAGE = 15;
+const contentValue = document.querySelector('#content_value');
 const profileInfoTBody = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(1) > table > tbody'
 );
@@ -216,8 +217,8 @@ const actionContainer = profileInfoTBody;
 const otherElementsContainer = document.querySelector(
   '#content_value > table:nth-child(3) > tbody > tr > td:nth-child(2)'
 );
-const membersContainer = document
-  .querySelector('#content_value h3')
+const membersContainer = contentValue
+  .querySelector('h3')
   .nextElementSibling.querySelector('tbody');
 const translations = getTranslations();
 
@@ -288,6 +289,7 @@ const renderTr = ({ title, data, id }) => {
 
 const extendMembersData = players => {
   membersContainer.parentElement.style.width = '100%';
+  contentValue.append(membersContainer.parentElement);
   const heading = membersContainer.querySelector('tr:first-child');
   if (heading.children.length !== 11) {
     [
@@ -606,7 +608,7 @@ const loadMembersGrowthData = async ({ createDateLTE, createDateGT } = {}) => {
     createDateLTE,
     createDateGT,
   };
-  const data = await requestCreator({
+  return await requestCreator({
     query: TRIBE_MEMBERS_DAILY_STATS_QUERY,
     variables: {
       filter,
@@ -615,7 +617,6 @@ const loadMembersGrowthData = async ({ createDateLTE, createDateGT } = {}) => {
       server: SERVER,
     },
   });
-  return data;
 };
 
 const handleShowMembersGrowthClick = async e => {
