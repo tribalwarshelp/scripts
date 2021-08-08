@@ -35,23 +35,39 @@ const saveConfig = () => {
   setItem(LOCAL_STORAGE_KEY, config);
 };
 
-const villageIDByCoords = (x, y) => {
+const getVillageIDByCoords = (x, y) => {
   const xy = parseInt(`${x}${y}`, 10);
   const village = TWMap.villages[xy];
-  if (village) {
-    return TWMap.villages[xy].id;
+  if (!village) {
+    return NaN;
   }
-  return NaN;
+  return village.id;
 };
 
-const setVillageBorder = (x, y, color = 'transparent') => {
-  const id = villageIDByCoords(x, y);
-  if (isNaN(id)) return;
-  const village = document.querySelector('#map_village_' + id);
+const addBorderToVillage = (x, y, color = 'transparent') => {
+  const village = document.querySelector(
+    '#map_village_' + getVillageIDByCoords(x, y)
+  );
   if (village) {
     village.style.boxSizing = 'border-box';
     village.style.border =
       color !== 'transparent' ? `5px solid ${color}` : 'none';
+  }
+};
+
+const addBorderToVillagesInGroup = (name, color = '') => {
+  config.groups[name].villages.forEach(village => {
+    addBorderToVillage(
+      village.x,
+      village.y,
+      color ? color : config.groups[name].color
+    );
+  });
+};
+
+const addBorderToSelectedVillages = (color = '') => {
+  for (let name in config.groups) {
+    addBorderToVillagesInGroup(name, color);
   }
 };
 
@@ -67,27 +83,33 @@ const deleteVillageFromOtherGroups = key => {
 const handleMapClick = (x, y, e) => {
   e.preventDefault();
 
+  if (isNaN(getVillageIDByCoords(x, y))) {
+    return;
+  }
+
   const key = `${x}|${y}`;
-  const selected = config.groups[config.selectedGroup].villages.some(
-    village => village.key === key
-  );
-  if (selected) {
+  if (
+    config.groups[config.selectedGroup].villages.some(
+      village => village.key === key
+    )
+  ) {
     config.groups[config.selectedGroup].villages = config.groups[
       config.selectedGroup
     ].villages.filter(village => village.key !== key);
-    setVillageBorder(x, y, 'transparent');
-  } else {
-    config.groups[config.selectedGroup].villages = [
-      ...config.groups[config.selectedGroup].villages,
-      {
-        x,
-        y,
-        key,
-      },
-    ];
-    setVillageBorder(x, y, config.groups[config.selectedGroup].color);
-    deleteVillageFromOtherGroups(key);
+    addBorderToVillage(x, y, 'transparent');
+    return;
   }
+
+  config.groups[config.selectedGroup].villages = [
+    ...config.groups[config.selectedGroup].villages,
+    {
+      x,
+      y,
+      key,
+    },
+  ];
+  addBorderToVillage(x, y, config.groups[config.selectedGroup].color);
+  deleteVillageFromOtherGroups(key);
 };
 
 const renderForm = (container, group) => {
@@ -119,7 +141,7 @@ const renderForm = (container, group) => {
     if (group) {
       if (group.name === config.selectedGroup)
         config.selectedGroup = e.target[1].value;
-      colorizeGroupVillages(group.name, e.target[0].value);
+      addBorderToVillagesInGroup(group.name, e.target[0].value);
       config.groups[e.target[1].value] = {
         ...config.groups[group.name],
 
@@ -141,7 +163,7 @@ const renderForm = (container, group) => {
         if (config.selectedGroup === group.name) {
           return UI.ErrorMessage(translations.cannotDeleteSelectedGroup);
         }
-        colorizeGroupVillages(group.name, 'transparent');
+        addBorderToVillagesInGroup(group.name, 'transparent');
         delete config.groups[group.name];
         form.remove();
       });
@@ -195,7 +217,7 @@ const renderActions = () => {
 
 const handleSpawnSector = (data, sector) => {
   TWMap.mapHandler.__spawnSector(data, sector);
-  colorizeVillages();
+  addBorderToSelectedVillages();
 };
 
 const handleStart = () => {
@@ -205,7 +227,7 @@ const handleStart = () => {
   TWMap.mapHandler.spawnSector = handleSpawnSector;
   button.innerHTML = translations.stopCoordsPicker;
   renderActions();
-  colorizeVillages();
+  addBorderToSelectedVillages();
   renderGroups();
   intervalID = setInterval(saveConfig, 500);
 };
@@ -220,7 +242,7 @@ const handleStop = () => {
   button.innerHTML = translations.startCoordsPicker;
   formsContainer.innerHTML = '';
   actionsContainer.innerHTML = '';
-  colorizeVillages('transparent');
+  addBorderToSelectedVillages('transparent');
   if (intervalID) {
     clearInterval(intervalID);
   }
@@ -237,22 +259,6 @@ const handleButtonClick = () => {
   }
   config.started = !config.started;
   saveConfig();
-};
-
-const colorizeGroupVillages = (name, bgColor = '') => {
-  config.groups[name].villages.forEach(village => {
-    setVillageBorder(
-      village.x,
-      village.y,
-      bgColor ? bgColor : config.groups[name].color
-    );
-  });
-};
-
-const colorizeVillages = (bgColor = '') => {
-  for (let name in config.groups) {
-    colorizeGroupVillages(name, bgColor);
-  }
 };
 
 const renderUI = () => {

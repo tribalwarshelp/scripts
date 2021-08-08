@@ -124,22 +124,32 @@
   const $bfe8b11df18d9acc480580699499dd1a$var$saveConfig = () => {
     $3d935538f644f492fe681e00121114a4$export$setItem($bfe8b11df18d9acc480580699499dd1a$var$LOCAL_STORAGE_KEY, $bfe8b11df18d9acc480580699499dd1a$var$config);
   };
-  const $bfe8b11df18d9acc480580699499dd1a$var$villageIDByCoords = (x, y) => {
+  const $bfe8b11df18d9acc480580699499dd1a$var$getVillageIDByCoords = (x, y) => {
     const xy = parseInt(("").concat(x).concat(y), 10);
     const village = TWMap.villages[xy];
-    if (village) {
-      return TWMap.villages[xy].id;
+    if (!village) {
+      return NaN;
     }
-    return NaN;
+    return village.id;
   };
-  const $bfe8b11df18d9acc480580699499dd1a$var$setVillageBorder = function setVillageBorder(x, y) {
+  const $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillage = function addBorderToVillage(x, y) {
     let color = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'transparent';
-    const id = $bfe8b11df18d9acc480580699499dd1a$var$villageIDByCoords(x, y);
-    if (isNaN(id)) return;
-    const village = document.querySelector('#map_village_' + id);
+    const village = document.querySelector('#map_village_' + $bfe8b11df18d9acc480580699499dd1a$var$getVillageIDByCoords(x, y));
     if (village) {
       village.style.boxSizing = 'border-box';
       village.style.border = color !== 'transparent' ? ("5px solid ").concat(color) : 'none';
+    }
+  };
+  const $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillagesInGroup = function addBorderToVillagesInGroup(name) {
+    let color = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    $bfe8b11df18d9acc480580699499dd1a$var$config.groups[name].villages.forEach(village => {
+      $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillage(village.x, village.y, color ? color : $bfe8b11df18d9acc480580699499dd1a$var$config.groups[name].color);
+    });
+  };
+  const $bfe8b11df18d9acc480580699499dd1a$var$addBorderToSelectedVillages = function addBorderToSelectedVillages() {
+    let color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    for (let name in $bfe8b11df18d9acc480580699499dd1a$var$config.groups) {
+      $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillagesInGroup(name, color);
     }
   };
   const $bfe8b11df18d9acc480580699499dd1a$var$deleteVillageFromOtherGroups = key => {
@@ -150,20 +160,22 @@
   };
   const $bfe8b11df18d9acc480580699499dd1a$var$handleMapClick = (x, y, e) => {
     e.preventDefault();
-    const key = ("").concat(x, "|").concat(y);
-    const selected = $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages.some(village => village.key === key);
-    if (selected) {
-      $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages = $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages.filter(village => village.key !== key);
-      $bfe8b11df18d9acc480580699499dd1a$var$setVillageBorder(x, y, 'transparent');
-    } else {
-      $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages = [...$bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages, {
-        x,
-        y,
-        key
-      }];
-      $bfe8b11df18d9acc480580699499dd1a$var$setVillageBorder(x, y, $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].color);
-      $bfe8b11df18d9acc480580699499dd1a$var$deleteVillageFromOtherGroups(key);
+    if (isNaN($bfe8b11df18d9acc480580699499dd1a$var$getVillageIDByCoords(x, y))) {
+      return;
     }
+    const key = ("").concat(x, "|").concat(y);
+    if ($bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages.some(village => village.key === key)) {
+      $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages = $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages.filter(village => village.key !== key);
+      $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillage(x, y, 'transparent');
+      return;
+    }
+    $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages = [...$bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].villages, {
+      x,
+      y,
+      key
+    }];
+    $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillage(x, y, $bfe8b11df18d9acc480580699499dd1a$var$config.groups[$bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup].color);
+    $bfe8b11df18d9acc480580699499dd1a$var$deleteVillageFromOtherGroups(key);
   };
   const $bfe8b11df18d9acc480580699499dd1a$var$renderForm = (container, group) => {
     const selected = group && group.name !== $bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup;
@@ -174,7 +186,7 @@
       e.preventDefault();
       if (group) {
         if (group.name === $bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup) $bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup = e.target[1].value;
-        $bfe8b11df18d9acc480580699499dd1a$var$colorizeGroupVillages(group.name, e.target[0].value);
+        $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillagesInGroup(group.name, e.target[0].value);
         $bfe8b11df18d9acc480580699499dd1a$var$config.groups[e.target[1].value] = $bfe8b11df18d9acc480580699499dd1a$var$_objectSpread($bfe8b11df18d9acc480580699499dd1a$var$_objectSpread({}, $bfe8b11df18d9acc480580699499dd1a$var$config.groups[group.name]), {}, {
           color: e.target[0].value
         });
@@ -192,7 +204,7 @@
         if ($bfe8b11df18d9acc480580699499dd1a$var$config.selectedGroup === group.name) {
           return UI.ErrorMessage($bfe8b11df18d9acc480580699499dd1a$var$translations.cannotDeleteSelectedGroup);
         }
-        $bfe8b11df18d9acc480580699499dd1a$var$colorizeGroupVillages(group.name, 'transparent');
+        $bfe8b11df18d9acc480580699499dd1a$var$addBorderToVillagesInGroup(group.name, 'transparent');
         delete $bfe8b11df18d9acc480580699499dd1a$var$config.groups[group.name];
         form.remove();
       });
@@ -231,7 +243,7 @@
   };
   const $bfe8b11df18d9acc480580699499dd1a$var$handleSpawnSector = (data, sector) => {
     TWMap.mapHandler.__spawnSector(data, sector);
-    $bfe8b11df18d9acc480580699499dd1a$var$colorizeVillages();
+    $bfe8b11df18d9acc480580699499dd1a$var$addBorderToSelectedVillages();
   };
   const $bfe8b11df18d9acc480580699499dd1a$var$handleStart = () => {
     TWMap.map.handler.__onClick = TWMap.map.handler.onClick;
@@ -240,7 +252,7 @@
     TWMap.mapHandler.spawnSector = $bfe8b11df18d9acc480580699499dd1a$var$handleSpawnSector;
     $bfe8b11df18d9acc480580699499dd1a$var$button.innerHTML = $bfe8b11df18d9acc480580699499dd1a$var$translations.stopCoordsPicker;
     $bfe8b11df18d9acc480580699499dd1a$var$renderActions();
-    $bfe8b11df18d9acc480580699499dd1a$var$colorizeVillages();
+    $bfe8b11df18d9acc480580699499dd1a$var$addBorderToSelectedVillages();
     $bfe8b11df18d9acc480580699499dd1a$var$renderGroups();
     $bfe8b11df18d9acc480580699499dd1a$var$intervalID = setInterval($bfe8b11df18d9acc480580699499dd1a$var$saveConfig, 500);
   };
@@ -254,7 +266,7 @@
     $bfe8b11df18d9acc480580699499dd1a$var$button.innerHTML = $bfe8b11df18d9acc480580699499dd1a$var$translations.startCoordsPicker;
     $bfe8b11df18d9acc480580699499dd1a$var$formsContainer.innerHTML = '';
     $bfe8b11df18d9acc480580699499dd1a$var$actionsContainer.innerHTML = '';
-    $bfe8b11df18d9acc480580699499dd1a$var$colorizeVillages('transparent');
+    $bfe8b11df18d9acc480580699499dd1a$var$addBorderToSelectedVillages('transparent');
     if ($bfe8b11df18d9acc480580699499dd1a$var$intervalID) {
       clearInterval($bfe8b11df18d9acc480580699499dd1a$var$intervalID);
     }
@@ -270,18 +282,6 @@
     }
     $bfe8b11df18d9acc480580699499dd1a$var$config.started = !$bfe8b11df18d9acc480580699499dd1a$var$config.started;
     $bfe8b11df18d9acc480580699499dd1a$var$saveConfig();
-  };
-  const $bfe8b11df18d9acc480580699499dd1a$var$colorizeGroupVillages = function colorizeGroupVillages(name) {
-    let bgColor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-    $bfe8b11df18d9acc480580699499dd1a$var$config.groups[name].villages.forEach(village => {
-      $bfe8b11df18d9acc480580699499dd1a$var$setVillageBorder(village.x, village.y, bgColor ? bgColor : $bfe8b11df18d9acc480580699499dd1a$var$config.groups[name].color);
-    });
-  };
-  const $bfe8b11df18d9acc480580699499dd1a$var$colorizeVillages = function colorizeVillages() {
-    let bgColor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-    for (let name in $bfe8b11df18d9acc480580699499dd1a$var$config.groups) {
-      $bfe8b11df18d9acc480580699499dd1a$var$colorizeGroupVillages(name, bgColor);
-    }
   };
   const $bfe8b11df18d9acc480580699499dd1a$var$renderUI = () => {
     $bfe8b11df18d9acc480580699499dd1a$var$button = document.createElement('button');
