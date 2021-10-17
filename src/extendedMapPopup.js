@@ -14,7 +14,7 @@ import calcLoyalty from './utils/calcLoyalty';
 // @namespace    https://github.com/tribalwarshelp/scripts
 // @updateURL    https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
 // @downloadURL  https://raw.githubusercontent.com/tribalwarshelp/scripts/master/dist/extendedMapPopup.js
-// @version      ${version}
+// @version      <%= version %>
 // @description  Extended map popup
 // @author       Kichiyaki https://dwysokinski.me/
 // @match        *://*/game.php*screen=map*
