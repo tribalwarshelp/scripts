@@ -15,7 +15,7 @@
   "dependencies": {
     "date-fns": "^2.22.1",
     "lodash": "^4.17.21",
-    "parcel": "2.0.0"
+    "parcel": "2.4.0"
   },
   "browserslist": [
     "since 2017-06"
